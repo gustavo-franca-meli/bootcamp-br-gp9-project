@@ -1,0 +1,17 @@
+# "prod" suffix properties file. Scopes name samples: "prod", "web-prod", "api-prod", etc.
+# Overrides application.yml default properties
+
+spring:
+  datasource:
+    host: DB_MYSQL_DESAENV04_DAMBETANDB_DAMBETANDB_ENDPOINT
+    db: dambetandb
+    username: dambetandb_WPROD
+    password: DB_MYSQL_DESAENV04_DAMBETANDB_DAMBETANDB_WPROD
+    initialization-mode: always
+
+  jpa:
+    show-sql: true
+    hibernate:
+      sql: debug
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQL8Dialect
