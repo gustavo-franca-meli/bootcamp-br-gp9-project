@@ -5,7 +5,7 @@
 spring:
   datasource:
     host: proxysql.master.meliseginf.com:6612
-    db: dambetandb
+    db: gp9db
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASS}
     initialization-mode: always
@@ -14,7 +14,7 @@ spring:
     show-sql: true
     hibernate:
       sql: debug
-      ddl-auto: none # create-drop para crear las entidades, una vez creadas y finalizado el mododel cambiar a none
+      ddl-auto: create-drop # create-drop para crear las entidades, una vez creadas y finalizado el mododel cambiar a none
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
 
