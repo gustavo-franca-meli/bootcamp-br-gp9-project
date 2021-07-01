@@ -5,7 +5,7 @@
 spring:
   datasource:
     host: localhost:3306
-    db: gp9db
+    db: warehouse_db
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASS}
     initialization-mode: always
