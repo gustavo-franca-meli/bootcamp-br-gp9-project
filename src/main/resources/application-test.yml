@@ -4,7 +4,7 @@
 spring:
   datasource:
     host: DB_MYSQL_DESAENV04_DAMBETANDB_DAMBETANDB_ENDPOINT
-    db: dambetandb
+    db: gp9db
     username: dambetandb_WPROD
     password: DB_MYSQL_DESAENV04_DAMBETANDB_DAMBETANDB_WPROD
     initialization-mode: always
