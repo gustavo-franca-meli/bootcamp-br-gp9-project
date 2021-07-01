@@ -22,7 +22,12 @@ public class Order {
     @OneToMany
     private List<Batch> batches;
 
-    @OneToOne
-    private Warehouse warehouse;
-
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Representative representative;
+    public Order(LocalDate orderDate, Representative representative, List<Batch> bathStock) {
+        this.orderDate = orderDate;
+        this.batches = bathStock;
+        this.representative = representative;
+    }
 }
