@@ -1,10 +1,10 @@
 # Properties file for local/dev enviroment
-# You need to configure the environment variable in your IDE, more info in README.md
+# You need to configure the environment variable in your IDE, more info in contribute.md
 # Overrides application.yml default properties
 
 spring:
   datasource:
-    host: proxysql.master.meliseginf.com:6612
+    host: localhost:3306
     db: gp9db
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASS}
