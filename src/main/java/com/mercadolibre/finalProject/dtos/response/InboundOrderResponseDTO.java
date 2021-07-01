@@ -1,9 +1,9 @@
 package com.mercadolibre.finalProject.dtos.response;
 
-import com.mercadolibre.finalProject.dtos.BatchDto;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
 
 import java.util.List;
 
 public class InboundOrderResponseDTO {
-    List<BatchDto> batchStock;
+    List<BatchDTO> batchStock;
 }

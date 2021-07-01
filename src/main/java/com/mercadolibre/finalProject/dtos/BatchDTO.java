@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-public class BatchDto {
+public class BatchDTO {
     @JsonProperty("batchNumber")
     private Integer id;
     private String productId;
