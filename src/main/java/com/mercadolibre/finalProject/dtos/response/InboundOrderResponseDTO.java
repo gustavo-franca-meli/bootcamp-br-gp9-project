@@ -1,13 +1,15 @@
 package com.mercadolibre.finalProject.dtos.response;
 
-import com.mercadolibre.finalProject.dtos.BatchDto;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 public class InboundOrderResponseDTO {
-    List<BatchDto> batchStock;
+    List<BatchDTO> batchStock;
 
-    public InboundOrderResponseDTO(List<BatchDto> batchStock) {
+    public InboundOrderResponseDTO(List<BatchDTO> batchStock) {
         this.batchStock = batchStock;
     }
 }
