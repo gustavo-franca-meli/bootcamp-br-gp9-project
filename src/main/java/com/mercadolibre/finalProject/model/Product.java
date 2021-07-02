@@ -19,6 +19,7 @@ public class Product {
 
     @Id
     private Long id;
+
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
