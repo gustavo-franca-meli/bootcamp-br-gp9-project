@@ -11,31 +11,27 @@ import javax.validation.constraints.NotNull;
 public class SectorDTO {
     @JsonProperty("sectionCode")
     @NotNull
-    @NotEmpty
     private Long code;
 
     @NotNull
-    @NotEmpty
-    private String warehouseCode;
+    private Long warehouseCode;
 
     @NotNull
-    @NotEmpty
     private Double currentQuantityBatches;
 
     @NotNull
-    @NotEmpty
     private Double maxQuantityBatches;
 
-    public SectorDTO(Long code, String warehouseCode, Double currentQuantityBatches, Double maxQuantityBatches) {
+    public SectorDTO(Long code, Long warehouseCode, Double currentQuantityBatches, Double maxQuantityBatches) {
         this.code = code;
         this.warehouseCode = warehouseCode;
         this.currentQuantityBatches = currentQuantityBatches;
         this.maxQuantityBatches = maxQuantityBatches;
     }
 
-    public SectorDTO(Sector sector) {
+    public SectorDTO(@NotNull Sector sector) {
         this.code = sector.getId();
-        this.warehouseCode = sector.getWarehouse().getId().toString();
+        this.warehouseCode = sector.getWarehouse().getId();
         this.currentQuantityBatches = sector.getCurrentQuantityBatches();
         this.maxQuantityBatches = sector.getMaxQuantityBatches();
     }
