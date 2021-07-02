@@ -19,7 +19,8 @@ public class RepresentativeServiceImpl implements IRepresentativeService {
     }
 
     @Override
-    public Representative findByIdAndWarehouse(String representativeId, Warehouse warehouse) throws RepresentativeNotFound {
+    public Representative findByIdAndWarehouseId(String representeId, Long id) throws RepresentativeNotFound {
         return null;
     }
+
 }
