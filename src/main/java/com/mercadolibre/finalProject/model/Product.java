@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Product {
 
     @Id
-    private UUID id;
+    private Long id;
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,37 +25,13 @@ public class Product {
         return SectorType.FRAGILE;
     }
 
-    public Product(UUID id) {
+    public Product(Long id) {
         this.id = id;
     }
 
     public Product(String name, Seller seller) {
 
         this.name = name;
-        this.seller = seller;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Seller getSeller() {
-        return seller;
-    }
-
-    public void setSeller(Seller seller) {
         this.seller = seller;
     }
 }

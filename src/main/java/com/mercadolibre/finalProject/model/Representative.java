@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Representative {
 
     @Id
-    private UUID id;
+    private Long id;
 
     private String name;
 
@@ -22,7 +22,6 @@ public class Representative {
     private Warehouse warehouse;
 
     public Representative(String name, Warehouse warehouse) {
-
         this.name = name;
         this.warehouse = warehouse;
     }

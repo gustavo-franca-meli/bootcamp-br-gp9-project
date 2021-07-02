@@ -12,7 +12,7 @@ import java.util.UUID;
 public class BatchMapper {
 
 
-    public static Batch toModel(BatchDTO bathDto, UUID sectorId) {
+    public static Batch toModel(BatchDTO bathDto, Long sectorId) {
       return new Batch(
               bathDto.getId(),
               new Product(bathDto.getProductId()),

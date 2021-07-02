@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Warehouse {
 
     @Id
-    private UUID id;
+    private Long id;
 
     private String name;
 
@@ -25,41 +25,8 @@ public class Warehouse {
     private Representative representative;
 
     public Warehouse(String name, List<Sector> sectors, Representative representative) {
-
         this.name = name;
         this.sectors = sectors;
-        this.representative = representative;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Sector> getSectors() {
-        return sectors;
-    }
-
-    public void setSectors(List<Sector> sectors) {
-        this.sectors = sectors;
-    }
-
-    public Representative getRepresentative() {
-        return representative;
-    }
-
-    public void setRepresentative(Representative representative) {
         this.representative = representative;
     }
 }

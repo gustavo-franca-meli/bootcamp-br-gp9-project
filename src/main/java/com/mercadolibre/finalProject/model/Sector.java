@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class Sector {
 
     @Id
-    private UUID id;
+    private Long id;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SECTOR_TYPES")
@@ -30,7 +30,7 @@ public class Sector {
     private Double currentQuantityBatches;
     private Double maxQuantityBatches;
 
-    public Sector(UUID id) {
+    public Sector(Long id) {
         this.id = id;
     }
 
@@ -43,45 +43,5 @@ public class Sector {
 
     private void getTypes(Set<SectorType> types) {
         this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public Set<Integer> getTypes() {
-        return types;
-    }
-
-    public void setTypes(Set<Integer> types) {
-        this.types = types;
-    }
-
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
-
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
-
-    public Double getCurrentQuantityBatches() {
-        return currentQuantityBatches;
-    }
-
-    public void setCurrentQuantityBatches(Double currentQuantityBatches) {
-        this.currentQuantityBatches = currentQuantityBatches;
-    }
-
-    public Double getMaxQuantityBatches() {
-        return maxQuantityBatches;
-    }
-
-    public void setMaxQuantityBatches(Double maxQuantityBatches) {
-        this.maxQuantityBatches = maxQuantityBatches;
     }
 }

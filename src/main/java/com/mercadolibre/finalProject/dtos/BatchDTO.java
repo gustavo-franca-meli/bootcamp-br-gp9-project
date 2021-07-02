@@ -10,8 +10,8 @@ import java.util.UUID;
 @Data
 public class BatchDTO {
     @JsonProperty("batchNumber")
-    private UUID id;
-    private UUID productId;
+    private Long id;
+    private Long productId;
     private Float currentTemperature;
     private Float minimumTemperature;
     private Integer initialQuantity;
@@ -23,7 +23,7 @@ public class BatchDTO {
     public BatchDTO() {
     }
 
-    public BatchDTO(UUID id, UUID productId, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+    public BatchDTO(Long id, Long productId, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
         this.id = id;
         this.productId = productId;
         this.currentTemperature = currentTemperature;

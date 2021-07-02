@@ -20,7 +20,7 @@ import java.util.UUID;
 public class CountryHouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    private Long id;
 
     private String name;
 
