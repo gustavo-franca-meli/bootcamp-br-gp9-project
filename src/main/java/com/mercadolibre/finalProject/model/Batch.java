@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class Batch {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -44,5 +43,9 @@ public class Batch {
         this.manufacturingDate = manufacturingDate;
         this.manufacturingTime = manufacturingTime;
         this.dueDate = dueDate;
+    }
+
+    public Batch (Long id) {
+        this.id = id;
     }
 }

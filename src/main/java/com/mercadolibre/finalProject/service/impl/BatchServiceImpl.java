@@ -1,10 +1,9 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.BatchDto;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
-import com.mercadolibre.finalProject.service.IBathService;
-import org.modelmapper.internal.util.Stack;
+import com.mercadolibre.finalProject.service.IBatchService;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -12,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class BathService implements IBathService {
+public class BatchServiceImpl implements IBatchService {
     @Override
-    public List<Batch> create(@NotNull List<BatchDto> batchStock, Sector sector) {
+    public List<Batch> create(@NotNull List<BatchDTO> batchStock, Sector sector) {
 
         //sector has space for batchStock length else throws
 
