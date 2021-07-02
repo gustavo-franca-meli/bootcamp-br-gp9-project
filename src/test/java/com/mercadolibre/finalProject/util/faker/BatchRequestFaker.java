@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.UUID;
 
-public class BathRequestFaker  {
+public class BatchRequestFaker {
 
 
     static  public BatchDTO validRequest(){

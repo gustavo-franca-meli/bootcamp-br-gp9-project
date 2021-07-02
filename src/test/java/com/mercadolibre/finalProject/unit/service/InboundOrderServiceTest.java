@@ -10,11 +10,11 @@ import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.OrderRepository;
-import com.mercadolibre.finalProject.service.IBathService;
+import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IRepresentativeService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import com.mercadolibre.finalProject.service.IWarehouseService;
-import com.mercadolibre.finalProject.service.impl.InboundOrderService;
+import com.mercadolibre.finalProject.service.impl.InboundOrderServiceImpl;
 import com.mercadolibre.finalProject.util.faker.InboundOrderFaker;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,14 +35,14 @@ public class InboundOrderServiceTest {
     private final ISectorService sectorService = mock(ISectorService.class);
     private final OrderRepository inboundOrderRepository = mock(OrderRepository.class);
     private final IRepresentativeService representativeService = mock(IRepresentativeService.class);
-    private final IBathService bathService = mock(IBathService.class);
+    private final IBatchService bathService = mock(IBatchService.class);
     private final String representativeId = UUID.randomUUID().toString();
-    private InboundOrderService service;
+    private InboundOrderServiceImpl service;
     private InboundOrderDTO validRequest;
 
     @BeforeEach
     public void setup() {
-        service = new InboundOrderService(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
+        service = new InboundOrderServiceImpl(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
         validRequest = InboundOrderFaker.getValidInboundOrderRequest();
     }
 
@@ -63,7 +63,7 @@ public class InboundOrderServiceTest {
         when(warehouseService.findById(dto.getSection().getWarehouseCode())).thenReturn(warehouse);
         when(representativeService.findByIdAndWarehouse(representeId, warehouse)).thenReturn(new Representative());
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
-        when(bathService.create(dto.getBatchStock(), sector)).thenReturn(bathModelList);
+        when(bathService.create(dto.getBatchStock(), sector.getId())).thenReturn(bathModelList);
         var response = service.create(dto, representeId);
         assertEquals(response.getBatchStock().size(), sizeList);
     }
@@ -104,7 +104,7 @@ public class InboundOrderServiceTest {
     public void shouldReturnBathStockErrorWhenOneOrMoreBathHasError() {
         var sector = InboundOrderFaker.getSector(validRequest.getSection().getCode());
         when(sectorService.findById(any())).thenReturn(sector);
-        when(bathService.create(validRequest.getBatchStock(), sector)).thenThrow(CreateBathStockException.class);
+        when(bathService.create(validRequest.getBatchStock(), sector.getId())).thenThrow(CreateBathStockException.class);
         assertThrows(CreateBathStockException.class, () -> service.create(validRequest, UUID.randomUUID().toString()));
     }
 }
