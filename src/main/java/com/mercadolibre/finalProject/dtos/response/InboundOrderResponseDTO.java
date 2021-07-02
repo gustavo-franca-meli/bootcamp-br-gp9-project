@@ -6,4 +6,8 @@ import java.util.List;
 
 public class InboundOrderResponseDTO {
     List<BatchDTO> batchStock;
+
+    public InboundOrderResponseDTO(List<BatchDTO> batchStock) {
+        this.batchStock = batchStock;
+    }
 }

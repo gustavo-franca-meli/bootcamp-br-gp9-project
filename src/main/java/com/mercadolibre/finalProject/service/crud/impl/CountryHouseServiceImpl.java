@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +49,7 @@ public class CountryHouseServiceImpl implements ICountryHouseService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(UUID id) {
         Optional<CountryHouse> opt = countryHouseRepository.findById(id);
         if (!opt.isPresent()) {
             throw new NoSuchElementException("No existe empleado con el id: " + id);
@@ -57,7 +58,7 @@ public class CountryHouseServiceImpl implements ICountryHouseService {
     }
 
     @Override
-    public CountryHouseDTO findById(Long id) {
+    public CountryHouseDTO findById(UUID id) {
         Optional<CountryHouse> opt = countryHouseRepository.findById(id);
 
         if (!opt.isPresent()) {

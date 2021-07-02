@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
@@ -16,8 +17,7 @@ import java.util.stream.Collectors;
 public class Sector {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SECTOR_TYPES")
@@ -30,8 +30,11 @@ public class Sector {
     private Double currentQuantityBatches;
     private Double maxQuantityBatches;
 
-    public Sector(Long id, Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
+    public Sector(UUID id) {
         this.id = id;
+    }
+
+    public Sector(Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
         this.types = types;
         this.warehouse = warehouse;
         this.currentQuantityBatches = currentQuantityBatches;
@@ -42,11 +45,11 @@ public class Sector {
         this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

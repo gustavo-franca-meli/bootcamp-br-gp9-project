@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="country_houses")
@@ -18,7 +20,8 @@ import java.util.List;
 public class CountryHouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
+
     private String name;
 
     @Unique
@@ -27,4 +30,15 @@ public class CountryHouse {
     @OneToMany(mappedBy = "countryHouse")
     private List<Account> accounts;
 
+    public CountryHouse(String name, @Unique String country) {
+        this.name = name;
+        this.country = country;
+        this.accounts = new ArrayList<>();
+    }
+
+    public CountryHouse(String name, @Unique String country, List<Account> accounts) {
+        this.name = name;
+        this.country = country;
+        this.accounts = accounts;
+    }
 }
