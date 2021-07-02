@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class Sector {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -27,12 +26,17 @@ public class Sector {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
+    private Double currentQuantityBatches;
     private Double maxQuantityBatches;
 
-    public Sector(Long id, Set<Integer> types, Warehouse warehouse, Double maxQuantityBatches) {
+    public Sector(Long id) {
         this.id = id;
+    }
+
+    public Sector(Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
         this.types = types;
         this.warehouse = warehouse;
+        this.currentQuantityBatches = currentQuantityBatches;
         this.maxQuantityBatches = maxQuantityBatches;
     }
 

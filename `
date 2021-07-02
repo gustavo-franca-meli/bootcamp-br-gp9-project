@@ -1,0 +1,33 @@
+Remove import of UUID
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Fri Jul 2 12:41:31 2021 -0300
+# Committer: Nycolas De Lima Vieira <nyvieira@mbpdemeliadmin.lan>
+#
+# On branch feature/service-sector-refactor
+# Changes to be committed:
+#	modified:   src/main/java/com/mercadolibre/finalProject/dtos/BatchDTO.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/dtos/CountryHouseDTO.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/dtos/SectorDTO.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/Batch.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/CountryHouse.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/Order.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/Product.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/Representative.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/Sector.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/Seller.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/Warehouse.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/model/mapper/BatchMapper.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/repository/AccountRepository.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/repository/BathRepository.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/repository/CountryHouseRepository.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/repository/OrderRepository.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/repository/SectorRepository.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/service/ISectorService.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/service/crud/ICRUD.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/service/crud/impl/CountryHouseServiceImpl.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/service/impl/InboundOrderService.java
+#	modified:   src/main/java/com/mercadolibre/finalProject/service/impl/SectorServiceImpl.java
+#
