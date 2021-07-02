@@ -8,34 +8,34 @@ import com.mercadolibre.finalProject.model.Sector;
 public class BatchMapper {
 
 
-    public static Batch toModel(BatchDTO bathDto, String sectorId) {
+    public static Batch toModel(BatchDTO batchDTO, Long sectorId) {
       return new Batch(
-              bathDto.getId(),
-              new Product(bathDto.getProductId()),
+              batchDTO.getId(),
+              new Product(batchDTO.getProductId()),
               new Sector(sectorId),
-              bathDto.getCurrentTemperature(),
-              bathDto.getMinimumTemperature(),
-              bathDto.getInitialQuantity(),
-              bathDto.getCurrentQuantity(),
-              bathDto.getManufacturingDate(),
-              bathDto.getManufacturingTime(),
-              bathDto.getDueDate()
+              batchDTO.getCurrentTemperature(),
+              batchDTO.getMinimumTemperature(),
+              batchDTO.getInitialQuantity(),
+              batchDTO.getCurrentQuantity(),
+              batchDTO.getManufacturingDate(),
+              batchDTO.getManufacturingTime(),
+              batchDTO.getDueDate()
       );
 
 
     }
 
-    public static BatchDTO toDto(Batch bath) {
+    public static BatchDTO toDTO(Batch batch) {
         return new BatchDTO(
-                bath.getId(),
-                bath.getProduct().getId(),
-                bath.getCurrentTemperature(),
-                bath.getMinimumTemperature(),
-                bath.getInitialQuantity(),
-                bath.getCurrentQuantity(),
-                bath.getManufacturingDate(),
-                bath.getManufacturingTime(),
-                bath.getDueDate()
+                batch.getId(),
+                batch.getProduct().getId(),
+                batch.getCurrentTemperature(),
+                batch.getMinimumTemperature(),
+                batch.getInitialQuantity(),
+                batch.getCurrentQuantity(),
+                batch.getManufacturingDate(),
+                batch.getManufacturingTime(),
+                batch.getDueDate()
         );
     }
 }

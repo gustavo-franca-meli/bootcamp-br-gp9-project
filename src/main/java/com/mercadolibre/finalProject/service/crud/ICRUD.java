@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.service.crud;
 
 import java.util.List;
 
+
 public interface ICRUD <DTO>{
     DTO create(DTO dto);
 

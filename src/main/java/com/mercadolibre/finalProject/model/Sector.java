@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class Sector {
 
     @Id
-    private String id;
+    private Long id;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SECTOR_TYPES")
@@ -26,20 +26,21 @@ public class Sector {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
+    private Double currentQuantityBatches;
     private Double maxQuantityBatches;
 
-    public Sector(String id, Set<Integer> types, Warehouse warehouse, Double maxQuantityBatches) {
+    public Sector(Long id) {
         this.id = id;
+    }
+
+    public Sector(Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
         this.types = types;
         this.warehouse = warehouse;
+        this.currentQuantityBatches = currentQuantityBatches;
         this.maxQuantityBatches = maxQuantityBatches;
     }
 
     private void getTypes(Set<SectorType> types) {
         this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
-    }
-
-    public Sector(String id) {
-        this.id = id;
     }
 }
