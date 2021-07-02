@@ -25,12 +25,24 @@ public class Batch {
     @JoinColumn(name = "sector_id")
     private Sector sector;
 
-    private Integer quantity;
     private Float currentTemperature;
     private Float minimumTemperature;
     private Integer initialQuantity;
     private Integer currentQuantity;
-    private LocalDateTime manufacturingDate;
+    private LocalDate manufacturingDate;
     private LocalDateTime manufacturingTime;
     private LocalDate dueDate;
+
+    public Batch(Long id, Product product, Sector sector, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+        this.id = id;
+        this.product = product;
+        this.sector = sector;
+        this.currentTemperature = currentTemperature;
+        this.minimumTemperature = minimumTemperature;
+        this.initialQuantity = initialQuantity;
+        this.currentQuantity = currentQuantity;
+        this.manufacturingDate = manufacturingDate;
+        this.manufacturingTime = manufacturingTime;
+        this.dueDate = dueDate;
+    }
 }

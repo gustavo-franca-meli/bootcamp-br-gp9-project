@@ -16,8 +16,7 @@ import java.util.stream.Collectors;
 public class Sector {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SECTOR_TYPES")
@@ -29,7 +28,7 @@ public class Sector {
 
     private Double maxQuantityBatches;
 
-    public Sector(Long id, Set<Integer> types, Warehouse warehouse, Double maxQuantityBatches) {
+    public Sector(String id, Set<Integer> types, Warehouse warehouse, Double maxQuantityBatches) {
         this.id = id;
         this.types = types;
         this.warehouse = warehouse;
@@ -38,5 +37,9 @@ public class Sector {
 
     private void getTypes(Set<SectorType> types) {
         this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
+    }
+
+    public Sector(String id) {
+        this.id = id;
     }
 }

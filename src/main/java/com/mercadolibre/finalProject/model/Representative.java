@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "representatives")
@@ -12,8 +13,7 @@ import javax.persistence.*;
 public class Representative {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     private String name;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -21,4 +21,7 @@ public class Representative {
     private Warehouse warehouse;
 
 
+    public Boolean worksIn(String warehouseId) {
+        return this.warehouse.getId().toString().equals(warehouseId);
+    }
 }
