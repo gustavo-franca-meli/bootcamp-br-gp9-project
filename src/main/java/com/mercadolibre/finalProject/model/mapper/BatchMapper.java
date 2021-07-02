@@ -1,44 +1,41 @@
 package com.mercadolibre.finalProject.model.mapper;
 
-import com.mercadolibre.finalProject.dtos.BatchDto;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class BatchMapper {
 
 
-    public static Batch toModel(BatchDto bathDto, String sectorId) {
+    public static Batch toModel(BatchDTO batchDTO, Long sectorId) {
       return new Batch(
-              bathDto.getId().longValue(),
-              new Product(bathDto.getProductId()),
+              batchDTO.getId(),
+              new Product(batchDTO.getProductId()),
               new Sector(sectorId),
-              bathDto.getCurrentTemperature(),
-              bathDto.getMinimumTemperature(),
-              bathDto.getInitialQuantity(),
-              bathDto.getCurrentQuantity(),
-              bathDto.getManufacturingDate(),
-              bathDto.getManufacturingTime(),
-              bathDto.getDueDate()
+              batchDTO.getCurrentTemperature(),
+              batchDTO.getMinimumTemperature(),
+              batchDTO.getInitialQuantity(),
+              batchDTO.getCurrentQuantity(),
+              batchDTO.getManufacturingDate(),
+              batchDTO.getManufacturingTime(),
+              batchDTO.getDueDate()
       );
 
 
     }
 
-    public static BatchDto toDto(Batch bath) {
-        return new BatchDto(
-                bath.getId(),
-                bath.getProduct().getId(),
-                bath.getCurrentTemperature(),
-                bath.getMinimumTemperature(),
-                bath.getInitialQuantity(),
-                bath.getCurrentQuantity(),
-                bath.getManufacturingDate(),
-                bath.getManufacturingTime(),
-                bath.getDueDate()
+    public static BatchDTO toDTO(Batch batch) {
+        return new BatchDTO(
+                batch.getId(),
+                batch.getProduct().getId(),
+                batch.getCurrentTemperature(),
+                batch.getMinimumTemperature(),
+                batch.getInitialQuantity(),
+                batch.getCurrentQuantity(),
+                batch.getManufacturingDate(),
+                batch.getManufacturingTime(),
+                batch.getDueDate()
         );
     }
 }

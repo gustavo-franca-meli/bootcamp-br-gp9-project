@@ -11,14 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class InboundOrderServiceTest {
 
-    @Test public void test(){
-        Mockito.mock(IWarehouseService.class);
-        Mockito.mock(IRepresentativeService.class);
-        Mockito.mock(.class);
-        Mockito.mock(IRepresentativeService.class);
-
-        new InboundOrderService()
-
-    }
+//    @Test public void test(){
+//        Mockito.mock(IWarehouseService.class);
+//        Mockito.mock(IRepresentativeService.class);
+//        Mockito.mock(.class);
+//        Mockito.mock(IRepresentativeService.class);
+//
+//        new InboundOrderService()
+//
+//    }
 }
 

@@ -1,13 +1,11 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.BatchDto;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.*;
-import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Order;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
-import com.mercadolibre.finalProject.repository.BathRepository;
 import com.mercadolibre.finalProject.repository.OrderRepository;
 import com.mercadolibre.finalProject.service.*;
 
@@ -34,12 +32,12 @@ public class InboundOrderService implements IInboundOrderService {
 
         //representative works in warehouse if not throws?
         var representative = representativeService.findById(representation);
-        representative.worksIn(warehouse.getId().toString());
+        representative.worksIn(warehouse.getId());
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
         var bathStock = bathService.create(dto.getBatchStock(),sector);
-        List<BatchDto> bathStockResponse = bathStock.stream().map(BatchMapper::toDto).collect(Collectors.toList());
+        List<BatchDTO> bathStockResponse = bathStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws
         var order = new Order(dto.getOrderDate(),representative,bathStock);

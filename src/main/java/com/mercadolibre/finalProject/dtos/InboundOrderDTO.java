@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.mercadolibre.finalProject.dtos.BatchDTO;
+
 @Data
 public class InboundOrderDTO {
     @NotNull
@@ -14,7 +16,7 @@ public class InboundOrderDTO {
     @NotNull
     private LocalDate orderDate;
     @NotNull
-    private SectionDto section;
+    private SectorDTO section;
     @NotNull
-    private List<BatchDto> batchStock;
+    private List<BatchDTO> batchStock;
 }

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+
 @Entity
 @Table(name = "warehouses")
 @Data
@@ -14,7 +15,8 @@ import java.util.UUID;
 public class Warehouse {
 
     @Id
-    private UUID id;
+    private Long id;
+
     private String name;
 
     @OneToMany
@@ -22,4 +24,10 @@ public class Warehouse {
 
     @OneToOne
     private Representative representative;
+
+    public Warehouse(String name, List<Sector> sectors, Representative representative) {
+        this.name = name;
+        this.sectors = sectors;
+        this.representative = representative;
+    }
 }
