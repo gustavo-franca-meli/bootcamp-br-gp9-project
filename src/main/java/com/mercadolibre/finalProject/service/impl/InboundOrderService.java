@@ -10,6 +10,7 @@ import com.mercadolibre.finalProject.repository.OrderRepository;
 import com.mercadolibre.finalProject.service.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class InboundOrderService implements IInboundOrderService {
@@ -32,7 +33,7 @@ public class InboundOrderService implements IInboundOrderService {
 
         //representative works in warehouse if not throws?
         var representative = representativeService.findById(representation);
-        representative.worksIn(warehouse.getId());
+        //representative.worksIn(warehouse.getId());
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
