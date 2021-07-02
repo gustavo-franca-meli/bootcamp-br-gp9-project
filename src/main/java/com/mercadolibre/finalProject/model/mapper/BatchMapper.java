@@ -1,19 +1,16 @@
 package com.mercadolibre.finalProject.model.mapper;
 
-import com.mercadolibre.finalProject.dtos.BatchDto;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class BatchMapper {
 
 
-    public static Batch toModel(BatchDto bathDto, String sectorId) {
+    public static Batch toModel(BatchDTO bathDto, String sectorId) {
       return new Batch(
-              bathDto.getId().longValue(),
+              bathDto.getId(),
               new Product(bathDto.getProductId()),
               new Sector(sectorId),
               bathDto.getCurrentTemperature(),
@@ -28,8 +25,8 @@ public class BatchMapper {
 
     }
 
-    public static BatchDto toDto(Batch bath) {
-        return new BatchDto(
+    public static BatchDTO toDto(Batch bath) {
+        return new BatchDTO(
                 bath.getId(),
                 bath.getProduct().getId(),
                 bath.getCurrentTemperature(),
