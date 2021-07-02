@@ -19,14 +19,14 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
     private ISectorService sectorService;
     private IRepresentativeService representativeService;
     private OrderRepository repository;
-    private IBatchService bathService;
+    private IBatchService batchService;
 
-    public InboundOrderServiceImpl(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService bathService) {
+    public InboundOrderServiceImpl(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService batchService) {
         this.warehouseService = warehouseService;
         this.sectorService = sectorService;
         this.representativeService = representativeService;
         this.repository = repository;
-        this.bathService = bathService;
+        this.batchService = batchService;
     }
 
     @Override
@@ -39,13 +39,13 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
-        var bathStock = bathService.create(dto.getBatchStock(), sector);
-        List<BatchDTO> bathStockResponse = bathStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
+        var batchStock = batchService.create(dto.getBatchStock(), sector);
+        List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws
-        var order = new Order(dto.getOrderDate(), representative, bathStock);
+        var order = new Order(dto.getOrderDate(), representative, batchStock);
         repository.save(order);
-        return new InboundOrderResponseDTO(bathStockResponse);
+        return new InboundOrderResponseDTO(batchStockResponse);
     }
 
     @Override
