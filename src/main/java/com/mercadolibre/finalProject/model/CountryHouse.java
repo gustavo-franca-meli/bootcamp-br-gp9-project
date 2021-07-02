@@ -9,7 +9,6 @@ import org.checkerframework.common.aliasing.qual.Unique;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name="country_houses")

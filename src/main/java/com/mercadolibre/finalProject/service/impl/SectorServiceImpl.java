@@ -9,7 +9,7 @@ import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
 
 import java.util.Optional;
-import java.util.UUID;
+
 
 public class SectorServiceImpl implements ISectorService {
 
@@ -22,7 +22,7 @@ public class SectorServiceImpl implements ISectorService {
     public SectorDTO getById (Sector sector) { return new SectorDTO(sector); }
 
     @Override
-    public Sector findById (UUID sectorId) {
+    public Sector findById (Long sectorId) {
         Optional<Sector> sectorOpt = this.sectorRepository.findById(sectorId);
 
         if(sectorOpt.isEmpty()) { throw new SectorNotFound(); }
@@ -31,12 +31,12 @@ public class SectorServiceImpl implements ISectorService {
     }
 
     @Override
-    public Boolean exist(UUID sectorId) {
+    public Boolean exist(Long sectorId) {
         return sectorRepository.findById(sectorId).isPresent();
     }
 
     @Override
-    public Boolean isThereSpace(Batch batch, UUID sectorId) throws Exception{
+    public Boolean isThereSpace(Batch batch, Long sectorId) throws Exception{
         // checks whether there's enough space for batch in the sector
 
         Sector sector = findById(sectorId);
