@@ -10,11 +10,11 @@ import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.OrderRepository;
-import com.mercadolibre.finalProject.service.IBathService;
+import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IRepresentativeService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import com.mercadolibre.finalProject.service.IWarehouseService;
-import com.mercadolibre.finalProject.service.impl.InboundOrderService;
+import com.mercadolibre.finalProject.service.impl.InboundOrderServiceImpl;
 import com.mercadolibre.finalProject.util.faker.InboundOrderFaker;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,21 +28,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class InboundOrderServiceTest {
+public class InboundOrderServiceImplTest {
 
 
     private final IWarehouseService warehouseService = mock(IWarehouseService.class);
     private final ISectorService sectorService = mock(ISectorService.class);
     private final OrderRepository inboundOrderRepository = mock(OrderRepository.class);
     private final IRepresentativeService representativeService = mock(IRepresentativeService.class);
-    private final IBathService bathService = mock(IBathService.class);
+    private final IBatchService bathService = mock(IBatchService.class);
     private final String representativeId = UUID.randomUUID().toString();
-    private InboundOrderService service;
+    private InboundOrderServiceImpl service;
     private InboundOrderDTO validRequest;
 
     @BeforeEach
     public void setup() {
-        service = new InboundOrderService(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
+        service = new InboundOrderServiceImpl(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
         validRequest = InboundOrderFaker.getValidInboundOrderRequest();
     }
 

@@ -9,5 +9,5 @@ public interface IRepresentativeService {
 
     Representative findById(String representation);
 
-    Representative findByIdAndWarehouse(String representeId, Warehouse warehouse) throws RepresentativeNotFound;
+    Representative findByIdAndWarehouse(String representativeId, Warehouse warehouse) throws RepresentativeNotFound;
 }

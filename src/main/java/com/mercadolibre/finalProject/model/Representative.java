@@ -27,6 +27,10 @@ public class Representative {
         this.warehouse = warehouse;
     }
 
+    public Representative(String name) {
+        this.name = name;
+    }
+
     public Boolean worksIn(Long warehouseId) {
         return this.warehouse.getId().equals(warehouseId);
     }

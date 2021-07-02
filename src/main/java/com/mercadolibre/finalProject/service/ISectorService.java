@@ -7,5 +7,5 @@ import com.mercadolibre.finalProject.model.Sector;
 public interface ISectorService {
     Boolean isThereSpace (Batch batch, Long sectorId) throws Exception;
     Boolean exist(Long sectorId);
-    Sector findById(Long code) throws SectorNotFoundException;
+    Sector findById(Long sectorId) throws SectorNotFoundException;
 }

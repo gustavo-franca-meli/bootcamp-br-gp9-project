@@ -32,4 +32,9 @@ public class Warehouse {
         this.sectors = sectors;
         this.representative = representative;
     }
+
+    public Warehouse(String name, Representative representative) {
+        this.name = name;
+        this.representative = representative;
+    }
 }
