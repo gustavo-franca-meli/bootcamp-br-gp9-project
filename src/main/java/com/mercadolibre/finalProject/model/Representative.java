@@ -20,6 +20,11 @@ public class Representative {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
+    public Representative(UUID id, String name, Warehouse warehouse) {
+        this.id = id;
+        this.name = name;
+        this.warehouse = warehouse;
+    }
 
     public Boolean worksIn(String warehouseId) {
         return this.warehouse.getId().toString().equals(warehouseId);

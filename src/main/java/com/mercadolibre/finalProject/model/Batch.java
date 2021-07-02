@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 public class Batch {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -33,7 +32,7 @@ public class Batch {
     private LocalDateTime manufacturingTime;
     private LocalDate dueDate;
 
-    public Batch(Long id, Product product, Sector sector, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+    public Batch(String id, Product product, Sector sector, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
         this.id = id;
         this.product = product;
         this.sector = sector;
