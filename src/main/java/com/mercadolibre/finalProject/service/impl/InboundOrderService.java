@@ -18,6 +18,7 @@ public class InboundOrderService implements IInboundOrderService {
     private IRepresentativeService representativeService;
     private OrderRepository repository;
     private IBathService bathService;
+
     public InboundOrderService(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBathService bathService) {
         this.warehouseService = warehouseService;
         this.sectorService = sectorService;
@@ -32,15 +33,15 @@ public class InboundOrderService implements IInboundOrderService {
         var warehouse = warehouseService.findById(dto.getSection().getWarehouseCode());
 
         //representative works in warehouse if not throws?
-        var representative = representativeService.findByIdAndWarehouse(representation,warehouse);
+        var representative = representativeService.findByIdAndWarehouse(representation, warehouse);
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
-        var bathStock = bathService.create(dto.getBatchStock(),sector);
-        List<BatchDTO> bathStockResponse = bathStock.stream().map(BatchMapper::toDto).collect(Collectors.toList());
+        var bathStock = bathService.create(dto.getBatchStock(), sector);
+        List<BatchDTO> bathStockResponse = bathStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws
-        var order = new Order(dto.getOrderDate(),representative,bathStock);
+        var order = new Order(dto.getOrderDate(), representative, bathStock);
         repository.save(order);
         return new InboundOrderResponseDTO(bathStockResponse);
     }
