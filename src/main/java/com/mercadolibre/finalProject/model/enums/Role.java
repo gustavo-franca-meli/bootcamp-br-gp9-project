@@ -3,7 +3,8 @@ package com.mercadolibre.finalProject.model.enums;
 public enum Role {
 
     REPRESENTATIVE(1, "ROLE_REPRESENTATIVE"),
-    BUYER(2, "ROLE_BUYER");
+    BUYER(2, "ROLE_BUYER"),
+    SELLER(3, "ROLE_SELLER");
 
     private int code;
     private String description;
