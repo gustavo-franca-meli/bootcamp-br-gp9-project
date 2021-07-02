@@ -8,18 +8,20 @@ import com.mercadolibre.finalProject.model.Order;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.OrderRepository;
 import com.mercadolibre.finalProject.service.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class InboundOrderService implements IInboundOrderService {
     private IWarehouseService warehouseService;
     private ISectorService sectorService;
     private IRepresentativeService representativeService;
     private OrderRepository repository;
-    private IBathService bathService;
+    private IBatchService bathService;
 
-    public InboundOrderService(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBathService bathService) {
+    public InboundOrderService(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService bathService) {
         this.warehouseService = warehouseService;
         this.sectorService = sectorService;
         this.representativeService = representativeService;
@@ -37,7 +39,7 @@ public class InboundOrderService implements IInboundOrderService {
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
-        var bathStock = bathService.create(dto.getBatchStock(), sector);
+        var bathStock = bathService.create(dto.getBatchStock(), sector.getId());
         List<BatchDTO> bathStockResponse = bathStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws

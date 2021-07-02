@@ -10,5 +10,5 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface IBathService {
-    List<Batch> create(@NotNull  List<BatchDTO> batchStock, Sector sector) throws CreateBathStockException;
+    List<Batch> create(@NotNull List<BatchDTO> batchStock, Long sectorID) throws CreateBathStockException;
 }

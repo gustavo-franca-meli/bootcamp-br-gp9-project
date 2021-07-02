@@ -4,6 +4,7 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 public class BathRequestFaker  {
@@ -11,8 +12,8 @@ public class BathRequestFaker  {
 
     static  public BatchDTO validRequest(){
         var bath = new BatchDTO();
-        bath.setId(UUID.randomUUID().toString());
-        bath.setProductId(UUID.randomUUID().toString());
+        bath.setId(random());
+        bath.setProductId(random());
         bath.setInitialQuantity(10);
         bath.setCurrentQuantity(10);
         bath.setCurrentTemperature(25.5f);
@@ -21,6 +22,14 @@ public class BathRequestFaker  {
         bath.setManufacturingTime(LocalDateTime.now());
         bath.setDueDate(LocalDate.now());
         return bath;
+    }
+
+    static public Long random(){
+        Random rand = new Random(); //instance of random class
+        int upperbound = 1000;
+        //generate random values from 0-24
+        return Integer.valueOf(rand.nextInt(upperbound)).longValue();
+
     }
 
 
