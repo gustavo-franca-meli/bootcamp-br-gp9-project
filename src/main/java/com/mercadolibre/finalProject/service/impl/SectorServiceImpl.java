@@ -2,7 +2,7 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
-import com.mercadolibre.finalProject.exceptions.SectorNotFound;
+import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.repository.SectorRepository;
@@ -23,10 +23,10 @@ public class SectorServiceImpl implements ISectorService {
     public SectorDTO getById (Sector sector) { return new SectorDTO(sector); }
 
     @Override
-    public Sector findById (Long sectorId) {
+    public Sector findById (Long sectorId) throws SectorNotFoundException {
         Optional<Sector> sectorOpt = this.sectorRepository.findById(sectorId);
 
-        if(sectorOpt.isEmpty()) { throw new SectorNotFound(); }
+        if(sectorOpt.isEmpty()) { throw new SectorNotFoundException(); }
 
         return sectorOpt.get();
     }
