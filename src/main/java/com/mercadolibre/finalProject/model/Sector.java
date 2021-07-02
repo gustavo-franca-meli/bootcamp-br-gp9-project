@@ -31,12 +31,4 @@ public class Sector {
         this.id = id;
     }
 
-    public Sector(Long id, Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
-        this.id = id;
-        this.types = types;
-        this.warehouse = warehouse;
-        this.currentQuantityBatches = currentQuantityBatches;
-        this.maxQuantityBatches = maxQuantityBatches;
-    }
-
 }

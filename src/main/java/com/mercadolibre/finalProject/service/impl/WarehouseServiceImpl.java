@@ -1,7 +1,6 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
-import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
@@ -19,12 +18,13 @@ public class WarehouseServiceImpl implements IWarehouseService {
     }
 
     @Override
-    public WarehouseResponseDTO findById(String warehouseCode) throws WarehouseNotFoundException {
-        var warehouse = this.findWarehouseBy(Long.valueOf(warehouseCode));
+    public WarehouseResponseDTO findById(Long warehouseCode) throws WarehouseNotFoundException {
+        var warehouse = this.findWarehouseBy(warehouseCode);
         return WarehouseMapper.toResponseDTO(warehouse);
     }
 
     private Warehouse findWarehouseBy(Long id) {
-        return warehouseRepository.findById(id).orElseThrow(() -> new NotFoundException("This warehouse was not found. Id: " + id));
+        var data = warehouseRepository.findById(id);
+        return data.orElseThrow(() -> new WarehouseNotFoundException());
     }
 }

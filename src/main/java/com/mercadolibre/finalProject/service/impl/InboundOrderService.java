@@ -29,7 +29,7 @@ public class InboundOrderService implements IInboundOrderService {
     @Override
     public InboundOrderResponseDTO create(InboundOrderDTO dto, String representation) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentiveNotFound, SectorNotFound, InternalServerErrorException {
         //warehouse exist if not throws
-        var warehouse = warehouseService.findById(dto.getSection().getWarehouseCode());
+        //var warehouse = warehouseService.findById(dto.getSection().getWarehouseCode());
 
         //representative works in warehouse if not throws?
         var representative = representativeService.findById(representation);
