@@ -11,8 +11,8 @@ public class BathRequestFaker  {
 
     static  public BatchDTO validRequest(){
         var bath = new BatchDTO();
-        bath.setId(UUID.randomUUID().toString());
-        bath.setProductId(UUID.randomUUID().toString());
+        bath.setId(1L);
+        bath.setProductId(1L);
         bath.setInitialQuantity(10);
         bath.setCurrentQuantity(10);
         bath.setCurrentTemperature(25.5f);

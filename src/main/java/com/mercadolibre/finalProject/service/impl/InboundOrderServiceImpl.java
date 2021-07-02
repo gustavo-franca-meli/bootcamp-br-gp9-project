@@ -8,19 +8,20 @@ import com.mercadolibre.finalProject.model.Order;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.OrderRepository;
 import com.mercadolibre.finalProject.service.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class InboundOrderService implements IInboundOrderService {
+@Service
+public class InboundOrderServiceImpl implements IInboundOrderService {
     private IWarehouseService warehouseService;
     private ISectorService sectorService;
     private IRepresentativeService representativeService;
     private OrderRepository repository;
-    private IBathService bathService;
+    private IBatchService bathService;
 
-    public InboundOrderService(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBathService bathService) {
+    public InboundOrderServiceImpl(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService bathService) {
         this.warehouseService = warehouseService;
         this.sectorService = sectorService;
         this.representativeService = representativeService;

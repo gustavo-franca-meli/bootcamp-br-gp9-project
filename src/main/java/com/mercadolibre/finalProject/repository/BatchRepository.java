@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BathRepository extends JpaRepository<Batch, Long> {
+public interface BatchRepository extends JpaRepository<Batch, Long> {
 }
