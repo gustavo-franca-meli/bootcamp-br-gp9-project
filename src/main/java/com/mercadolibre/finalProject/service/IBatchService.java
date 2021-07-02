@@ -9,6 +9,6 @@ import com.mercadolibre.finalProject.model.Sector;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public interface IBathService {
+public interface IBatchService {
     List<Batch> create(@NotNull List<BatchDTO> batchStock, Long sectorID) throws CreateBathStockException;
 }

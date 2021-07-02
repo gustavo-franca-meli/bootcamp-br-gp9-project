@@ -7,7 +7,7 @@ import com.mercadolibre.finalProject.exceptions.ProductTypeNotSuportedInSectorEx
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
-import com.mercadolibre.finalProject.service.IBathService;
+import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class BathService implements IBathService {
+public class BatchServiceImpl implements IBatchService {
     private ISectorService sectorService;
     private BatchRepository repository;
     private IProductService productService;
 
-    public BathService(ISectorService sectorService, BatchRepository repository, IProductService productService) {
+    public BatchServiceImpl(ISectorService sectorService, BatchRepository repository, IProductService productService) {
         this.sectorService = sectorService;
         this.repository = repository;
         this.productService = productService;
@@ -47,8 +47,9 @@ public class BathService implements IBathService {
                     sectorService.isThereSpace(batchModel);
                     var bathResponse = repository.save(batchModel);
                     responseBathList.add(bathResponse);
+                }else{
+                    throw new ProductTypeNotSuportedInSectorException(product.getId().toString(),product.getType().toString(),sectorID.toString());
                 };
-                throw new ProductTypeNotSuportedInSectorException(product.getId().toString(),product.getType().toString(),sectorID.toString());
 
 
             }catch (Exception e){
@@ -63,7 +64,7 @@ public class BathService implements IBathService {
             responseBathList.forEach((batch -> {
                 repository.deleteById(batch.getId());
             }));
-            throw new CreateBathStockException("Error in save" + errorList.size() + "bath in sector",errorList);
+            throw new CreateBathStockException("Error in save " + errorList.size() + " bath in sector ",errorList);
         }
         //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }

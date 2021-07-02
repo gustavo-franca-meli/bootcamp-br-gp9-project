@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class InboundOrderService implements IInboundOrderService {
+public class InboundOrderServiceImpl implements IInboundOrderService {
     private IWarehouseService warehouseService;
     private ISectorService sectorService;
     private IRepresentativeService representativeService;
     private OrderRepository repository;
     private IBatchService bathService;
 
-    public InboundOrderService(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService bathService) {
+    public InboundOrderServiceImpl(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService bathService) {
         this.warehouseService = warehouseService;
         this.sectorService = sectorService;
         this.representativeService = representativeService;
