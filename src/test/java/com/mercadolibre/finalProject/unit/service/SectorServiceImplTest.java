@@ -1,7 +1,7 @@
 package com.mercadolibre.finalProject.unit.service;
 
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
-import com.mercadolibre.finalProject.exceptions.SectorNotFound;
+import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.repository.SectorRepository;
@@ -26,7 +26,7 @@ public class SectorServiceImplTest {
     }
 
     @Test
-    void shouldFindSectorById () {
+    void shouldFindSectorById () throws SectorNotFoundException {
         Sector sector = new Sector(1L);
         
         when(this.repository.findById(1L)).thenReturn(Optional.of(sector));
@@ -38,7 +38,7 @@ public class SectorServiceImplTest {
     void shouldNotFindSectorById () {
         when(this.repository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(SectorNotFound.class, () -> this.service.findById(2L));
+        assertThrows(SectorNotFoundException.class, () -> this.service.findById(2L));
     }
 
     @Test

@@ -14,11 +14,11 @@ public class InboundOrderFaker {
     public static InboundOrderDTO getValidInboundOrderRequest() {
 
         var bathList = new ArrayList<BatchDTO>();
-        bathList.add(BathRequestFaker.validRequest());
-        bathList.add(BathRequestFaker.validRequest());
-        bathList.add(BathRequestFaker.validRequest());
-        bathList.add(BathRequestFaker.validRequest());
-        bathList.add(BathRequestFaker.validRequest());
+        bathList.add(BatchRequestFaker.validRequest());
+        bathList.add(BatchRequestFaker.validRequest());
+        bathList.add(BatchRequestFaker.validRequest());
+        bathList.add(BatchRequestFaker.validRequest());
+        bathList.add(BatchRequestFaker.validRequest());
         return new InboundOrderDTO(10, LocalDate.now(),validSector,bathList);
     }
 
