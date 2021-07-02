@@ -11,11 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-<<<<<<< HEAD:src/main/java/com/mercadolibre/finalProject/service/impl/BathServiceImpl.java
-public class BathServiceImpl implements IBatchService {
-=======
 public class BatchServiceImpl implements IBatchService {
->>>>>>> feature/US001:src/main/java/com/mercadolibre/finalProject/service/impl/BatchServiceImpl.java
     @Override
     public List<Batch> create(@NotNull List<BatchDTO> batchStock, Sector sector) {
 
