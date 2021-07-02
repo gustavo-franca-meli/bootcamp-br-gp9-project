@@ -26,7 +26,6 @@ public class Order {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Representative representative;
-
     public Order(LocalDate orderDate, Representative representative, List<Batch> bathStock) {
         this.orderDate = orderDate;
         this.batches = bathStock;

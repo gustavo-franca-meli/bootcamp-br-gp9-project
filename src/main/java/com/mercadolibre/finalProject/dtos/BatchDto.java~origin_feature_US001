@@ -7,10 +7,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-public class BatchDTO {
+public class BatchDto {
     @JsonProperty("batchNumber")
     private Long id;
-    private Long productId;
+    private String productId;
     private Float currentTemperature;
     private Float minimumTemperature;
     private Integer initialQuantity;
@@ -19,10 +19,10 @@ public class BatchDTO {
     private LocalDateTime manufacturingTime;
     private LocalDate dueDate;
 
-    public BatchDTO() {
+    public BatchDto() {
     }
 
-    public BatchDTO(Long id, Long productId, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+    public BatchDto(Long id, String productId, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
         this.id = id;
         this.productId = productId;
         this.currentTemperature = currentTemperature;

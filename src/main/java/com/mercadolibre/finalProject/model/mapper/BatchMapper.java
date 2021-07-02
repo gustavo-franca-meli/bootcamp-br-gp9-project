@@ -25,7 +25,7 @@ public class BatchMapper {
 
     }
 
-    public static BatchDTO toDto(Batch bath) {
+    public static BatchDTO toDTO(Batch bath) {
         return new BatchDTO(
                 bath.getId(),
                 bath.getProduct().getId(),
