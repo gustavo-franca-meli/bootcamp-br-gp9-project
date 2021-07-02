@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class Sector {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -30,8 +29,11 @@ public class Sector {
     private Double currentQuantityBatches;
     private Double maxQuantityBatches;
 
-    public Sector(Long id, Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
+    public Sector(Long id) {
         this.id = id;
+    }
+
+    public Sector(Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
         this.types = types;
         this.warehouse = warehouse;
         this.currentQuantityBatches = currentQuantityBatches;
@@ -40,45 +42,5 @@ public class Sector {
 
     private void getTypes(Set<SectorType> types) {
         this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Set<Integer> getTypes() {
-        return types;
-    }
-
-    public void setTypes(Set<Integer> types) {
-        this.types = types;
-    }
-
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
-
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
-
-    public Double getCurrentQuantityBatches() {
-        return currentQuantityBatches;
-    }
-
-    public void setCurrentQuantityBatches(Double currentQuantityBatches) {
-        this.currentQuantityBatches = currentQuantityBatches;
-    }
-
-    public Double getMaxQuantityBatches() {
-        return maxQuantityBatches;
-    }
-
-    public void setMaxQuantityBatches(Double maxQuantityBatches) {
-        this.maxQuantityBatches = maxQuantityBatches;
     }
 }

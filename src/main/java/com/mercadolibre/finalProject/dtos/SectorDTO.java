@@ -12,7 +12,7 @@ public class SectorDTO {
     @JsonProperty("sectionCode")
     @NotNull
     @NotEmpty
-    private String code;
+    private Long code;
 
     @NotNull
     @NotEmpty
@@ -26,7 +26,7 @@ public class SectorDTO {
     @NotEmpty
     private Double maxQuantityBatches;
 
-    public SectorDTO(String code, String warehouseCode, Double currentQuantityBatches, Double maxQuantityBatches) {
+    public SectorDTO(Long code, String warehouseCode, Double currentQuantityBatches, Double maxQuantityBatches) {
         this.code = code;
         this.warehouseCode = warehouseCode;
         this.currentQuantityBatches = currentQuantityBatches;
@@ -34,7 +34,7 @@ public class SectorDTO {
     }
 
     public SectorDTO(Sector sector) {
-        this.code = sector.getId().toString();
+        this.code = sector.getId();
         this.warehouseCode = sector.getWarehouse().getId().toString();
         this.currentQuantityBatches = sector.getCurrentQuantityBatches();
         this.maxQuantityBatches = sector.getMaxQuantityBatches();
