@@ -1,8 +1,10 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.response.PurchaseOrderBatchResponseDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
+import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.service.IBatchService;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,13 @@ import java.util.List;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
+
+    private BatchRepository batchRepository;
+
+    public BatchServiceImpl(BatchRepository batchRepository) {
+        this.batchRepository = batchRepository;
+    }
+
     @Override
     public List<Batch> create(@NotNull List<BatchDTO> batchStock, Sector sector) {
 
@@ -29,5 +38,29 @@ public class BatchServiceImpl implements IBatchService {
         return new ArrayList<>();
 
 
+    }
+
+    @Override
+    public PurchaseOrderBatchResponseDTO withdrawStockFromBatch(Batch batch, Integer withdrawnQuantity, Integer orderQuantity) {
+        Integer quantityTakenFromBatch;
+        if(batch.getCurrentQuantity() > (orderQuantity - withdrawnQuantity)) {
+            quantityTakenFromBatch = orderQuantity - withdrawnQuantity;
+        }
+        else {
+            quantityTakenFromBatch = batch.getCurrentQuantity();
+        }
+
+        this.withdrawQuantity(batch, quantityTakenFromBatch);
+        return new PurchaseOrderBatchResponseDTO(
+                batch.getId(),
+                quantityTakenFromBatch,
+                batch.getManufacturingDate(),
+                batch.getManufacturingTime(),
+                batch.getDueDate());
+    }
+
+    public void withdrawQuantity (Batch batch, Integer quantityTakenFromBatch) {
+        batch.withdrawQuantity(quantityTakenFromBatch);
+        this.batchRepository.save(batch);
     }
 }

@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,17 @@ public class Sector {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SECTOR_TYPES")
     private Set<Integer> types = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "PRODUCT_SECTOR",
+            joinColumns = @JoinColumn(name = "sector_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    List<Product> products = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Batch> batches = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
@@ -42,5 +55,13 @@ public class Sector {
 
     private void getTypes(Set<SectorType> types) {
         this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
+    }
+
+    private void addBatch (Batch batch) {
+        this.getBatches().add(batch);
+    }
+
+    private void addBatches (List<Batch> batches) {
+        this.getBatches().addAll(batches);
     }
 }

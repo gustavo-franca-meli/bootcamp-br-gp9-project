@@ -48,4 +48,9 @@ public class Batch {
     public Batch (Long id) {
         this.id = id;
     }
+
+    public void withdrawQuantity(Integer quantityTakenFromBatch) {
+        Integer newQuantity = this.getCurrentQuantity() - quantityTakenFromBatch;
+        this.setCurrentQuantity(newQuantity);
+    }
 }
