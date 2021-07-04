@@ -34,7 +34,6 @@ public class InboundOrderServiceImplTest {
         service = new InboundOrderServiceImpl(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
     }
 
-
     @SneakyThrows
     @Test
     public void shouldReturnBatchStockSizeCorrectly() {
