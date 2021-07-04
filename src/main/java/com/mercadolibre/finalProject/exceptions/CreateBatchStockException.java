@@ -2,9 +2,9 @@ package com.mercadolibre.finalProject.exceptions;
 
 import java.util.List;
 
-public class CreateBathStockException extends Exception {
+public class CreateBatchStockException extends Exception {
     private List<BathException> bathExceptions;
-    public CreateBathStockException(String message, List<BathException> bathExceptions) {
+    public CreateBatchStockException(String message, List<BathException> bathExceptions) {
         super(message);
         this.bathExceptions = bathExceptions;
     }
