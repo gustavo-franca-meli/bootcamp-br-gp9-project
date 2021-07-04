@@ -30,7 +30,7 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
     }
 
     @Override
-    public InboundOrderResponseDTO create(InboundOrderDTO dto, String representation) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBathStockException {
+    public InboundOrderResponseDTO create(InboundOrderDTO dto, String representation) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
         //warehouse exist if not throws
         var warehouse = warehouseService.findById(dto.getSection().getWarehouseCode());
 

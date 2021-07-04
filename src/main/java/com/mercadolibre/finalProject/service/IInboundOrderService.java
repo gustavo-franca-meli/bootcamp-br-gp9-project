@@ -6,7 +6,7 @@ import com.mercadolibre.finalProject.exceptions.*;
 
 public interface IInboundOrderService {
 
-    InboundOrderResponseDTO create(InboundOrderDTO dto, String representativeId) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBathStockException;
+    InboundOrderResponseDTO create(InboundOrderDTO dto, String representativeId) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException;
 
     InboundOrderResponseDTO save(InboundOrderDTO dto, String representative) throws InboundOrderNotFoundException, InternalServerErrorException;
 }

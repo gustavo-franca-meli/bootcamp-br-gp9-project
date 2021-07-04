@@ -1,7 +1,13 @@
 package com.mercadolibre.finalProject.util;
 
+import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
+import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.SectorType;
+import com.mercadolibre.finalProject.model.mapper.BatchMapper;
+import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,6 +68,7 @@ public interface TestUtils {
         seller.setId(1L);
         return seller;
     }
+
     static Product getProductValid() {
         return new Product("Pizza", null);
     }
@@ -76,6 +83,33 @@ public interface TestUtils {
         var representative = getRepresentativeValid();
         var batchs = Arrays.asList(getBatchValid());
         return new Order(LocalDate.now(), representative, batchs);
+    }
+
+    static SectorDTO getSectorDTOValid() {
+        return new SectorDTO(1L, 1L, 10.0, 100.0);
+    }
+
+    static InboundOrderDTO getInboundOrderDTOValid() {
+        var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
+        var sector = getSectorDTOValid();
+        return new InboundOrderDTO(10, LocalDate.now(), sector, batchList);
+    }
+
+    static BatchDTO getBatchDTOValid() {
+        return new BatchDTO(1L, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+    }
+
+    static WarehouseResponseDTO getWarehouseResponseDTOValid() {
+        var sectors = getListSectorsValid();
+        var representative = getRepresentativeValid();
+        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
+        warehouse.setId(1L);
+        return WarehouseMapper.toResponseDTO(warehouse);
+    }
+
+    static List<Batch> getBatchListValid() {
+        var batchsDTO = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
+        return batchsDTO.stream().map(b -> BatchMapper.toModel(b, 1L)).collect(Collectors.toList());
     }
 
 }
