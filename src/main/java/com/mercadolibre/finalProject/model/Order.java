@@ -31,4 +31,9 @@ public class Order {
         this.batches = bathStock;
         this.representative = representative;
     }
+    public Order(LocalDate orderDate, Long representativeId, List<Batch> bathStock) {
+        this.orderDate = orderDate;
+        this.batches = bathStock;
+        this.representative = new Representative(representativeId);
+    }
 }

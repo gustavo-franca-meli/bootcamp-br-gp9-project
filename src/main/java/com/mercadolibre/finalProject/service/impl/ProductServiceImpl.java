@@ -2,13 +2,16 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.service.IProductService;
 import javassist.NotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProductServiceImpl implements IProductService {
 
     ProductRepository productRepository;
@@ -47,8 +50,11 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Product findById(Long id) {
-        return productRepository.findById(id).get();
+    public Product findById(Long id) throws ProductNotFoundException {
+
+        var product =  productRepository.findById(id);
+        if(product.isPresent())return product.get();
+        throw new ProductNotFoundException();
     }
 
     @Override

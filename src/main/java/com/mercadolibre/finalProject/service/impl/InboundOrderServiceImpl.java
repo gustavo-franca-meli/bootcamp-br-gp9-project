@@ -30,28 +30,26 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
     }
 
     @Override
-    public InboundOrderResponseDTO create(InboundOrderDTO dto, String representation) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
+    public InboundOrderResponseDTO create(InboundOrderDTO dto, Long representativeId) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
         //warehouse exist if not throws
         var warehouse = warehouseService.findById(dto.getSection().getWarehouseCode());
-
-        // TODO: retrieve the id of the representative, probably via the token sent by the header, a mocked id was placed (1L) so as not to give an error
         //representative works in warehouse if not throws?
-        var representative = representativeService.findByIdAndWarehouseId(1L, warehouse.getId());
+        var representative = representativeService.findByIdAndWarehouseId(representativeId, warehouse.getId());
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
-        var batchStock = batchService.create(dto.getBatchStock(), sector);
+        var batchStock = batchService.create(dto.getBatchStock(), sector.getId());
         List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws
-        var order = new Order(dto.getOrderDate(), null, batchStock);
+        var order = new Order(dto.getOrderDate(), representative.getId(), batchStock);
         repository.save(order);
 
         return new InboundOrderResponseDTO(batchStockResponse);
     }
 
     @Override
-    public InboundOrderResponseDTO save(InboundOrderDTO dto, String representative) {
+    public InboundOrderResponseDTO update(InboundOrderDTO dto, Long representative) {
         return null;
     }
 }
