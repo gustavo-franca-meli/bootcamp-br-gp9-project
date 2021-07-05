@@ -12,9 +12,5 @@ import com.mercadolibre.finalProject.model.Warehouse;
 import java.util.List;
 
 public interface IWarehouseService {
-    WarehouseResponseDTO findById(Long warehouseCode) throws WarehouseNotFoundException;
-    Warehouse findByRepresentative (String representation) throws WarehouseNotFoundException;
-    List<ProductStockForOrderDTO> getProductsStockForOrder (Long id, PurchaseOrderDTO purchaseOrder) throws ProductNotFoundException;
-    Boolean isThereStockForOrder (List<ProductStockForOrderDTO> productsStocks);
-    PurchaseOrderResponseDTO withDrawStockForOrder(List<ProductStockForOrderDTO> productsStocks) throws ProductNotFoundException;
+    WarehouseResponseDTO findById(Long warehouseId) throws WarehouseNotFoundException;
 }

@@ -19,11 +19,10 @@ public class SectorServiceImplTest {
 
     SectorRepository repository = Mockito.mock(SectorRepository.class);
     SectorServiceImpl service;
-    BatchServiceImpl batchService;
 
     @BeforeEach
-    void setUp(){
-        this.service = new SectorServiceImpl(repository,batchService);
+    void setUp() {
+        this.service = new SectorServiceImpl(repository);
     }
 
     @Test

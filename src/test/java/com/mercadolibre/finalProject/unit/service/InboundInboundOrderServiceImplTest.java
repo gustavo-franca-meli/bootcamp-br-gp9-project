@@ -34,29 +34,28 @@ public class InboundInboundOrderServiceImplTest {
         service = new InboundOrderServiceImpl(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
 
 
-
     }
 
     @SneakyThrows
     @Test
     public void shouldReturnBatchStockSizeCorrectly() {
-//        var dto = TestUtils.getInboundOrderDTOValid();
-//
-//        var warehouseResponseDto = TestUtils.getWarehouseResponseDTOValid();
-//        when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
-//
-//        var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-//        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
-//
-//        var sector = TestUtils.getSectorValid();
-//        when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
-//
-//        var batchList = TestUtils.getBatchListValid();
-//        when(bathService.create(dto.getBatchStock(), sector.getId())).thenReturn(batchList);
-//
-//        var expected = dto.getBatchStock().size();
-//        var got = service.create(dto, Mockito.anyLong());
-//        assertEquals(expected, got.getBatchStock().size());
+        var dto = TestUtils.getInboundOrderDTOValid();
+
+        var warehouseResponseDto = TestUtils.getWarehouseResponseDTOValid();
+        when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
+
+        var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
+        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+
+        var sector = TestUtils.getSectorValid();
+        when(sectorService.findById(dto.getSection().getCode())).thenReturn(null);
+
+        var batchList = TestUtils.getBatchListValid();
+        when(bathService.create(dto.getBatchStock(), sector.getId())).thenReturn(batchList);
+
+        var expected = dto.getBatchStock().size();
+        var got = service.create(dto, Mockito.anyLong());
+        assertEquals(expected, got.getBatchStock().size());
     }
 
     @SneakyThrows
@@ -69,7 +68,7 @@ public class InboundInboundOrderServiceImplTest {
         when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorValid();
-        when(sectorService.findById(anyLong())).thenReturn(sector);
+        when(sectorService.findById(anyLong())).thenReturn(null);
 
         var order = TestUtils.getOrderValid();
         when(inboundOrderRepository.save(order)).thenReturn(order);
@@ -116,7 +115,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
 
         var sector = TestUtils.getSectorValid();
-        when(sectorService.findById(Mockito.anyLong())).thenReturn(sector);
+        when(sectorService.findById(Mockito.anyLong())).thenReturn(null);
         when(bathService.create(Mockito.any(), Mockito.any())).thenThrow(CreateBatchStockException.class);
 
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();

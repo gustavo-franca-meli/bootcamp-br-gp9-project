@@ -35,17 +35,8 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
-//    public Set<ProductType> getTypesInProductType () {
-//        return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
-//    }
-//
-//    public void setTypes (Set<ProductType> types) {
-//        this.types = types.stream().map(ProductType::getCod).collect(Collectors.toSet());
-//    }
-
-
-    public Set<Integer> getTypes() {
-        return types;
+    public Set<ProductType> getProductTypes () {
+        return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
     }
 
     public void setTypes(Set<Integer> types) {
@@ -70,4 +61,5 @@ public class Product {
         this.types = types;
         this.seller = seller;
     }
+
 }

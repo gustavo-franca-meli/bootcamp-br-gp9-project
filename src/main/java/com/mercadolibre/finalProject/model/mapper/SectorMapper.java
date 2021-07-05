@@ -12,15 +12,14 @@ import java.util.stream.Collectors;
 public interface SectorMapper {
 
     static List<SectorResponseDTO> toListResponseDTO(List<Sector> sectors) {
-        if(sectors.isEmpty())
+        if (sectors.isEmpty())
             return new ArrayList<>();
         return sectors.stream().map(SectorMapper::toResponseDTO).collect(Collectors.toList());
     }
 
     static SectorResponseDTO toResponseDTO(Sector sector) {
-//        var sectorTypesDescriptions = getTypesSectorDescriptions(sector.getTypes());
-//        return new SectorResponseDTO(sector.getId(), sectorTypesDescriptions, sector.getCurrentQuantityBatches(), sector.getMaxQuantityBatches());
-        return null;
+        var sectorTypesDescriptions = getTypesSectorDescriptions(sector.getTypes());
+        return new SectorResponseDTO(sector.getId(), sectorTypesDescriptions, sector.getBatches().size(), sector.getMaxQuantityBatches());
     }
 
     static Set<String> getTypesSectorDescriptions(Set<Integer> types) {

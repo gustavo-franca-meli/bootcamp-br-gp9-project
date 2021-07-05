@@ -38,7 +38,7 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
-        var batchStock = batchService.create(dto.getBatchStock(), sector);
+        var batchStock = batchService.create(dto.getBatchStock(), null);
         List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws
