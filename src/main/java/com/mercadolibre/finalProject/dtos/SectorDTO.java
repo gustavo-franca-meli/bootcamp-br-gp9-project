@@ -30,11 +30,4 @@ public class SectorDTO {
         this.currentQuantityBatches = currentQuantityBatches;
         this.maxQuantityBatches = maxQuantityBatches;
     }
-
-    public SectorDTO(@NotNull Sector sector) {
-        this.code = sector.getId();
-        this.warehouseCode = sector.getWarehouse().getId();
-        this.currentQuantityBatches = sector.getCurrentQuantityBatches();
-        this.maxQuantityBatches = sector.getMaxQuantityBatches();
-    }
 }

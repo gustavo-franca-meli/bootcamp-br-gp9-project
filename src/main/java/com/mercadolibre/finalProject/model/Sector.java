@@ -1,6 +1,6 @@
 package com.mercadolibre.finalProject.model;
 
-import com.mercadolibre.finalProject.model.enums.SectorType;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,25 +12,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "sectors")
+@Table(name = "sector")
 @Data
 @NoArgsConstructor
 public class Sector {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SECTOR_TYPES")
     private Set<Integer> types = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "PRODUCT_SECTOR",
-            joinColumns = @JoinColumn(name = "sector_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    List<Product> products = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Batch> batches = new ArrayList<>();
@@ -39,29 +32,23 @@ public class Sector {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    private Double currentQuantityBatches;
-    private Double maxQuantityBatches;
+    private Integer maxQuantityBatches;
 
     public Sector(Long id) {
         this.id = id;
     }
 
-    public Sector(Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
+    public Sector(Set<Integer> types, Warehouse warehouse, Integer maxQuantityBatches) {
         this.types = types;
         this.warehouse = warehouse;
-        this.currentQuantityBatches = currentQuantityBatches;
         this.maxQuantityBatches = maxQuantityBatches;
     }
 
-    private void getTypes(Set<SectorType> types) {
-        this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
+    private void setTypes (Set<ProductType> types) {
+        this.types = types.stream().map(ProductType::getCod).collect(Collectors.toSet());
     }
 
-    private void addBatch (Batch batch) {
-        this.getBatches().add(batch);
-    }
-
-    private void addBatches (List<Batch> batches) {
-        this.getBatches().addAll(batches);
+    public Set<ProductType> getTypesInProductType () {
+        return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
     }
 }

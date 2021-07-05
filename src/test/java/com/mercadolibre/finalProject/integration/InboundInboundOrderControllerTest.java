@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-public class InboundOrderControllerTest extends ControllerTest{
+public class InboundInboundOrderControllerTest extends ControllerTest{
     private static final String PATH = "/api/v1/fresh-products/inboundorder/";
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 

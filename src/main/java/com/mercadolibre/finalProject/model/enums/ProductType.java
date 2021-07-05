@@ -1,6 +1,6 @@
 package com.mercadolibre.finalProject.model.enums;
 
-public enum SectorType {
+public enum ProductType {
 
     PERISHABLE(1, "Perishable"),
     NOT_PERISHABLE(2, "Not Perishable"),
@@ -9,7 +9,7 @@ public enum SectorType {
     private int cod;
     private String description;
 
-    SectorType(int cod, String description) {
+    ProductType(int cod, String description) {
         this.cod = cod;
         this.description = description;
     }
@@ -22,11 +22,11 @@ public enum SectorType {
         return description;
     }
 
-    public static SectorType toEnum(Integer cod) {
+    public static ProductType toEnum(Integer cod) {
         if(cod == null)
             return null;
 
-        for(SectorType x : SectorType.values()) {
+        for(ProductType x : ProductType.values()) {
             if(cod.equals(x.getCod()))
                 return x;
         }
@@ -34,11 +34,11 @@ public enum SectorType {
         throw new RuntimeException("Invalid sector type code: "+ cod);
     }
 
-    public static SectorType toCod (String description) {
+    public static ProductType toCod (String description) {
         if(description == null)
             return null;
 
-        for(SectorType x : SectorType.values()) {
+        for(ProductType x : ProductType.values()) {
             if(description.equals(x.getDescription()))
                 return x;
         }

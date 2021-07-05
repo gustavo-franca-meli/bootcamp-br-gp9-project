@@ -6,7 +6,7 @@ import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.model.*;
-import com.mercadolibre.finalProject.model.enums.SectorType;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
 import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
@@ -31,11 +31,12 @@ public interface TestUtils {
     }
 
     static Warehouse getWarehouseValid() {
-        var sectors = getListSectorsValid();
-        var representative = getRepresentativeValid();
-        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
-        warehouse.setId(1L);
-        return warehouse;
+//        var sectors = getListSectorsValid();
+//        var representative = getRepresentativeValid();
+//        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
+//        warehouse.setId(1L);
+//        return warehouse;
+        return null;
     }
 
     static List<Sector> getListSectorsValid() {
@@ -43,25 +44,27 @@ public interface TestUtils {
     }
 
     static Sector getSectorValid() {
-        var types = convertSectorsToSetInteger();
-        var sector = new Sector();
-        sector.setId(1l);
-        sector.setTypes(types);
-        sector.setWarehouse(null);
-        sector.setCurrentQuantityBatches(1.0);
-        sector.setMaxQuantityBatches(10.0);
-
-        return sector;
+//        var types = convertSectorsToSetInteger();
+//        var sector = new Sector();
+//        sector.setId(1l);
+//        sector.setTypes(types);
+//        sector.setWarehouse(null);
+//        sector.setCurrentQuantityBatches(1.0);
+//        sector.setMaxQuantityBatches(10.0);
+//
+//        return sector;
+        return null;
     }
 
     static Set<Integer> convertSectorsToSetInteger() {
-        return Arrays.stream(SectorType.values()).map(SectorType::getCod).collect(Collectors.toSet());
+        return Arrays.stream(ProductType.values()).map(ProductType::getCod).collect(Collectors.toSet());
     }
 
     static Representative getRepresentativeValid() {
-        var representative = new Representative("Leonardo", null);
-        representative.setId(1l);
-        return representative;
+//        var representative = new Representative("Leonardo", null);
+//        representative.setId(1l);
+//        return representative;
+        return null;
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
@@ -86,10 +89,10 @@ public interface TestUtils {
         return new Batch(1L, product, sector, 0.0f, 0.0f, 10, 5, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
 
-    static Order getOrderValid() {
+    static InboundOrder getOrderValid() {
         var representative = getRepresentativeValid();
         var batchs = Arrays.asList(getBatchValid());
-        return new Order(LocalDate.now(), representative, batchs);
+        return new InboundOrder(LocalDate.now(), representative, batchs);
     }
 
     static SectorDTO getSectorDTOValid() {
@@ -107,11 +110,12 @@ public interface TestUtils {
     }
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
-        var sectors = getListSectorsValid();
-        var representative = getRepresentativeValid();
-        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
-        warehouse.setId(1L);
-        return WarehouseMapper.toResponseDTO(warehouse);
+//        var sectors = getListSectorsValid();
+//        var representative = getRepresentativeValid();
+//        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
+//        warehouse.setId(1L);
+//        return WarehouseMapper.toResponseDTO(warehouse);
+        return null;
     }
 
     static List<Batch> getBatchListValid() {

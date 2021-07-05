@@ -73,7 +73,7 @@ public class SectorServiceImplTest {
     @Test
     void shouldVerifyThereIsNoSpaceInSector() throws Exception {
         var sector = TestUtils.getSectorValid();
-        sector.setMaxQuantityBatches(1000.0);
+        sector.setMaxQuantityBatches(1000);
 
         var batch = TestUtils.getBatchValid();
         batch.setCurrentQuantity(1000);
