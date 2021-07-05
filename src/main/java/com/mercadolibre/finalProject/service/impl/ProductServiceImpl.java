@@ -95,7 +95,7 @@ public class ProductServiceImpl implements IProductService {
                 productId,
                 product.getName(),
                 orderQuantity,
-                this.batchRepository.getBatchesOfProductByDate(sector.getId(), productId)); //, date
+                null); //, date
     }
 
     @Override

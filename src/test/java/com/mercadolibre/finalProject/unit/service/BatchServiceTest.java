@@ -17,13 +17,12 @@ import static org.mockito.Mockito.*;
 public class BatchServiceTest {
 
     private BatchServiceImpl service;
-    private ISectorService sectorService = mock(ISectorService.class);
     private BatchRepository bathRepository = mock(BatchRepository.class);
     private IProductService productService = mock(IProductService.class);
 
     @BeforeEach
     public void setup() {
-        service = new BatchServiceImpl(sectorService, bathRepository, productService);
+        service = new BatchServiceImpl(bathRepository, productService);
     }
 
 

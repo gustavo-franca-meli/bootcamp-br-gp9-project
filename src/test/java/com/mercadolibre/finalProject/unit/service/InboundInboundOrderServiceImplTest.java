@@ -69,7 +69,7 @@ public class InboundInboundOrderServiceImplTest {
         when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorValid();
-        when(sectorService.findById(anyLong())).thenReturn(sector);
+        when(sectorService.findById(anyLong())).thenReturn(null);
 
         var order = TestUtils.getOrderValid();
         when(inboundOrderRepository.save(order)).thenReturn(order);
@@ -116,7 +116,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
 
         var sector = TestUtils.getSectorValid();
-        when(sectorService.findById(Mockito.anyLong())).thenReturn(sector);
+        when(sectorService.findById(Mockito.anyLong())).thenReturn(null);
         when(bathService.create(Mockito.any(), Mockito.any())).thenThrow(CreateBatchStockException.class);
 
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();

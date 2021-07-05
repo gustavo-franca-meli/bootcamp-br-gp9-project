@@ -1,7 +1,7 @@
 package com.mercadolibre.finalProject.exceptions;
 
-public class SectorNotFoundException extends Exception {
-    public SectorNotFoundException() {
-        super("Sector Not Found");
+public class SectorNotFoundException extends RuntimeException {
+    public SectorNotFoundException(String message) {
+        super(message);
     }
 }

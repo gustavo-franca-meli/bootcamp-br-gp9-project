@@ -4,7 +4,6 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderBatchResponseDTO;
 import com.mercadolibre.finalProject.exceptions.BatchCreateException;
 import com.mercadolibre.finalProject.exceptions.CreateBatchStockException;
-import com.mercadolibre.finalProject.exceptions.ProductTypeNotSuportedInSectorException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
@@ -14,19 +13,16 @@ import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
-    private ISectorService sectorService;
     private BatchRepository batchRepository;
     private IProductService productService;
 
-    public BatchServiceImpl(ISectorService sectorService, BatchRepository repository, IProductService productService) {
-        this.sectorService = sectorService;
-        this.batchRepository = repository;
+    public BatchServiceImpl(BatchRepository batchRepository, IProductService productService) {
+        this.batchRepository = batchRepository;
         this.productService = productService;
     }
 

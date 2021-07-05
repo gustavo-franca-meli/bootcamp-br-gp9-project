@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class WarehouseResponseDTO {
 
     private Long id;

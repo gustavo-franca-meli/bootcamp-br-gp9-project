@@ -1,13 +1,14 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
-import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderBatchResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.enums.ProductType;
+import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.ISectorService;
@@ -15,33 +16,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SectorServiceImpl implements ISectorService {
 
-    private SectorRepository sectorRepository;
-    private IBatchService batchService;
+    private final SectorRepository sectorRepository;
+    private final IBatchService batchService;
 
     public SectorServiceImpl(SectorRepository sectorRepository, IBatchService batchService) {
         this.sectorRepository = sectorRepository;
         this.batchService = batchService;
     }
 
-//    public SectorDTO getById (Sector sector) { return new SectorDTO(sector); }
-
     @Override
-    public Sector findById (Long sectorId) throws SectorNotFoundException {
-        Optional<Sector> sectorOpt = this.sectorRepository.findById(sectorId);
+    public SectorResponseDTO findById(Long sectorId) throws SectorNotFoundException {
+        var sector = this.findSectorBy(sectorId);
 
-        if(sectorOpt.isEmpty()) { throw new SectorNotFoundException(); }
-
-        return sectorOpt.get();
+        return SectorMapper.toResponseDTO(sector);
     }
 
+    private Sector findSectorBy(Long sectorId) {
+        var sector = this.sectorRepository.findById(sectorId);
 
-    public Integer getProductStockQuantity (ProductStockForOrderDTO productStock) {
-        return productStock.getBatches().stream().mapToInt(Batch::getCurrentQuantity).sum();
+        return sector.orElseThrow(() -> new SectorNotFoundException("Sector Not Found. Id:" + sectorId));
     }
 
     @Override
@@ -49,38 +47,45 @@ public class SectorServiceImpl implements ISectorService {
         List<PurchaseOrderBatchResponseDTO> purchaseBatches = new ArrayList<>();
         Integer withdrawnQuantity = 0;
 
-        for(Batch batch : batches) {
-            if(withdrawnQuantity >= orderQuantity) {
-                break;
-            }
-            PurchaseOrderBatchResponseDTO purchaseBatch = this.batchService.withdrawStockFromBatch(batch,withdrawnQuantity,orderQuantity);
+        for (Batch batch : batches) {
+            var purchaseBatch = purchaseBatchAndWithdrawStock(orderQuantity, withdrawnQuantity, batch);
             withdrawnQuantity += purchaseBatch.getQuantity();
             purchaseBatches.add(purchaseBatch);
+
+            if (withdrawnQuantity >= orderQuantity)
+                break;
         }
         return purchaseBatches;
     }
 
-    @Override
-    public Boolean hasType(Long sectorID, ProductType type) throws SectorNotFoundException {
-        var sector = findById(sectorID);
-        var types = sector.getTypes();
-        return types.stream().anyMatch((t)-> ProductType.toEnum(t).equals(type) );
+    private PurchaseOrderBatchResponseDTO purchaseBatchAndWithdrawStock(Integer orderQuantity, Integer withdrawnQuantity, Batch batch) {
+        return this.batchService.withdrawStockFromBatch(batch, withdrawnQuantity, orderQuantity);
     }
 
+    public Integer getProductStockQuantity(ProductStockForOrderDTO productStock) {
+        return productStock.getBatches().stream().mapToInt(Batch::getCurrentQuantity).sum();
+    }
 
     @Override
-    public Boolean exist (Long sectorId) {
+    public Boolean hasType(Long sectorID, Set<ProductType> productTypes) throws SectorNotFoundException {
+        var sector = this.findSectorBy(sectorID);
+        var sectorTypes = sector.getTypes();
+        return productTypes.stream().anyMatch(p -> sectorTypes.stream().anyMatch((s -> s == p.getCod())));
+    }
+
+    @Override
+    public Boolean exist(Long sectorId) {
         return sectorRepository.findById(sectorId).isPresent();
     }
 
     @Override
-    public Boolean isThereSpace (Batch batch, Long sectorId) throws Exception{
-        // checks whether there's enough space for batch in the sector
+    public Boolean isThereSpace(Batch batch, Long sectorId) {
+        var sector = this.findSectorBy(sectorId);
+        var totalQuantity = sector.getBatches().size() + batch.getInitialQuantity();
 
-//        Sector sector = this.findById(sectorId);
-//        if( (sector.getCurrentQuantityBatches() + batch.getCurrentQuantity()) > sector.getMaxQuantityBatches() ) {
-//            throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space for batch " + batch.getId());
-//        }
+        if (totalQuantity > sector.getMaxQuantityBatches()) {
+            throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space for batch " + batch.getId());
+        }
 
         return true;
     }
