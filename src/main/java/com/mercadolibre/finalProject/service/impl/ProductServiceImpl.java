@@ -35,10 +35,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductResponseDTO create(ProductRequestDTO productRequestDTO) {
-//        var response = productRepository.save(new Product(productRequestDTO.getName(), new HashSet<>(productRequestDTO.getTypes()), null));
-//
-//        return new ProductResponseDTO(response.getId(), response.getName());
-        return null;
+        Product p1 = new Product();
+        p1.setName(productRequestDTO.getName());
+        p1.setTypes((Set<Integer>) productRequestDTO.getTypes());
+
+        var createdProduct = productRepository.save(p1);
+
+        return new ProductResponseDTO(createdProduct.getId(), createdProduct.getName());
     }
 
     @Override
@@ -74,12 +77,6 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
-    }
-
-    @Override
-    public Set<ProductType> getTypes(Long id) throws ProductNotFoundException {
-        Product product = this.findById(id);
-        return product.getTypes().stream().map(ProductType::toEnum).collect(Collectors.toSet());
     }
 
     @Override

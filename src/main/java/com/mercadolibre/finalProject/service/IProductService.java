@@ -23,9 +23,7 @@ public interface IProductService {
     Product findById(Long id) throws ProductNotFoundException;
 
     List<Product> findAll();
-
-    Set<ProductType> getTypes (Long id) throws ProductNotFoundException;
-
+    
     Sector findSectorByIdAndWarehouse(Long warehouseId, Product product);
 
     ProductStockForOrderDTO getProductStockByDate (Long warehouseId, Long productId, LocalDate date, Integer orderQuantity) throws ProductNotFoundException;
