@@ -25,74 +25,20 @@ import java.util.List;
 public class WarehouseServiceImpl implements IWarehouseService {
 
     private WarehouseRepository warehouseRepository;
-    private IProductService productService;
-    private ISectorService sectorService;
-    private IBatchService batchService;
 
     public WarehouseServiceImpl(WarehouseRepository warehouseRepository) {
         this.warehouseRepository = warehouseRepository;
     }
 
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, IProductService productService, ISectorService sectorService, IBatchService batchService) {
-        this.warehouseRepository = warehouseRepository;
-        this.productService = productService;
-        this.sectorService = sectorService;
-        this.batchService = batchService;
-    }
-
     @Override
-    public WarehouseResponseDTO findById(Long warehouseCode) throws WarehouseNotFoundException {
-        var warehouse = this.findWarehouseBy(warehouseCode);
+    public WarehouseResponseDTO findById(Long warehouseId) throws WarehouseNotFoundException {
+        var warehouse = this.findWarehouseBy(warehouseId);
         return WarehouseMapper.toResponseDTO(warehouse);
     }
 
-    private Warehouse findWarehouseBy(Long id) {
-        var data = warehouseRepository.findById(id);
-        return data.orElseThrow(() -> new WarehouseNotFoundException());
+    private Warehouse findWarehouseBy(Long warehouseId) {
+        var data = warehouseRepository.findById(warehouseId);
+        return data.orElseThrow(() -> new WarehouseNotFoundException("Warehouse Not Found. Id:" + warehouseId));
     }
 
-    @Override
-    public Warehouse findByRepresentative(String representation) throws WarehouseNotFoundException {
-        return null;
-    }
-
-    @Override
-    public List<ProductStockForOrderDTO> getProductsStockForOrder (Long warehouseId, PurchaseOrderDTO purchaseOrder) throws ProductNotFoundException {
-
-        List<ProductStockForOrderDTO> productsStocks = new ArrayList<>();
-
-        for(ProductDTO productDTO : purchaseOrder.getProducts()) {
-            productsStocks.add(this.productService.getProductStockByDate(
-                    warehouseId,productDTO.getId(),purchaseOrder.getOrderDate(),productDTO.getQuantity()));
-        }
-        return productsStocks;
-    }
-
-    public Boolean isThereStockForOrder (List<ProductStockForOrderDTO> productsStocks) {
-        for(ProductStockForOrderDTO productStock : productsStocks) {
-            if( this.sectorService.getProductStockQuantity(productStock) < productStock.getOrderQuantity() ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public PurchaseOrderResponseDTO withDrawStockForOrder(List<ProductStockForOrderDTO> productsStocks) throws ProductNotFoundException {
-        List<PurchaseOrderItemResponseDTO> orderItems = new ArrayList<>();
-        Double totalPrice = 0.0;
-
-        for(ProductStockForOrderDTO productStock : productsStocks) {
-            Double itemPrice = this.productService.getTotalPrice(productStock.getProductId(),productStock.getOrderQuantity());
-            orderItems.add(new PurchaseOrderItemResponseDTO(
-                    productStock.getProductId(),
-                    productStock.getProductName(),
-                    productStock.getOrderQuantity(),
-                    itemPrice,
-                    this.sectorService.withdrawStockFromBatches(productStock.getBatches(),productStock.getOrderQuantity())));
-            totalPrice += itemPrice;
-        }
-
-        return new PurchaseOrderResponseDTO(totalPrice,orderItems);
-    }
 }

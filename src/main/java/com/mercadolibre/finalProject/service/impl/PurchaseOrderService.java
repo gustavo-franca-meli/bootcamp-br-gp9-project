@@ -30,16 +30,16 @@ public class PurchaseOrderService implements IPurchaseOrderService {
     public PurchaseOrderResponseDTO create(PurchaseOrderDTO purchaseOrder, String representative) throws WarehouseNotFoundException, ProductNotFoundException {
         //buyer registered
 
-        Warehouse warehouse = this.warehouseService.findByRepresentative(representative);
-
-        List<ProductStockForOrderDTO> productsStocks = this.warehouseService.getProductsStockForOrder(warehouse.getId(),purchaseOrder);
-
-        if(!this.warehouseService.isThereStockForOrder(productsStocks)) {
-            return null;
-        }
-
-        PurchaseOrderResponseDTO purchaseOrderResponse = this.warehouseService.withDrawStockForOrder(productsStocks);
-        purchaseOrder.setOrderDate(purchaseOrder.getOrderDate());
-        return purchaseOrderResponse;
+//        Warehouse warehouse = this.warehouseService.findByRepresentative(representative);
+//
+//        List<ProductStockForOrderDTO> productsStocks = this.warehouseService.getProductsStockForOrder(warehouse.getId(),purchaseOrder);
+//
+//        if(!this.warehouseService.isThereStockForOrder(productsStocks)) {
+//            return null;
+//        }
+//
+//        PurchaseOrderResponseDTO purchaseOrderResponse = this.warehouseService.withDrawStockForOrder(productsStocks);
+//        purchaseOrder.setOrderDate(purchaseOrder.getOrderDate());
+        return null;
     }
 }

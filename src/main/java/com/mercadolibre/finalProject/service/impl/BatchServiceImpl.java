@@ -14,19 +14,18 @@ import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
-    private ISectorService sectorService;
     private BatchRepository batchRepository;
+    private ISectorService  sectorService;
     private IProductService productService;
 
-    public BatchServiceImpl(ISectorService sectorService, BatchRepository repository, IProductService productService) {
+    public BatchServiceImpl(BatchRepository batchRepository, ISectorService sectorService, IProductService productService) {
+        this.batchRepository = batchRepository;
         this.sectorService = sectorService;
-        this.batchRepository = repository;
         this.productService = productService;
     }
 

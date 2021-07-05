@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface BatchRepository extends JpaRepository<Batch, Long> {
 
-    public List<Batch> getBatchesOfProductByDate(Long sectorId, Long productId);
-
 }
