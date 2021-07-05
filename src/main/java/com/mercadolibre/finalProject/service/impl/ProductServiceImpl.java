@@ -7,9 +7,11 @@ import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.service.IProductService;
 import javassist.NotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProductServiceImpl implements IProductService {
 
     ProductRepository productRepository;

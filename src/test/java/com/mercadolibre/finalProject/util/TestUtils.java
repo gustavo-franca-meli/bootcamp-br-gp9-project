@@ -117,5 +117,4 @@ public interface TestUtils {
         var batchsDTO = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
         return batchsDTO.stream().map(b -> BatchMapper.toModel(b, 1L)).collect(Collectors.toList());
     }
-
 }

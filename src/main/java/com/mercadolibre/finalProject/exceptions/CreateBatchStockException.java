@@ -3,17 +3,17 @@ package com.mercadolibre.finalProject.exceptions;
 import java.util.List;
 
 public class CreateBatchStockException extends Exception {
-    private List<BathCreateException> bathExceptions;
-    public CreateBatchStockException(String message, List<BathCreateException> bathExceptions) {
+    private List<BatchCreateException> bathExceptions;
+    public CreateBatchStockException(String message, List<BatchCreateException> bathExceptions) {
         super(message);
         this.bathExceptions = bathExceptions;
     }
 
-    public List<BathCreateException> getBathExceptions() {
+    public List<BatchCreateException> getBathExceptions() {
         return bathExceptions;
     }
 
-    public void setBathExceptions(List<BathCreateException> bathExceptions) {
+    public void setBathExceptions(List<BatchCreateException> bathExceptions) {
         this.bathExceptions = bathExceptions;
     }
 

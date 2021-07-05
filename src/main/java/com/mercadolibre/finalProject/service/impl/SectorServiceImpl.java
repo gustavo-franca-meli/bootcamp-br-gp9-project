@@ -39,6 +39,7 @@ public class SectorServiceImpl implements ISectorService {
         return types.stream().anyMatch((t)-> SectorType.toEnum(t).equals(type) );
     }
 
+
     @Override
     public Boolean exist (Long sectorId) {
         return sectorRepository.findById(sectorId).isPresent();
