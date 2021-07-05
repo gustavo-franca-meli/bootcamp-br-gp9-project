@@ -20,7 +20,7 @@ public class InboundOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<InboundOrderResponseDTO> create(@Valid @RequestBody InboundOrderDTO dto, @RequestParam Long representative) throws Exception {
+    public ResponseEntity<InboundOrderResponseDTO> create(@Valid @RequestBody InboundOrderDTO dto, @RequestHeader("X-Representative-Id") Long representative) throws Exception {
         var response = service.create(dto,representative);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

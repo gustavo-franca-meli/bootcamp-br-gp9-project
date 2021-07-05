@@ -32,7 +32,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Test
-    void loginFail() throws Exception {
+    void shouldCreateInboundOrderDTOCorrectly() throws Exception {
         var request = TestUtils.getInboundOrderDTOValid();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -43,7 +43,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("Authorization","")
+                .header("X-Representative-Id","1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )

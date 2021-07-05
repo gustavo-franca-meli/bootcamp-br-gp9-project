@@ -63,8 +63,8 @@ public class SectorServiceImpl implements ISectorService {
     @Override
     public Boolean hasType(Long sectorID, Set<ProductType> productTypes) throws SectorNotFoundException {
         var sector = this.findSectorBy(sectorID);
-        var sectorTypes = sector.getTypes();
-        return productTypes.stream().anyMatch(p -> sectorTypes.stream().anyMatch((s -> s == p.getCod())));
+        var sectorTypes = sector.getTypesInProductType();
+        return productTypes.stream().anyMatch(p -> sectorTypes.stream().anyMatch((s -> s .getCod() == p.getCod())));
     }
 
     @Override
