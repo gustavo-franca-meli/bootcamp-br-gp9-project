@@ -2,26 +2,37 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.model.Product;
+import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.ProductRepository;
+import com.mercadolibre.finalProject.repository.SellerRepository;
 import com.mercadolibre.finalProject.service.IProductService;
-import javassist.NotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProductServiceImpl implements IProductService {
 
     ProductRepository productRepository;
+    SellerRepository sellerRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, SellerRepository sellerRepository) {
         this.productRepository = productRepository;
+        this.sellerRepository = sellerRepository;
     }
 
     @Override
     public ProductResponseDTO create(ProductRequestDTO productRequestDTO) {
-        var response = productRepository.save(new Product(productRequestDTO.getName(), null));
+        var seller = sellerRepository.findById(productRequestDTO.getSellerId());
+        if (seller.isEmpty()) {
+            throw new NotFoundException("Seller not exists");
+        }
 
-        return new ProductResponseDTO(response.getId(), response.getName());
+        var response = productRepository.save(new Product(productRequestDTO.getName(), seller.get()));
+
+        return ProductMapper.fromEntityToResponse(response);
     }
 
     @Override
@@ -29,30 +40,48 @@ public class ProductServiceImpl implements IProductService {
         var optional = productRepository.findById(id);
 
         if (optional.isEmpty()) {
-            throw new RuntimeException("product not exists");
+            throw new NotFoundException("Product not exists");
         }
 
         var product = optional.get();
         product.setName(productRequestDTO.getName());
-        product.setSeller(null);
+        sellerRepository.findById(productRequestDTO.getSellerId()).ifPresent(product::setSeller);
 
         productRepository.save(product);
 
-        return new ProductResponseDTO(product.getId(), product.getName());
+        return ProductMapper.fromEntityToResponse(product);
     }
 
     @Override
     public void delete(Long id) {
+        var optional = productRepository.findById(id);
+
+        if (optional.isEmpty()) {
+            throw new NotFoundException("Product not exists");
+        }
+
         productRepository.deleteById(id);
     }
 
     @Override
-    public Product findById(Long id) {
-        return productRepository.findById(id).get();
+    public ProductResponseDTO getById(Long id) {
+        var optional = productRepository.findById(id);
+
+        if (optional.isEmpty()) {
+            throw new NotFoundException("Product not exists");
+        }
+
+        return ProductMapper.fromEntityToResponse(optional.get());
     }
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> getAll() {
+        var products = productRepository.findAll();
+
+        if (products == null || products.isEmpty()) {
+            throw new NotFoundException("List is empty");
+        }
+
+        return ProductMapper.fromEntityListToResponse(products);
     }
 }

@@ -1,10 +1,7 @@
 package com.mercadolibre.finalProject.model;
 
 import com.mercadolibre.finalProject.model.enums.SectorType;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -15,9 +12,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -35,7 +34,6 @@ public class Product {
     }
 
     public Product(String name, Seller seller) {
-
         this.name = name;
         this.seller = seller;
     }

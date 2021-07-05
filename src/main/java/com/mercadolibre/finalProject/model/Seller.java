@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,6 +22,12 @@ public class Seller {
 
     @OneToMany
     private List<Product> products;
+
+    public Seller(Long id, String name) {
+        this.id = id;
+        this.name = name;
+        this.products = new ArrayList<>();
+    }
 
     public Seller(String name, List<Product> products) {
         this.name = name;
