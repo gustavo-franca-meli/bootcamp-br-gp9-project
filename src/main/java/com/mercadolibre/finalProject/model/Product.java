@@ -35,7 +35,7 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
-    public Set<ProductType> getTypesInProductType () {
+    public Set<ProductType> getProductTypes () {
         return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
     }
 
@@ -61,4 +61,5 @@ public class Product {
         this.types = types;
         this.seller = seller;
     }
+
 }
