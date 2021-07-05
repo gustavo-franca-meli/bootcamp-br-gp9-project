@@ -2,11 +2,10 @@ package com.mercadolibre.finalProject.unit.service;
 
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
-import com.mercadolibre.finalProject.model.Batch;
-import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.impl.BatchServiceImpl;
 import com.mercadolibre.finalProject.service.impl.SectorServiceImpl;
+import com.mercadolibre.finalProject.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,63 +27,59 @@ public class SectorServiceImplTest {
     }
 
     @Test
-    void shouldFindSectorById () throws SectorNotFoundException {
-        Sector sector = new Sector(1L);
-        
-        when(this.repository.findById(1L)).thenReturn(Optional.of(sector));
+    void shouldFindSectorById() throws SectorNotFoundException {
+        var expected = TestUtils.getSectorValid();
+        when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.of(expected));
 
-        assertEquals(service.findById(1L),sector);
+        var got = service.findById(Mockito.anyLong());
+        assertEquals(expected.getId(), got.getId());
     }
 
     @Test
-    void shouldNotFindSectorById () {
-        when(this.repository.findById(2L)).thenReturn(Optional.empty());
+    void shouldFailFindSectorById() {
+        when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(SectorNotFoundException.class, () -> this.service.findById(2L));
+        assertThrows(SectorNotFoundException.class, () -> this.service.findById(Mockito.anyLong()));
     }
 
     @Test
-    void shouldCheckSectorExists () {
-        Sector sector = new Sector(1L);
+    void shouldCheckSectorExists() {
+        var sector = TestUtils.getSectorValid();
+        when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.of(sector));
 
-        when(this.repository.findById(1L)).thenReturn(Optional.of(sector));
-
-        assertTrue(service.exist(1L));
+        var got = service.exist(Mockito.anyLong());
+        assertTrue(got);
     }
 
     @Test
-    void shouldCheckSectorDoesNotExist () {
-        when(this.repository.findById(2L)).thenReturn(Optional.empty());
+    void shouldCheckSectorDoesNotExist() {
+        when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertFalse(service.exist(2L));
+        var got = service.exist(Mockito.anyLong());
+        assertFalse(got);
     }
 
 
     @Test
-    void shouldVerifyThereIsSpaceInSector () throws Exception {
-        Sector sector = new Sector(1L);
-        sector.setCurrentQuantityBatches(100.0);
+    void shouldVerifyThereIsSpaceInSector() throws Exception {
+        var sector = TestUtils.getSectorValid();
+        var batch = TestUtils.getBatchValid();
+        when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.of(sector));
+
+        var got = service.isThereSpace(batch, Mockito.anyLong());
+        assertTrue(got);
+    }
+
+    @Test
+    void shouldVerifyThereIsNoSpaceInSector() throws Exception {
+        var sector = TestUtils.getSectorValid();
         sector.setMaxQuantityBatches(1000.0);
 
-        Batch batch = new Batch(2L);
-        batch.setCurrentQuantity(100);
-
-        when(this.repository.findById(1L)).thenReturn(Optional.of(sector));
-
-        assertTrue(service.isThereSpace(batch,1L));
-    }
-
-    @Test
-    void shouldVerifyThereIsNoSpaceInSector () throws Exception {
-        Sector sector = new Sector(1L);
-        sector.setCurrentQuantityBatches(100.0);
-        sector.setMaxQuantityBatches(1000.0);
-
-        Batch batch = new Batch(2L);
+        var batch = TestUtils.getBatchValid();
         batch.setCurrentQuantity(1000);
 
-        when(this.repository.findById(1L)).thenReturn(Optional.of(sector));
+        when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.of(sector));
 
-        assertThrows(NoSpaceInSectorException.class, () -> this.service.isThereSpace(batch,1L));
+        assertThrows(NoSpaceInSectorException.class, () -> this.service.isThereSpace(batch, Mockito.anyLong()));
     }
 }

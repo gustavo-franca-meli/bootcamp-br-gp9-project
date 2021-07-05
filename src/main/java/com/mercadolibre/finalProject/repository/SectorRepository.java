@@ -13,5 +13,4 @@ import java.util.Optional;
 
 @Repository
 public interface SectorRepository extends JpaRepository<Sector, Long> {
-    Optional<Sector> findById (Long sectorId);
 }
