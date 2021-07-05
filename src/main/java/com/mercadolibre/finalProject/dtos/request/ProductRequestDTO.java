@@ -10,6 +10,7 @@ import java.util.List;
 public class ProductRequestDTO {
 
     private String name;
+
     private List<Integer> types;
 
     public ProductRequestDTO() {

@@ -2,14 +2,14 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.model.Seller;
 import com.mercadolibre.finalProject.repository.SellerRepository;
-import com.mercadolibre.finalProject.service.SellerService;
+import com.mercadolibre.finalProject.service.ISellerService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SellerServiceImpl implements SellerService {
+public class SellerServiceImpl implements ISellerService {
 
     SellerRepository repo;
 
