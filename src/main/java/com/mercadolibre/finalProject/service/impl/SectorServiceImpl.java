@@ -12,6 +12,9 @@ import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service

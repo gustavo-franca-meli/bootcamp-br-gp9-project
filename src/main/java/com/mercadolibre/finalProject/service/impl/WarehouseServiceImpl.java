@@ -8,7 +8,6 @@ import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
-import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
 import com.mercadolibre.finalProject.repository.WarehouseRepository;
