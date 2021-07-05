@@ -39,8 +39,8 @@ public class Product {
         return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
     }
 
-    private void setTypes (Set<ProductType> types) {
-        this.types = types.stream().map(ProductType::getCod).collect(Collectors.toSet());
+    public void setTypes(Set<Integer> types) {
+        this.types = types;
     }
 
     public Product (Long id) {
