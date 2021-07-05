@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.service.impl;
 import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.Warehouse;
@@ -64,8 +65,11 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Product findById(Long id) {
-        return productRepository.findById(id).get();
+    public Product findById(Long id) throws ProductNotFoundException {
+
+        var product =  productRepository.findById(id);
+        if(product.isPresent())return product.get();
+        throw new ProductNotFoundException();
     }
 
     @Override
@@ -74,7 +78,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Set<SectorType> getTypes(Long id) {
+    public Set<SectorType> getTypes(Long id) throws ProductNotFoundException {
         Product product = this.findById(id);
         return product.getTypes().stream().map(SectorType::toEnum).collect(Collectors.toSet());
     }
@@ -88,7 +92,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductStockForOrderDTO getProductStockByDate(Long warehouseId, Long productId, LocalDate date, Integer orderQuantity) {
+    public ProductStockForOrderDTO getProductStockByDate(Long warehouseId, Long productId, LocalDate date, Integer orderQuantity) throws ProductNotFoundException {
         Product product = this.findById(productId);
         Sector sector = this.findSectorByIdAndWarehouse(warehouseId,product);
         return new ProductStockForOrderDTO(
@@ -99,7 +103,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Double getTotalPrice(Long productId, Integer quantity) {
+    public Double getTotalPrice(Long productId, Integer quantity) throws ProductNotFoundException {
         Product product = this.findById(productId);
         return 0.0 * quantity; // refactor to include price attribute in product
      }

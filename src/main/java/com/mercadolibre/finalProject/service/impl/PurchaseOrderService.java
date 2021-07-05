@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.service.impl;
 import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
 import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
+import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.service.IProductService;
@@ -26,7 +27,7 @@ public class PurchaseOrderService implements IPurchaseOrderService {
     }
 
     @Override
-    public PurchaseOrderResponseDTO create(PurchaseOrderDTO purchaseOrder, String representative) throws WarehouseNotFoundException {
+    public PurchaseOrderResponseDTO create(PurchaseOrderDTO purchaseOrder, String representative) throws WarehouseNotFoundException, ProductNotFoundException {
         //buyer registered
 
         Warehouse warehouse = this.warehouseService.findByRepresentative(representative);

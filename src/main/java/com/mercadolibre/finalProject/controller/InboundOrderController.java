@@ -20,13 +20,13 @@ public class InboundOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<InboundOrderResponseDTO> create(@Valid @RequestBody InboundOrderDTO dto, String representative) throws Exception {
+    public ResponseEntity<InboundOrderResponseDTO> create(@Valid @RequestBody InboundOrderDTO dto, @RequestParam Long representative) throws Exception {
         var response = service.create(dto,representative);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PutMapping
-    public ResponseEntity<InboundOrderResponseDTO> update(@Valid @RequestBody InboundOrderDTO dto, String representative) throws Exception {
-        var response = service.save(dto,representative);
+    public ResponseEntity<InboundOrderResponseDTO> update(@Valid @RequestBody InboundOrderDTO dto, @RequestParam Long representative) throws Exception {
+        var response = service.update(dto,representative);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

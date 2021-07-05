@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 
 @Entity
@@ -35,7 +34,4 @@ public class Representative {
         this.name = name;
     }
 
-    public Boolean worksIn(Long warehouseId) {
-        return this.warehouse.getId().equals(warehouseId);
-    }
 }

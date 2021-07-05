@@ -8,6 +8,7 @@ import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
+import com.mercadolibre.finalProject.model.enums.SectorType;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.ISectorService;
@@ -62,6 +63,14 @@ public class SectorServiceImpl implements ISectorService {
     }
 
     @Override
+    public Boolean hasType(Long sectorID, SectorType type) throws SectorNotFoundException {
+        var sector = findById(sectorID);
+        var types = sector.getTypes();
+        return types.stream().anyMatch((t)-> SectorType.toEnum(t).equals(type) );
+    }
+
+
+    @Override
     public Boolean exist (Long sectorId) {
         return sectorRepository.findById(sectorId).isPresent();
     }
@@ -74,6 +83,7 @@ public class SectorServiceImpl implements ISectorService {
         if( (sector.getCurrentQuantityBatches() + batch.getCurrentQuantity()) > sector.getMaxQuantityBatches() ) {
             throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space for batch " + batch.getId());
         }
+
         return true;
     }
 }

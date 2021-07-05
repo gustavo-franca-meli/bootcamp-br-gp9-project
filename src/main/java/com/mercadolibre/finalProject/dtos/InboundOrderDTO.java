@@ -1,6 +1,9 @@
 package com.mercadolibre.finalProject.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -22,5 +25,8 @@ public class InboundOrderDTO {
         this.orderDate = orderDate;
         this.section = section;
         this.batchStock = batchStock;
+    }
+
+    public InboundOrderDTO() {
     }
 }

@@ -6,6 +6,7 @@ import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderItemResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
+import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.Warehouse;
@@ -56,7 +57,7 @@ public class WarehouseServiceImpl implements IWarehouseService {
     }
 
     @Override
-    public List<ProductStockForOrderDTO> getProductsStockForOrder (Long warehouseId, PurchaseOrderDTO purchaseOrder) {
+    public List<ProductStockForOrderDTO> getProductsStockForOrder (Long warehouseId, PurchaseOrderDTO purchaseOrder) throws ProductNotFoundException {
 
         List<ProductStockForOrderDTO> productsStocks = new ArrayList<>();
 
@@ -77,7 +78,7 @@ public class WarehouseServiceImpl implements IWarehouseService {
     }
 
     @Override
-    public PurchaseOrderResponseDTO withDrawStockForOrder(List<ProductStockForOrderDTO> productsStocks) {
+    public PurchaseOrderResponseDTO withDrawStockForOrder(List<ProductStockForOrderDTO> productsStocks) throws ProductNotFoundException {
         List<PurchaseOrderItemResponseDTO> orderItems = new ArrayList<>();
         Double totalPrice = 0.0;
 

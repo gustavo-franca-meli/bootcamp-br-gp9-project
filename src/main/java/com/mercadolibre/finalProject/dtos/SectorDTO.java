@@ -3,11 +3,13 @@ package com.mercadolibre.finalProject.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mercadolibre.finalProject.model.Sector;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
+@NoArgsConstructor
 public class SectorDTO {
     @JsonProperty("sectionCode")
     @NotNull
