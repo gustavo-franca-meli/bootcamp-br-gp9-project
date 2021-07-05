@@ -10,6 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface IBatchService {
-    List<Batch> create(@NotNull  List<BatchDTO> batchStock, Sector sector) throws CreateBatchStockException;
+    List<Batch> create(@NotNull  List<BatchDTO> batchStock, Long sectorId) throws CreateBatchStockException;
     PurchaseOrderBatchResponseDTO withdrawStockFromBatch (Batch batch, Integer withdrawnQuantity, Integer orderQuantity);
 }

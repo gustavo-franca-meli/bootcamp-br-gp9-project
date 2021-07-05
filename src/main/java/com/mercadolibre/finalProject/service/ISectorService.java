@@ -19,7 +19,7 @@ public interface ISectorService {
 
     Integer getProductStockQuantity(ProductStockForOrderDTO productStock);
 
-    List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity);
+//    List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity);
 
     Boolean hasType(Long sectorID, Set<ProductType> productTypes) throws SectorNotFoundException;
 }

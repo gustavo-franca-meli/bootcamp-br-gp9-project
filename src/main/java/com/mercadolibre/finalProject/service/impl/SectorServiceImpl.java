@@ -1,7 +1,6 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
-import com.mercadolibre.finalProject.dtos.response.PurchaseOrderBatchResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
@@ -10,23 +9,18 @@ import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
-import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Service
 public class SectorServiceImpl implements ISectorService {
 
     private final SectorRepository sectorRepository;
-    private final IBatchService batchService;
 
-    public SectorServiceImpl(SectorRepository sectorRepository, IBatchService batchService) {
+    public SectorServiceImpl(SectorRepository sectorRepository) {
         this.sectorRepository = sectorRepository;
-        this.batchService = batchService;
     }
 
     @Override
@@ -42,25 +36,25 @@ public class SectorServiceImpl implements ISectorService {
         return sector.orElseThrow(() -> new SectorNotFoundException("Sector Not Found. Id:" + sectorId));
     }
 
-    @Override
-    public List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
-        List<PurchaseOrderBatchResponseDTO> purchaseBatches = new ArrayList<>();
-        Integer withdrawnQuantity = 0;
-
-        for (Batch batch : batches) {
-            var purchaseBatch = purchaseBatchAndWithdrawStock(orderQuantity, withdrawnQuantity, batch);
-            withdrawnQuantity += purchaseBatch.getQuantity();
-            purchaseBatches.add(purchaseBatch);
-
-            if (withdrawnQuantity >= orderQuantity)
-                break;
-        }
-        return purchaseBatches;
-    }
-
-    private PurchaseOrderBatchResponseDTO purchaseBatchAndWithdrawStock(Integer orderQuantity, Integer withdrawnQuantity, Batch batch) {
-        return this.batchService.withdrawStockFromBatch(batch, withdrawnQuantity, orderQuantity);
-    }
+//    @Override
+//    public List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
+//        List<PurchaseOrderBatchResponseDTO> purchaseBatches = new ArrayList<>();
+//        Integer withdrawnQuantity = 0;
+//
+//        for (Batch batch : batches) {
+//            var purchaseBatch = purchaseBatchAndWithdrawStock(orderQuantity, withdrawnQuantity, batch);
+//            withdrawnQuantity += purchaseBatch.getQuantity();
+//            purchaseBatches.add(purchaseBatch);
+//
+//            if (withdrawnQuantity >= orderQuantity)
+//                break;
+//        }
+//        return purchaseBatches;
+//    }
+//
+//    private PurchaseOrderBatchResponseDTO purchaseBatchAndWithdrawStock(Integer orderQuantity, Integer withdrawnQuantity, Batch batch) {
+//        return this.batchService.withdrawStockFromBatch(batch, withdrawnQuantity, orderQuantity);
+//    }
 
     public Integer getProductStockQuantity(ProductStockForOrderDTO productStock) {
         return productStock.getBatches().stream().mapToInt(Batch::getCurrentQuantity).sum();
