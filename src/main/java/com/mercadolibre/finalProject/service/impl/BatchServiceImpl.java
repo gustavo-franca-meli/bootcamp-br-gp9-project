@@ -31,7 +31,7 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<Batch> create(List<BatchDTO> batchStock, Sector sector) throws CreateBatchStockException {
+    public List<Batch> create(List<BatchDTO> batchStock, Long sectorId) throws CreateBatchStockException {
         //sector has space for batchStock length else throws
         var size = batchStock.size();
 
@@ -40,17 +40,17 @@ public class BatchServiceImpl implements IBatchService {
         //iterate all product if find a error throws all
         batchStock.forEach((batch)->{
             try{
-                var batchModel = BatchMapper.toModel(batch,sector.getId());
+                var batchModel = BatchMapper.toModel(batch,sectorId);
                 //product seller is registered if not throws
                 var product = productService.findById(batch.getProductId());
                 //product type pertence a sector
-//                if(sectorService.hasType(sector.getId(),product.getType())){
-//                    sectorService.isThereSpace(batchModel,sectorID);
-//                    var bathResponse = batchRepository.save(batchModel);
-//                    responseBathList.add(bathResponse);
-//                }else{
-//                    throw new ProductTypeNotSuportedInSectorException(product.getId().toString(),product.getType().toString(),sectorID.toString());
-//                };
+                if(sectorService.hasType(sectorId,product.getProductTypes())){
+                    sectorService.isThereSpace(batchModel,sectorId);
+                    var bathResponse = batchRepository.save(batchModel);
+                    responseBathList.add(bathResponse);
+                }else{
+                    throw new ProductTypeNotSuportedInSectorException(product.getId().toString(),product.getProductTypes().toString(),sectorId.toString());
+                };
 
 
             }catch (Exception e){
