@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.unit.service;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.repository.SectorRepository;
+import com.mercadolibre.finalProject.service.impl.BatchServiceImpl;
 import com.mercadolibre.finalProject.service.impl.SectorServiceImpl;
 import com.mercadolibre.finalProject.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +19,11 @@ public class SectorServiceImplTest {
 
     SectorRepository repository = Mockito.mock(SectorRepository.class);
     SectorServiceImpl service;
+    BatchServiceImpl batchService;
 
     @BeforeEach
-    void setUp() {
-        this.service = new SectorServiceImpl(repository);
+    void setUp(){
+        this.service = new SectorServiceImpl(repository,batchService);
     }
 
     @Test

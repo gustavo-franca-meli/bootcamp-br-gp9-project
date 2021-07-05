@@ -1,0 +1,28 @@
+package com.mercadolibre.finalProject.dtos.response;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+public class PurchaseOrderItemResponseDTO {
+
+    private Long productId;
+    private String productName;
+    private Integer quantity;
+    private Double price;
+    private List<PurchaseOrderBatchResponseDTO> batches;
+
+    public PurchaseOrderItemResponseDTO(Long productId, String productName, Integer quantity, Double price, List<PurchaseOrderBatchResponseDTO> batches) {
+        this.productId = productId;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.price = price;
+        this.batches = batches;
+    }
+
+    public PurchaseOrderItemResponseDTO() {
+    }
+}

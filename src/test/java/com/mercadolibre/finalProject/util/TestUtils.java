@@ -76,7 +76,8 @@ public interface TestUtils {
     }
 
     static Product getProductValid() {
-        return new Product("Pizza", null);
+        //return new Product("Pizza", null);
+        return new Product(1L);
     }
 
     static Batch getBatchValid() {

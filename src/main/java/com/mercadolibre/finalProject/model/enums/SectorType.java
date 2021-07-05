@@ -31,7 +31,19 @@ public enum SectorType {
                 return x;
         }
 
-        throw new RuntimeException("Invalid code: "+ cod);
+        throw new RuntimeException("Invalid sector type code: "+ cod);
+    }
+
+    public static SectorType toCod (String description) {
+        if(description == null)
+            return null;
+
+        for(SectorType x : SectorType.values()) {
+            if(description.equals(x.getDescription()))
+                return x;
+        }
+
+        throw new RuntimeException("Invalid sector type: " + description);
     }
 
 }
