@@ -1,13 +1,11 @@
 package com.mercadolibre.finalProject.model;
 
-import com.mercadolibre.finalProject.model.enums.SectorType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "sectors")
@@ -33,14 +31,4 @@ public class Sector {
         this.id = id;
     }
 
-    public Sector(Set<Integer> types, Warehouse warehouse, Double currentQuantityBatches, Double maxQuantityBatches) {
-        this.types = types;
-        this.warehouse = warehouse;
-        this.currentQuantityBatches = currentQuantityBatches;
-        this.maxQuantityBatches = maxQuantityBatches;
-    }
-
-    private void getTypes(Set<SectorType> types) {
-        this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
-    }
 }

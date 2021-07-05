@@ -1,6 +1,6 @@
 package com.mercadolibre.finalProject.exceptions;
 
-public class WarehouseNotFoundException extends Exception {
+public class WarehouseNotFoundException extends RuntimeException {
     public WarehouseNotFoundException() {
         super("Warehouse Not Found");
     }

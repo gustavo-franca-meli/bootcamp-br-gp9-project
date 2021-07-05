@@ -22,9 +22,17 @@ public class Representative {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
+    public Representative(Long id) {
+        this.id = id;
+    }
+
     public Representative(String name, Warehouse warehouse) {
         this.name = name;
         this.warehouse = warehouse;
+    }
+
+    public Representative(String name) {
+        this.name = name;
     }
 
     public Boolean worksIn(Long warehouseId) {

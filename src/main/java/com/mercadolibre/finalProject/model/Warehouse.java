@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 
 @Entity
@@ -30,6 +29,11 @@ public class Warehouse {
     public Warehouse(String name, List<Sector> sectors, Representative representative) {
         this.name = name;
         this.sectors = sectors;
+        this.representative = representative;
+    }
+
+    public Warehouse(String name, Representative representative) {
+        this.name = name;
         this.representative = representative;
     }
 }

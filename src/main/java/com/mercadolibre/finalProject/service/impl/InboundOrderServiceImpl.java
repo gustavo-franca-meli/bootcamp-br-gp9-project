@@ -15,41 +15,43 @@ import java.util.stream.Collectors;
 
 @Service
 public class InboundOrderServiceImpl implements IInboundOrderService {
-    private IWarehouseService warehouseService;
-    private ISectorService sectorService;
-    private IRepresentativeService representativeService;
-    private OrderRepository repository;
-    private IBatchService bathService;
+    private final IWarehouseService warehouseService;
+    private final ISectorService sectorService;
+    private final IRepresentativeService representativeService;
+    private final OrderRepository repository;
+    private final IBatchService batchService;
 
-    public InboundOrderServiceImpl(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService bathService) {
+    public InboundOrderServiceImpl(IWarehouseService warehouseService, ISectorService sectorService, IRepresentativeService representativeService, OrderRepository repository, IBatchService batchService) {
         this.warehouseService = warehouseService;
         this.sectorService = sectorService;
         this.representativeService = representativeService;
         this.repository = repository;
-        this.bathService = bathService;
+        this.batchService = batchService;
     }
 
     @Override
-    public InboundOrderResponseDTO create(InboundOrderDTO dto, String representation) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBathStockException {
+    public InboundOrderResponseDTO create(InboundOrderDTO dto, String representation) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
         //warehouse exist if not throws
         var warehouse = warehouseService.findById(dto.getSection().getWarehouseCode());
 
+        // TODO: retrieve the id of the representative, probably via the token sent by the header, a mocked id was placed (1L) so as not to give an error
         //representative works in warehouse if not throws?
-        var representative = representativeService.findByIdAndWarehouse(representation, warehouse);
+        var representative = representativeService.findByIdAndWarehouseId(1L, warehouse.getId());
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
         // save all batchStock if fails throws
-        var bathStock = bathService.create(dto.getBatchStock(), sector.getId());
-        List<BatchDTO> bathStockResponse = bathStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
+        var batchStock = batchService.create(dto.getBatchStock(), sector);
+        List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws
-        var order = new Order(dto.getOrderDate(), representative, bathStock);
+        var order = new Order(dto.getOrderDate(), null, batchStock);
         repository.save(order);
-        return new InboundOrderResponseDTO(bathStockResponse);
+
+        return new InboundOrderResponseDTO(batchStockResponse);
     }
 
     @Override
-    public InboundOrderResponseDTO save(InboundOrderDTO dto, String representative) throws InboundOrderNotFoundException, InternalServerErrorException {
+    public InboundOrderResponseDTO save(InboundOrderDTO dto, String representative) {
         return null;
     }
 }

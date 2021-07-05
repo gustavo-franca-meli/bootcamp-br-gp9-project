@@ -44,4 +44,8 @@ public class Batch {
         this.manufacturingTime = manufacturingTime;
         this.dueDate = dueDate;
     }
+
+    public Batch (Long id) {
+        this.id = id;
+    }
 }
