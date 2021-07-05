@@ -1,7 +1,7 @@
 package com.mercadolibre.finalProject.controller;
 
 import com.mercadolibre.finalProject.model.Seller;
-import com.mercadolibre.finalProject.service.SellerService;
+import com.mercadolibre.finalProject.service.ISellerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
 @RequestMapping("/seller")
 public class SellerController {
 
-    SellerService service;
+    ISellerService service;
 
-    public SellerController(SellerService service) {
+    public SellerController(ISellerService service) {
         this.service = service;
     }
 

@@ -4,7 +4,7 @@ import com.mercadolibre.finalProject.model.Seller;
 
 import java.util.List;
 
-public interface SellerService {
+public interface ISellerService {
     Long createSeller(Seller seller);
     Seller findSellerById(Long id);
     List<Seller> listAllSellers();

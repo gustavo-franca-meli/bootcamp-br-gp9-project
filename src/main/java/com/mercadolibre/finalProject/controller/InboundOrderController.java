@@ -3,19 +3,19 @@ package com.mercadolibre.finalProject.controller;
 
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
-import com.mercadolibre.finalProject.service.impl.InboundOrderServiceImpl;
+import com.mercadolibre.finalProject.service.IInboundOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RequestMapping("/api/v1/fresh-products/inboundorder/")
+@RequestMapping(path = "/api/v1/fresh-products/inboundorder")
 @RestController
 public class InboundOrderController {
-    private InboundOrderServiceImpl service;
+    private IInboundOrderService service;
 
-    public InboundOrderController(InboundOrderServiceImpl service) {
+    public InboundOrderController(IInboundOrderService service) {
         this.service = service;
     }
 

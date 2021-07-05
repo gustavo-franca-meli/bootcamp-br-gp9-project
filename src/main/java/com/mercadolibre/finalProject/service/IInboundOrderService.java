@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.service;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.*;
+import org.springframework.stereotype.Service;
 
 public interface IInboundOrderService {
 
