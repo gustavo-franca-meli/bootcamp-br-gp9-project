@@ -9,10 +9,10 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "orders")
+@Table(name = "inbound_order")
 @Data
 @NoArgsConstructor
-public class Order {
+public class InboundOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,18 +20,19 @@ public class Order {
 
     private LocalDate orderDate;
 
-    @OneToMany
+    @OneToMany(mappedBy = "inboundOrder")
     private List<Batch> batches;
 
     @ManyToOne
     @JoinColumn(nullable = false)
     private Representative representative;
-    public Order(LocalDate orderDate, Representative representative, List<Batch> bathStock) {
+
+    public InboundOrder(LocalDate orderDate, Representative representative, List<Batch> bathStock) {
         this.orderDate = orderDate;
         this.batches = bathStock;
         this.representative = representative;
     }
-    public Order(LocalDate orderDate, Long representativeId, List<Batch> bathStock) {
+    public InboundOrder(LocalDate orderDate, Long representativeId, List<Batch> bathStock) {
         this.orderDate = orderDate;
         this.batches = bathStock;
         this.representative = new Representative(representativeId);

@@ -8,7 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="accounts")
+@Table(name="account")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,13 +23,13 @@ public class Account {
     private Integer rol;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_country_house_fk", nullable = false)
-    private CountryHouse countryHouse;
+    @JoinColumn(name = "id_country_fk", nullable = false)
+    private Country country;
 
-    public Account(String username, String password, Integer rol, CountryHouse countryHouse) {
+    public Account(String username, String password, Integer rol, Country country) {
         this.username = username;
         this.password = password;
         this.rol = rol;
-        this.countryHouse = countryHouse;
+        this.country = country;
     }
 }

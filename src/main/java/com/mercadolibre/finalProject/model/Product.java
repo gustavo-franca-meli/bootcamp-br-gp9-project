@@ -1,25 +1,20 @@
 package com.mercadolibre.finalProject.model;
 
-import com.mercadolibre.finalProject.model.enums.SectorType;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 public class Product {
 
@@ -28,30 +23,40 @@ public class Product {
 
     private String name;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "SECTOR_TYPES")
-    private Set<Integer> types = new HashSet<>();
+    private String description;
 
-    @ManyToMany(mappedBy = "products")
-    List<Sector> sectors = new ArrayList<>();
+    private Double price;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "SECTOR_PRODUCT_TYPES")
+    private Set<Integer> types = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
-//    public SectorType getType() {
-//        return SectorType.FRAGILE;
-//    }
+    public Set<ProductType> getTypesInProductType () {
+        return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
+    }
 
-    private void setTypes(Set<SectorType> types) {
-        this.types = types.stream().map(SectorType::getCod).collect(Collectors.toSet());
+    private void setTypes (Set<ProductType> types) {
+        this.types = types.stream().map(ProductType::getCod).collect(Collectors.toSet());
     }
 
     public Product (Long id) {
         this.id = id;
     }
 
-    public Product (String name, Set<Integer> types, Seller seller) {
+    public Product(String name, String description, Double price, Set<Integer> types, Seller seller) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.types = types;
+        this.seller = seller;
+    }
+
+    public Product(Long id, String name, Set<Integer> types, Seller seller) {
+        this.id = id;
         this.name = name;
         this.types = types;
         this.seller = seller;

@@ -1,7 +1,7 @@
 package com.mercadolibre.finalProject.service.crud.impl;
 
 import com.mercadolibre.finalProject.dtos.CountryHouseDTO;
-import com.mercadolibre.finalProject.model.CountryHouse;
+import com.mercadolibre.finalProject.model.Country;
 import com.mercadolibre.finalProject.repository.CountryHouseRepository;
 import com.mercadolibre.finalProject.service.crud.ICountryHouseService;
 import org.modelmapper.ModelMapper;
@@ -28,9 +28,9 @@ public class CountryHouseServiceImpl implements ICountryHouseService {
     @Override
     @Transactional
     public CountryHouseDTO create(CountryHouseDTO countryHouseDTO) {
-        if (countryHouseRepository.findByCountry(countryHouseDTO.getCountry())==null){
-            CountryHouse newCountryHouse = modelMapper.map(countryHouseDTO, CountryHouse.class);
-            countryHouseRepository.save(newCountryHouse);
+        if (countryHouseRepository.findByName(countryHouseDTO.getCountry())==null){
+            Country newCountry = modelMapper.map(countryHouseDTO, Country.class);
+            countryHouseRepository.save(newCountry);
         }else{
             countryHouseDTO=null;
         }
@@ -41,15 +41,15 @@ public class CountryHouseServiceImpl implements ICountryHouseService {
     @Override
     @Transactional
     public CountryHouseDTO update(CountryHouseDTO countryHouseDTO) {
-        CountryHouse newCountryHouse = modelMapper.map(countryHouseDTO, CountryHouse.class);
-        countryHouseRepository.save(newCountryHouse);
+        Country newCountry = modelMapper.map(countryHouseDTO, Country.class);
+        countryHouseRepository.save(newCountry);
         return countryHouseDTO;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        Optional<CountryHouse> opt = countryHouseRepository.findById(id);
+        Optional<Country> opt = countryHouseRepository.findById(id);
         if (!opt.isPresent()) {
             throw new NoSuchElementException("No existe empleado con el id: " + id);
         }
@@ -58,7 +58,7 @@ public class CountryHouseServiceImpl implements ICountryHouseService {
 
     @Override
     public CountryHouseDTO findById(Long id) {
-        Optional<CountryHouse> opt = countryHouseRepository.findById(id);
+        Optional<Country> opt = countryHouseRepository.findById(id);
 
         if (!opt.isPresent()) {
             throw new NoSuchElementException("No existe empleado con el id: " + id);
@@ -70,14 +70,14 @@ public class CountryHouseServiceImpl implements ICountryHouseService {
     public List<CountryHouseDTO> findAll() {
         List<CountryHouseDTO> countryHousesDTO = countryHouseRepository.findAll()
                 .stream()
-                .map(countryHouse -> modelMapper.map(countryHouse, CountryHouseDTO.class))
+                .map(country -> modelMapper.map(country, CountryHouseDTO.class))
                 .collect(Collectors.toList());
         return countryHousesDTO;
     }
 
     @Override
     public CountryHouseDTO findByCountry(String country) {
-        CountryHouse contryHouse = countryHouseRepository.findByCountry(country);
+        Country contryHouse = countryHouseRepository.findByName(country);
         return modelMapper.map(contryHouse, CountryHouseDTO.class);
     }
 }

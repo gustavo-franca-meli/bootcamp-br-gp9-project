@@ -4,7 +4,7 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.*;
-import com.mercadolibre.finalProject.model.Order;
+import com.mercadolibre.finalProject.model.InboundOrder;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.OrderRepository;
 import com.mercadolibre.finalProject.service.*;
@@ -42,7 +42,7 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
         List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         //register order and assign representative if fails throws
-        var order = new Order(dto.getOrderDate(), representative.getId(), batchStock);
+        var order = new InboundOrder(dto.getOrderDate(), representative.getId(), batchStock);
         repository.save(order);
 
         return new InboundOrderResponseDTO(batchStockResponse);

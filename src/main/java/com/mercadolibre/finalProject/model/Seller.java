@@ -3,12 +3,14 @@ package com.mercadolibre.finalProject.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
-@Table(name = "sellers")
+@Table(name = "seller")
 @Data
 @NoArgsConstructor
 public class Seller {
@@ -19,11 +21,20 @@ public class Seller {
 
     private String name;
 
-    @OneToMany
-    private List<Product> products;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Product> products = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
     public Seller(String name, List<Product> products) {
         this.name = name;
         this.products = products;
+    }
+
+    public Seller(String name, Account account) {
+        this.name = name;
+        this.account = account;
     }
 }

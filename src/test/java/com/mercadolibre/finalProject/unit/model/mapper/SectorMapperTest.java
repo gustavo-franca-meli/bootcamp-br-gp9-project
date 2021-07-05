@@ -1,7 +1,6 @@
 package com.mercadolibre.finalProject.unit.model.mapper;
 
-import com.mercadolibre.finalProject.model.enums.SectorType;
-import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.util.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -32,6 +31,6 @@ public class SectorMapperTest {
         var expected = TestUtils.getSectorValid();
         var got = SectorMapper.getTypesSectorDescriptions(expected.getTypes());
 
-        assertTrue(got.contains(SectorType.PERISHABLE.getDescription()));
+        assertTrue(got.contains(ProductType.PERISHABLE.getDescription()));
     }
 }

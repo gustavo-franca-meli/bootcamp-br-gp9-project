@@ -5,9 +5,8 @@ import com.mercadolibre.finalProject.dtos.response.PurchaseOrderBatchResponseDTO
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
-import com.mercadolibre.finalProject.model.enums.SectorType;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ISectorService {
@@ -16,5 +15,5 @@ public interface ISectorService {
     Sector findById (Long sectorId) throws SectorNotFoundException;
     Integer getProductStockQuantity (ProductStockForOrderDTO productStock);
     List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches (List<Batch> batches, Integer orderQuantity);
-    Boolean hasType(Long sectorID, SectorType type) throws SectorNotFoundException;
+    Boolean hasType(Long sectorID, ProductType type) throws SectorNotFoundException;
 }

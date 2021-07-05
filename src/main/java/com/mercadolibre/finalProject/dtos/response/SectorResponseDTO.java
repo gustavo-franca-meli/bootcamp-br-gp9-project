@@ -1,12 +1,10 @@
 package com.mercadolibre.finalProject.dtos.response;
 
-import com.mercadolibre.finalProject.model.enums.SectorType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor

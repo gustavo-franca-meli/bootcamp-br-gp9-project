@@ -6,13 +6,11 @@ import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
-import com.mercadolibre.finalProject.model.Warehouse;
-import com.mercadolibre.finalProject.model.enums.SectorType;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.IProductService;
-import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,9 +35,10 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductResponseDTO create(ProductRequestDTO productRequestDTO) {
-        var response = productRepository.save(new Product(productRequestDTO.getName(), new HashSet<>(productRequestDTO.getTypes()), null));
-
-        return new ProductResponseDTO(response.getId(), response.getName());
+//        var response = productRepository.save(new Product(productRequestDTO.getName(), new HashSet<>(productRequestDTO.getTypes()), null));
+//
+//        return new ProductResponseDTO(response.getId(), response.getName());
+        return null;
     }
 
     @Override
@@ -78,17 +77,14 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Set<SectorType> getTypes(Long id) throws ProductNotFoundException {
+    public Set<ProductType> getTypes(Long id) throws ProductNotFoundException {
         Product product = this.findById(id);
-        return product.getTypes().stream().map(SectorType::toEnum).collect(Collectors.toSet());
+        return product.getTypes().stream().map(ProductType::toEnum).collect(Collectors.toSet());
     }
 
     @Override
     public Sector findSectorByIdAndWarehouse(Long warehouseId, Product product) {
-        Optional<Sector> sector = product.getSectors().stream().filter(
-                s -> s.getWarehouse().getId().equals(warehouseId)).collect(Collectors.toList()).stream().findFirst();
-        if(sector.isEmpty()) { throw new RuntimeException(); } // CREATE EXCEPTION FOR WHEN CANT FIND SECTOR FOR PRODUCT AND WAREHOUSE
-        return sector.get();
+        return null;
     }
 
     @Override
