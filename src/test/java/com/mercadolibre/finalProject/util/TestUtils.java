@@ -3,10 +3,12 @@ package com.mercadolibre.finalProject.util;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.SectorType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
+import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
 import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
 
 import java.time.LocalDate;
@@ -60,6 +62,10 @@ public interface TestUtils {
         var representative = new Representative("Leonardo", null);
         representative.setId(1l);
         return representative;
+    }
+
+    static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
+        return RepresentativeMapper.toResponseDTO(getRepresentativeValid());
     }
 
     static Seller getSellerValid() {

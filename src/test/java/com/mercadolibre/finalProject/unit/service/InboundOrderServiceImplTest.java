@@ -34,7 +34,6 @@ public class InboundOrderServiceImplTest {
         service = new InboundOrderServiceImpl(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
     }
 
-
     @SneakyThrows
     @Test
     public void shouldReturnBatchStockSizeCorrectly() {
@@ -43,8 +42,8 @@ public class InboundOrderServiceImplTest {
         var warehouseResponseDto = TestUtils.getWarehouseResponseDTOValid();
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
-        var representative = TestUtils.getRepresentativeValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representative);
+        var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
+        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorValid();
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
@@ -84,7 +83,7 @@ public class InboundOrderServiceImplTest {
     public void shouldReturnRepresentativeNotFoundWhenRepresentativeNotExistInWareHouse() {
         var warehouseResponseDTO = TestUtils.getWarehouseResponseDTOValid();
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenThrow(RepresentativeNotFound.class);
+        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenThrow(RepresentativeNotFound.class);
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();
         assertThrows(RepresentativeNotFound.class, () -> service.create(inboundOrderDTO, Mockito.anyString()));
     }

@@ -1,13 +1,13 @@
 package com.mercadolibre.finalProject.service;
 
+import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
 import com.mercadolibre.finalProject.exceptions.RepresentativeNotFound;
 import com.mercadolibre.finalProject.model.Representative;
 import com.mercadolibre.finalProject.model.Warehouse;
 
 public interface IRepresentativeService {
-    boolean worksIn(Warehouse warehouse);
 
-    Representative findById(String representation);
+    RepresentativeResponseDTO findById(Long representativeId);
 
-    Representative findByIdAndWarehouseId(String representeId, Long id) throws RepresentativeNotFound;
+    RepresentativeResponseDTO findByIdAndWarehouseId(Long representativeId, Long warehouseId) throws RepresentativeNotFound;
 }
