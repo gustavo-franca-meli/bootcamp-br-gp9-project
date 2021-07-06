@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.unit.service;
 
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
+import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.ISectorService;
@@ -34,7 +35,7 @@ public class BatchServiceTest {
         var dto = TestUtils.getInboundOrderDTOValid();
         var listBath = dto.getBatchStock();
 
-        var product = new Product(1L);
+        var product = ProductMapper.toResponseDTO(new Product(1L)); //new Product(1L);
         var bath = BatchMapper.toModel(listBath.get(0),dto.getSection().getCode());
         when(productService.findById(any())).thenReturn(product);
         when(sectorService.hasType(dto.getSection().getCode(), product.getProductTypes())).thenReturn(true);
