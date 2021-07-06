@@ -26,7 +26,7 @@ public class Sector {
     private Set<Integer> types = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Batch> batches = new ArrayList<>();
+    private List<Batch> batches;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
@@ -44,11 +44,15 @@ public class Sector {
         this.maxQuantityBatches = maxQuantityBatches;
     }
 
-    private void setTypes (Set<ProductType> types) {
+    public void setTypes (Set<ProductType> types) {
         this.types = types.stream().map(ProductType::getCod).collect(Collectors.toSet());
     }
 
     public Set<ProductType> getTypesInProductType () {
         return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
+    }
+
+    public Long getWarehouseId() {
+        return this.warehouse.getId();
     }
 }

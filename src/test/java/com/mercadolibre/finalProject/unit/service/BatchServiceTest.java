@@ -35,12 +35,13 @@ public class BatchServiceTest {
         var listBath = dto.getBatchStock();
 
         var product = new Product(1L);
-        var bath = BatchMapper.toModel(listBath.get(0),dto.getSection().getCode());
+
+        var bath = BatchMapper.toModel(listBath.get(0),dto.getSection().getCode(),1L);
         when(productService.findById(any())).thenReturn(product);
         when(sectorService.hasType(dto.getSection().getCode(), product.getProductTypes())).thenReturn(true);
-        when(sectorService.isThereSpace(any(),anyLong())).thenReturn(true);
+        when(sectorService.isThereSpace(anyLong())).thenReturn(true);
         when(bathRepository.save(any())).thenReturn(bath);
-        var response =  service.create(listBath,dto.getSection().getCode());
+        var response =  service.create(listBath,dto.getSection().getCode(),1L);
         assertEquals(response.size(),listBath.size());
 
     }

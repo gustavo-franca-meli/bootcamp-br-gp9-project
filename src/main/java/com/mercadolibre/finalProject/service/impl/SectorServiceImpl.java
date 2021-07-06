@@ -73,12 +73,13 @@ public class SectorServiceImpl implements ISectorService {
     }
 
     @Override
-    public Boolean isThereSpace(Batch batch, Long sectorId) {
+    public Boolean isThereSpace(Long sectorId) {
+        //TODO: change de method of verify if sector has space!!
         var sector = this.findSectorBy(sectorId);
-        var totalQuantity = sector.getBatches().size() + batch.getInitialQuantity();
+        var totalQuantity = this.sectorRepository.countBatchesIn(sectorId);
 
-        if (totalQuantity > sector.getMaxQuantityBatches()) {
-            throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space for batch " + batch.getId());
+        if (totalQuantity >= sector.getMaxQuantityBatches()) {
+            throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space");
         }
 
         return true;

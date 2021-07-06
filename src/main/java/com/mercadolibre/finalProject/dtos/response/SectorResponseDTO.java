@@ -16,4 +16,5 @@ public class SectorResponseDTO {
     private Set<String> types = new HashSet<>();
     private Integer currentQuantityBatches;
     private Integer maxQuantityBatches;
+    private Long warehouseId;
 }

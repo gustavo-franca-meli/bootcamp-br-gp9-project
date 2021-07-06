@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface ISectorService {
-    Boolean isThereSpace(Batch batch, Long sectorId);
+    Boolean isThereSpace(Long sectorId);
 
     Boolean exist(Long sectorId);
 

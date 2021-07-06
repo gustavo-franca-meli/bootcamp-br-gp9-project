@@ -27,11 +27,21 @@ public class InboundOrder {
     @JoinColumn(nullable = false)
     private Representative representative;
 
+    public InboundOrder(Long id) {
+        this.id = id;
+    }
+
     public InboundOrder(LocalDate orderDate, Representative representative, List<Batch> bathStock) {
         this.orderDate = orderDate;
         this.batches = bathStock;
         this.representative = representative;
     }
+
+    public InboundOrder(LocalDate orderDate, Long representativeId) {
+        this.orderDate = orderDate;
+        this.representative = new Representative(representativeId);
+    }
+
     public InboundOrder(LocalDate orderDate, Long representativeId, List<Batch> bathStock) {
         this.orderDate = orderDate;
         this.batches = bathStock;

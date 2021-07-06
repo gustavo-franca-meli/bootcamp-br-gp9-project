@@ -19,11 +19,20 @@ VALUES ('4', 'contra123', '1', 'user_four', '4');
 INSERT INTO representative (id,name,account_id,warehouse_id) VALUES (1,'Name', 1,null);
 INSERT INTO warehouse (id,name, country_id, representative_id) VALUES (1,'Name', 1, 1);
 UPDATE representative SET warehouse_id = '1' WHERE (`id` = '1');
+
+INSERT INTO warehouse (id,name, country_id, representative_id) VALUES (2,'100mq', 1, null);
 INSERT INTO sector (`id`, `max_quantity_batches`, `warehouse_id`) VALUES ('1', '50', '1');
+INSERT INTO sector (`id`, `max_quantity_batches`, `warehouse_id`) VALUES ('2', '50', '2');
+INSERT INTO sector (`id`, `max_quantity_batches`, `warehouse_id`) VALUES ('3', '1', '1');
 INSERT INTO `seller` (`name`,`account_id`) VALUES ('Nycolas Vieira',2);
 INSERT INTO product (id,description,name,price,seller_id) VALUES (1,'Produto cadastrado','Produto', 10.0, 1);
+INSERT INTO product (id,description,name,price,seller_id) VALUES (3,'Produto cadastrado','Produto', 10.0, 1);
+
 INSERT INTO sector_product_types (product_id,types) VALUES (1,  1);
+INSERT INTO sector_product_types (product_id,types) VALUES (3,  2);
 INSERT INTO sector_types (sector_id,types) VALUES (1,1);
+INSERT INTO sector_types (sector_id,types) VALUES (2,2);
+INSERT INTO sector_types (sector_id,types) VALUES (3,1);
 --
 --INSERT INTO `seller` (`name`) VALUES ('Carolina Fugita');
 --INSERT INTO `seller` (`name`) VALUES ('Gustavo França');

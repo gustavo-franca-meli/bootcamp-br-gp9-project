@@ -37,13 +37,16 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
         var representative = representativeService.findByIdAndWarehouseId(representativeId, warehouse.getId());
         //sector is valid if not throws
         var sector = sectorService.findById(dto.getSection().getCode());
-        // save all batchStock if fails throws
-        var batchStock = batchService.create(dto.getBatchStock(), sector.getId());
-        List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
+        if(!sector.getWarehouseId().equals(warehouse.getId()))throw new SectorNotFoundException("Sector id " + sector.getId() + " not found in warehouse Id " + warehouse.getId());
 
         //register order and assign representative if fails throws
-        var order = new InboundOrder(dto.getOrderDate(), representative.getId(), batchStock);
-        repository.save(order);
+        var order  = repository.save(new InboundOrder(dto.getOrderDate(), representative.getId()));
+
+        // save all batchStock if fails throws
+        var batchStock = batchService.create(dto.getBatchStock(), sector.getId(),order.getId());
+        List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
+
+
 
         return new InboundOrderResponseDTO(batchStockResponse);
     }

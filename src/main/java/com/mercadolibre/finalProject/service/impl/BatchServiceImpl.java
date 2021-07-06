@@ -30,30 +30,30 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<Batch> create(List<BatchDTO> batchStock, Long sectorId) throws CreateBatchStockException {
-        //sector has space for batchStock length else throws
-        var size = batchStock.size();
+    public List<Batch> create(List<BatchDTO> batchStock, Long sectorId,Long orderId) throws CreateBatchStockException {
 
         var errorList = new ArrayList<BatchCreateException>();
         var responseBathList = new ArrayList<Batch>();
         //iterate all product if find a error throws all
         batchStock.forEach((batch)->{
             try{
-                var batchModel = BatchMapper.toModel(batch,sectorId);
+                var batchModel = BatchMapper.toModel(batch,sectorId,orderId);
                 //product seller is registered if not throws
                 var product = productService.findById(batch.getProductId());
                 //product type pertence a sector
                 if(sectorService.hasType(sectorId,product.getProductTypes())){
-                    sectorService.isThereSpace(batchModel,sectorId);
-                    var bathResponse = batchRepository.save(batchModel);
-                    responseBathList.add(bathResponse);
+                    //verify if has space
+                    sectorService.isThereSpace(sectorId);
+                    //save batch
+                    var batchResponse = batchRepository.save(batchModel);
+                    responseBathList.add(batchResponse);
                 }else{
-                    throw new ProductTypeNotSuportedInSectorException(product.getId().toString(),product.getProductTypes().toString(),sectorId.toString());
-                };
+                    throw new ProductTypeNotSuportedInSectorException(product.getId().toString(),product.getProductTypes(),sectorId.toString());
+                }
 
 
             }catch (Exception e){
-                errorList.add(new BatchCreateException(batch,e.getMessage()));
+                errorList.add(new BatchCreateException(batch.getId(),e.getMessage()));
             }
 
         });
@@ -64,7 +64,7 @@ public class BatchServiceImpl implements IBatchService {
             responseBathList.forEach((batch -> {
                 batchRepository.deleteById(batch.getId());
             }));
-            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector ",errorList);
+            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector",errorList);
         }
         //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }
