@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class SessionServiceImplTest {
+class SessionServiceTest {
 
     AccountRepository repository = Mockito.mock(AccountRepository.class);
     SessionServiceImpl service;
@@ -21,7 +21,6 @@ class SessionServiceImplTest {
     void setUp(){
         this.service = new SessionServiceImpl(repository);
     }
-
 
     @Test
     void loginFail() {

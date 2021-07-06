@@ -1,5 +1,6 @@
 package com.mercadolibre.finalProject.dtos.response;
 
+import com.mercadolibre.finalProject.model.Seller;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import lombok.Data;
 import lombok.Getter;
@@ -18,11 +19,6 @@ public class ProductResponseDTO {
     private Double price;
     private Integer type;
 
-    public ProductResponseDTO(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public ProductResponseDTO(Long id, String name, String description, Double price, Integer type) {
         this.id = id;
         this.name = name;
@@ -30,4 +26,5 @@ public class ProductResponseDTO {
         this.price = price;
         this.type = type;
     }
+
 }

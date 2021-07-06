@@ -9,8 +9,7 @@ import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
-import com.mercadolibre.finalProject.repository.SectorRepository;
-import com.mercadolibre.finalProject.service.IProductService;
+import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,33 +21,36 @@ import java.util.Set;
 public class ProductServiceImpl implements IProductService {
 
     private ProductRepository productRepository;
-    private SectorRepository sectorRepository;
-    private BatchRepository batchRepository;
+    private ISellerService sellerService;
 
-    public ProductServiceImpl(ProductRepository productRepository, SectorRepository sectorRepository, BatchRepository batchRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ISellerService sellerService) {
         this.productRepository = productRepository;
-        this.sectorRepository = sectorRepository;
-        this.batchRepository = batchRepository;
+        this.sellerService = sellerService;
     }
 
     @Override
     public ProductResponseDTO create(ProductRequestDTO productRequestDTO) {
-        var product = new Product();
-        product.setName(productRequestDTO.getName());
-        product.setDescription(productRequestDTO.getDescription());
-        product.setPrice(productRequestDTO.getPrice());
-        product.setProductType(productRequestDTO.getProductType());
+        var seller = sellerService.findSellerById(productRequestDTO.getSellerId());
+        var product = new Product(
+                productRequestDTO.getName(),
+                productRequestDTO.getDescription(),
+                productRequestDTO.getPrice(),
+                productRequestDTO.getProductType(),
+                seller);
 
-        var createdProduct = productRepository.save(product);
+        product = productRepository.save(product);
 
-        return ProductMapper.toResponseDTO(createdProduct);
+        return ProductMapper.toResponseDTO(product);
     }
 
     @Override
     public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
-        Product product = this.findProductBy(id);
-        product.setName(productRequestDTO.getName());
-        product.setSeller(null);
+        var product = this.findProductBy(id);
+        product.setName(productRequestDTO.getName() == null ? productRequestDTO.getName() : product.getName());
+        product.setDescription(productRequestDTO.getDescription() == null ? productRequestDTO.getDescription() : product.getDescription());
+        product.setPrice(productRequestDTO.getPrice() == null ? productRequestDTO.getPrice() : product.getPrice());
+        product.setProductType(productRequestDTO.getProductType() == null ? productRequestDTO.getProductType() : product.getProductType());
+        product.setSeller(sellerService.findSellerById(productRequestDTO.getSellerId()));
 
         this.productRepository.save(product);
 
@@ -95,5 +97,4 @@ public class ProductServiceImpl implements IProductService {
     public List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date) {
         return new ArrayList<>();
     }
-
 }

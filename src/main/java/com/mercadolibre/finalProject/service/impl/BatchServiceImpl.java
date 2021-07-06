@@ -113,7 +113,7 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     private void isCorrectSectorForProducts(Integer productType, Integer sectorType) {
-        if (productType == sectorType)
+        if (productType != sectorType)
             throw new IncorrectSectorTypeException("This product doesn't should stay in this sector");
     }
 
@@ -122,7 +122,7 @@ public class BatchServiceImpl implements IBatchService {
         if (ordered.equals(ORDERED_BY_CURRENT_QUANTITY)) {
             batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByCurrentQuantity(warehouseId, productId, MINIMUM_DUE_DATE);
         } else {
-            batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueData(warehouseId, productId, MINIMUM_DUE_DATE);
+            batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(warehouseId, productId, MINIMUM_DUE_DATE);
         }
 
         this.validateFillBatches(batches, productId);

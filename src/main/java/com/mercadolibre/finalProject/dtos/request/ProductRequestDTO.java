@@ -9,6 +9,7 @@ public class ProductRequestDTO {
     private String description;
     private Double price;
     private Integer productType;
+    private Long sellerId;
 
     public ProductRequestDTO() {
     }

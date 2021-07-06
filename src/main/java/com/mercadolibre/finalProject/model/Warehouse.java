@@ -33,6 +33,14 @@ public class Warehouse {
         this.id = id;
     }
 
+    public Warehouse(Long id, String name, Country country, List<Sector> sectors, Representative representative) {
+        this.id = id;
+        this.name = name;
+        this.country = country;
+        this.sectors = sectors;
+        this.representative = representative;
+    }
+
     public Warehouse(String name, Country country, List<Sector> sectors, Representative representative) {
         this.name = name;
         this.country = country;

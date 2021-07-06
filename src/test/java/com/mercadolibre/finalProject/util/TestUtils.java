@@ -31,13 +31,14 @@ public interface TestUtils {
         return Optional.ofNullable(null);
     }
 
+    static Country getCountry() {
+        return new Country("Brasil");
+    }
+
     static Warehouse getWarehouseValid() {
-//        var sectors = getListSectorsValid();
-//        var representative = getRepresentativeValid();
-//        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
-//        warehouse.setId(1L);
-//        return warehouse;
-        return null;
+        var representative = getRepresentativeValid();
+        var country = getCountry();
+        return new Warehouse(1L, "São Paulo", country, null, representative);
     }
 
     static List<Sector> getListSectorsValid() {
@@ -45,16 +46,9 @@ public interface TestUtils {
     }
 
     static Sector getSectorValid() {
-//        var types = convertSectorsToSetInteger();
-//        var sector = new Sector();
-//        sector.setId(1l);
-//        sector.setTypes(types);
-//        sector.setWarehouse(null);
-//        sector.setCurrentQuantityBatches(1.0);
-//        sector.setMaxQuantityBatches(10.0);
-//
-//        return sector;
-        return null;
+        var warehouse = getWarehouseValid();
+        var batches = getBatchListValid();
+        return new Sector(1L, 1, batches, warehouse, 100);
     }
 
     static Set<Integer> convertSectorsToSetInteger() {
@@ -73,21 +67,13 @@ public interface TestUtils {
     }
 
     static Seller getSellerValid() {
-        var products = Arrays.asList(getProductValid());
-        var seller = new Seller("Leonardo", products);
-        seller.setId(1L);
+        var seller = new Seller(1L, "Leonardo");
         return seller;
     }
 
     static Product getProductValid() {
         var seller = getSellerValid();
         return new Product(1L, "Product Name", "Product description", 1.0, 1, seller);
-    }
-
-    static Batch getBatchValid() {
-        var product = getProductValid();
-        var sector = getSectorValid();
-        return new Batch(1L, product, sector, 0.0f, 0.0f, 10, 5, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
 
     static InboundOrder getOrderValid() {
@@ -120,13 +106,14 @@ public interface TestUtils {
     }
 
     static List<Batch> getBatchListValid() {
-        var batchsDTO = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
-        return batchsDTO.stream().map(b -> BatchMapper.toModel(b, 1L)).collect(Collectors.toList());
+        return Arrays.asList(getBatchValid(), getBatchValid());
     }
 
     static Batch getBatchValid() {
         var product = getProductValid();
-        var batch = new Batch(1L, Product product, Sector sector, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate);
+        var warehouse = new Warehouse(1L);
+        var sector = new Sector(1L, 1, null, warehouse, 100);
+        return new Batch(1L, product, sector, 0.0f, 0.0f, 1000, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(10));
     }
 
     static ProductResponseDTO getProductResponseDTO() {

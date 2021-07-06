@@ -1,15 +1,11 @@
 package com.mercadolibre.finalProject.model;
 
-import com.mercadolibre.finalProject.model.enums.ProductType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "sector")
@@ -34,6 +30,14 @@ public class Sector {
 
     public Sector(Long id) {
         this.id = id;
+    }
+
+    public Sector(Long id, Integer sectorType, List<Batch> batches, Warehouse warehouse, Integer maxQuantityBatches) {
+        this.id = id;
+        this.sectorType = sectorType;
+        this.batches = batches;
+        this.warehouse = warehouse;
+        this.maxQuantityBatches = maxQuantityBatches;
     }
 
     public Sector(Integer sectorType, Warehouse warehouse, Integer maxQuantityBatches) {

@@ -32,8 +32,6 @@ public class InboundInboundOrderServiceImplTest {
     @BeforeEach
     public void setup() {
         service = new InboundOrderServiceImpl(warehouseService, sectorService, representativeService, inboundOrderRepository, bathService);
-
-
     }
 
     @SneakyThrows
