@@ -10,9 +10,11 @@ import com.mercadolibre.finalProject.repository.BatchPurchaseOrderRepository;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.service.IBatchPurchaseOrderService;
 import com.mercadolibre.finalProject.service.IBatchService;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class BatchPurchaseOrderServiceImpl implements IBatchPurchaseOrderService {
 
     private BatchPurchaseOrderRepository repository;

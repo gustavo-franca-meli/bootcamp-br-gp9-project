@@ -18,21 +18,17 @@ public interface IProductService {
 
     ProductResponseDTO create(ProductRequestDTO dto);
 
-    ProductResponseDTO update(Long id, ProductRequestDTO dto);
+    ProductResponseDTO update(Long id, ProductRequestDTO dto) throws ProductNotFoundException;
 
     void delete(Long id);
 
-    Product findById(Long id) throws ProductNotFoundException;
+    ProductResponseDTO findById (Long id) throws ProductNotFoundException;
 
     List<Product> findAll();
-    
-    Sector findSectorByIdAndWarehouse(Long warehouseId, Product product);
-
-    ProductBatchesPurchaseOrderDTO getProductStockByDate (Long warehouseId, Long productId, LocalDate date, Integer orderQuantity) throws ProductNotFoundException;
 
     Double getTotalPrice (Long productId, Integer quantity) throws ProductNotFoundException;
 
-    ProductStockDTO getStockForProductInCountryByData (Long productId, Long countryId, LocalDate date);
+    ProductStockDTO getStockForProductInCountryByData (Long productId, Long countryId, LocalDate date) throws ProductNotFoundException;
 
     List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date);
 }

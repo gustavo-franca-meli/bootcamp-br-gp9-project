@@ -1,6 +1,5 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
@@ -12,9 +11,6 @@ import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -35,19 +31,12 @@ public class SectorServiceImpl implements ISectorService {
 
     private Sector findSectorBy(Long sectorId) {
         var sector = this.sectorRepository.findById(sectorId);
-
-    public Integer getProductStockQuantity (ProductBatchesPurchaseOrderDTO productStock) {
-        return 1;
+        return sector.orElseThrow();
     }
 
     @Override
-    public List<BatchPurchaseOrderResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
-        return null;
-    }
-
-    @Override
-    public Boolean hasType(Long sectorID, Set<ProductType> productTypes) throws SectorNotFoundException {
-        var sector = this.findSectorBy(sectorID);
+    public Boolean hasType (Long sectorId, Set<ProductType> productTypes) throws SectorNotFoundException {
+        var sector = this.findSectorBy(sectorId);
         var sectorTypes = sector.getTypes();
         return productTypes.stream().anyMatch(p -> sectorTypes.stream().anyMatch((s -> s == p.getCod())));
     }

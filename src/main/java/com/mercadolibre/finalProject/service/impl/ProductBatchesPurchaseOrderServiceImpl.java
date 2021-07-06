@@ -10,11 +10,13 @@ import com.mercadolibre.finalProject.model.PurchaseOrder;
 import com.mercadolibre.finalProject.repository.ProductBatchesPurchaseOrderRepository;
 import com.mercadolibre.finalProject.service.IBatchPurchaseOrderService;
 import com.mercadolibre.finalProject.service.IProductBatchesPurchaseOrderService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ProductBatchesPurchaseOrderServiceImpl implements IProductBatchesPurchaseOrderService {
 
     ProductBatchesPurchaseOrderRepository repository;

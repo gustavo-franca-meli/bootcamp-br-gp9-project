@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBatchService {
-    List<Batch> create(@NotNull  List<BatchDTO> batchStock, Sector sector) throws CreateBatchStockException;
-//    BatchPurchaseOrderResponseDTO withdrawStockFromBatch (Batch batch, Integer withdrawnQuantity, Integer orderQuantity);
-    Boolean isThereStockForPurchaseOrder(PurchaseOrderRequestDTO purchaseOrder, Long id);
+    List<Batch> create(List<BatchDTO> batchStock, Long sectorId) throws CreateBatchStockException;
     BatchDTO withdrawQuantity (Long batchId, Integer withdrawnQuantity);
 }

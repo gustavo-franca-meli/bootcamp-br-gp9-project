@@ -6,6 +6,7 @@ import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.BatchCreateException;
 import com.mercadolibre.finalProject.exceptions.CreateBatchStockException;
+import com.mercadolibre.finalProject.exceptions.ProductTypeNotSuportedInSectorException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
@@ -70,23 +71,6 @@ public class BatchServiceImpl implements IBatchService {
             throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector ",errorList);
         }
         //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
-    }
-
-
-    @Override
-    public Boolean isThereStockForPurchaseOrder(PurchaseOrderRequestDTO purchaseOrder, Long countryId) {
-
-//        Map<Long,Boolean> verification = new HashMap<>();
-//        LocalDate date = purchaseOrder.getDate();
-//
-//        for(ProductPurchaseOrderRequestDTO productRequest : purchaseOrder.getProducts()) {
-//            Long productId = productRequest.getProductId();
-//            Integer productStock = this.batchRepository.getProductStockByCountryAndDate(productId,countryId,date).size();
-//            verification.put(productId, productStock >= productRequest.getQuantity());
-//        }
-//
-//        return !verification.values().contains(false);
-        return null;
     }
 
     public BatchDTO withdrawQuantity (Long batchId, Integer withdrawnQuantity) {

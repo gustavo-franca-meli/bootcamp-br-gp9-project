@@ -6,6 +6,7 @@ import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
+import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
 import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
@@ -35,7 +36,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
     }
 
     @Override
-    public PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrderRequest, String token) throws WarehouseNotFoundException {
+    public PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrderRequest, String token) throws WarehouseNotFoundException, ProductNotFoundException {
         String buyerUsername = SessionServiceImpl.getUsername(token);
 //        Country country = this.sessionService.findByName(buyerUsername).getCountry();
         Long countryId = 1L;
@@ -59,7 +60,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         return new PurchaseOrderResponseDTO(purchaseOrderRequest.getDate(), purchaseOrderRequest.getOrderStatus(), productBatches);
     }
 
-    public List<StockForOrderDTO> getStocksForOrder (PurchaseOrderRequestDTO purchaseOrderRequest, Long countryId){
+    public List<StockForOrderDTO> getStocksForOrder (PurchaseOrderRequestDTO purchaseOrderRequest, Long countryId) throws ProductNotFoundException {
         List<StockForOrderDTO> stocksForOrder = new ArrayList<>();
         LocalDate date = purchaseOrderRequest.getDate();
 
