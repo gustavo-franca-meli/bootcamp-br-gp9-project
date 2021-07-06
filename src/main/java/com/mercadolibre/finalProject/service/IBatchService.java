@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBatchService {
+    BatchDTO findById (Long id);
     List<Batch> create(List<BatchDTO> batchStock, Long sectorId) throws CreateBatchStockException;
     BatchDTO withdrawQuantity (Long batchId, Integer withdrawnQuantity);
 }

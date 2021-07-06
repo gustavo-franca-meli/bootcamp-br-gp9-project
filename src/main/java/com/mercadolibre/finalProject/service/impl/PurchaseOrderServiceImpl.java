@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.StockForOrderDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderResponseDTO;
@@ -14,6 +15,7 @@ import com.mercadolibre.finalProject.service.IProductBatchesPurchaseOrderService
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
 import com.mercadolibre.finalProject.service.ISessionService;
+import net.bytebuddy.asm.Advice;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,42 +42,31 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         String buyerUsername = SessionServiceImpl.getUsername(token);
 //        Country country = this.sessionService.findByName(buyerUsername).getCountry();
         Long countryId = 1L;
+        LocalDate minimumDueDate = purchaseOrderRequest.getDate().minusWeeks(3);
 
-        List<StockForOrderDTO> stocksForOrder = this.getStocksForOrder(purchaseOrderRequest,countryId);
-
-        if (!this.isStockEnough(stocksForOrder)) { throw new RuntimeException(); }
+        if (!this.isStockEnough(purchaseOrderRequest.getProducts(), countryId, minimumDueDate)) {
+            throw new RuntimeException(); }
 
         PurchaseOrder purchaseOrder = new PurchaseOrder(purchaseOrderRequest.getDate(), purchaseOrderRequest.getOrderStatus());
         List<ProductBatchesPurchaseOrderResponseDTO> productBatches = new ArrayList<>();
 
-        for (StockForOrderDTO stockForOrder : stocksForOrder) {
-            productBatches.add(
-                    this.productBatchesPurchaseOrderService.create(
-                            stockForOrder.getOrderQuantity(),
-                            stockForOrder.getProductStock(),
-                            purchaseOrder));
+        for (ProductPurchaseOrderRequestDTO productRequest : purchaseOrderRequest.getProducts()) {
+            productBatches.add(this.productBatchesPurchaseOrderService.create(productRequest, purchaseOrder, countryId, minimumDueDate));
         }
 
         this.repository.save(purchaseOrder);
         return new PurchaseOrderResponseDTO(purchaseOrderRequest.getDate(), purchaseOrderRequest.getOrderStatus(), productBatches);
     }
 
-    public List<StockForOrderDTO> getStocksForOrder (PurchaseOrderRequestDTO purchaseOrderRequest, Long countryId) throws ProductNotFoundException {
-        List<StockForOrderDTO> stocksForOrder = new ArrayList<>();
-        LocalDate date = purchaseOrderRequest.getDate();
-
-        for(ProductPurchaseOrderRequestDTO productRequest : purchaseOrderRequest.getProducts()) {
-            stocksForOrder.add(new StockForOrderDTO(
-                    productRequest.getQuantity(),
-                    this.productService.getStockForProductInCountryByData(productRequest.getProductId(),countryId,date)));
+    public Boolean isStockEnough (List<ProductPurchaseOrderRequestDTO> productRequests, Long countryId, LocalDate date) {
+        LocalDate minimumDate = date; // fazer -3 semanas
+        for(ProductPurchaseOrderRequestDTO productRequestDTO : productRequests) {
+            Integer quantityProduct = this.productService.getQuantityOfProductByCountryAndDate(productRequestDTO.getProductId(), countryId, date);
+            if (quantityProduct < productRequestDTO.getQuantity()) { // lista de excecao com productId e quantidade de estoque disponivel
+                }
         }
-
-        return stocksForOrder;
+        return true;
     }
-
-    public Boolean isStockEnough (List<StockForOrderDTO> stocks) {
-        // retornar lista de erros caso falso
-        return true; }
 
     @Override
     public PurchaseOrderResponseDTO update (Long id, List<PurchaseOrderUpdateRequestDTO> updates) {

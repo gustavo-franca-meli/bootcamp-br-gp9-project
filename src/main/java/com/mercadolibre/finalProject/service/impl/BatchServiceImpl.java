@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
@@ -31,6 +32,17 @@ public class BatchServiceImpl implements IBatchService {
         this.batchRepository = batchRepository;
         this.sectorService = sectorService;
         this.productService = productService;
+    }
+
+    private Batch getModelById (Long id) {
+        Optional<Batch> batchOpt = this.batchRepository.findById(id);
+        if(batchOpt.isEmpty()) { throw new RuntimeException(); }
+        return batchOpt.get();
+    }
+
+    @Override
+    public BatchDTO findById (Long id) {
+        return BatchMapper.toDTO(this.getModelById(id));
     }
 
     @Override

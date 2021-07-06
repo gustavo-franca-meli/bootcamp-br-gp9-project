@@ -7,9 +7,11 @@ import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
+import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.enums.ProductType;
+import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
@@ -100,7 +102,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date) {
-        return new ArrayList<>();
+        List<Batch> batchesByProductCountryAndDate = this.batchRepository.findByProductCountryAndDate(productId,countryId,date);
+        return BatchMapper.toListDTO(batchesByProductCountryAndDate);
+    }
+
+    @Override
+    public Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date) {
+        return this.batchRepository.getProductQuantityByCountryAndDate(productId,countryId,date);
     }
 
 }

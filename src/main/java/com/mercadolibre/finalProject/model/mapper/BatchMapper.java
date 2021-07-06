@@ -5,6 +5,9 @@ import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public interface BatchMapper {
 
     static Batch toModel(BatchDTO batchDTO, Long sectorId) {
@@ -34,6 +37,10 @@ public interface BatchMapper {
                 batch.getManufacturingTime(),
                 batch.getDueDate()
         );
+    }
+
+    static List<BatchDTO> toListDTO(List<Batch> batches) {
+        return batches.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
     }
 
 }

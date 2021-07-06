@@ -2,16 +2,24 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
+import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
+import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.ProductBatchesPurchaseOrder;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
 import com.mercadolibre.finalProject.repository.ProductBatchesPurchaseOrderRepository;
+import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.service.IBatchPurchaseOrderService;
+import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IProductBatchesPurchaseOrderService;
+import com.mercadolibre.finalProject.service.IProductService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +28,14 @@ import java.util.Optional;
 public class ProductBatchesPurchaseOrderServiceImpl implements IProductBatchesPurchaseOrderService {
 
     ProductBatchesPurchaseOrderRepository repository;
+    IBatchService batchService;
+    IProductService productService;
     IBatchPurchaseOrderService batchPurchaseOrderService;
 
-    public ProductBatchesPurchaseOrderServiceImpl(ProductBatchesPurchaseOrderRepository repository, IBatchPurchaseOrderService batchPurchaseOrderService) {
+    public ProductBatchesPurchaseOrderServiceImpl(ProductBatchesPurchaseOrderRepository repository, IBatchService batchService, IProductService productService, IBatchPurchaseOrderService batchPurchaseOrderService) {
         this.repository = repository;
+        this.batchService = batchService;
+        this.productService = productService;
         this.batchPurchaseOrderService = batchPurchaseOrderService;
     }
 
@@ -64,9 +76,11 @@ public class ProductBatchesPurchaseOrderServiceImpl implements IProductBatchesPu
     }
 
     @Override
-    public ProductBatchesPurchaseOrderResponseDTO create (Integer orderQuantity, ProductStockDTO productStock, PurchaseOrder purchaseOrder) {
+    public ProductBatchesPurchaseOrderResponseDTO create (ProductPurchaseOrderRequestDTO productRequest, PurchaseOrder purchaseOrder, Long countryId, LocalDate date) throws ProductNotFoundException {
         List<BatchPurchaseOrderResponseDTO> batchesOrder = new ArrayList<>();
-        Integer withdrawnQuantity = 0;
+        Integer withdrawnQuantity = 0, orderQuantity = productRequest.getQuantity();
+
+        ProductStockDTO productStock = this.productService.getStockForProductInCountryByData(productRequest.getProductId(), countryId, date);
         ProductBatchesPurchaseOrder productBatchesPurchaseOrder = new ProductBatchesPurchaseOrder(productStock.getProductPrice(),purchaseOrder);
 
         for(BatchDTO batchDTO : productStock.getBatches()) {
