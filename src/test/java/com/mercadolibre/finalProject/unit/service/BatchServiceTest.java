@@ -32,7 +32,7 @@ public class BatchServiceTest {
     @Test
     public void shouldReturnBathStockSizeCorrectly() {
 
-        var dto = TestUtils.getInboundOrderDTOValid();
+        var dto = TestUtils.getInboundOrderDTOValidForCreate();
         var listBath = dto.getBatchStock();
 
         var product = ProductMapper.toResponseDTO(new Product(1L)); //new Product(1L);

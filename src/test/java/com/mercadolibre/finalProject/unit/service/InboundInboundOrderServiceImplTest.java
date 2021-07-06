@@ -39,7 +39,7 @@ public class InboundInboundOrderServiceImplTest {
     @SneakyThrows
     @Test
     public void shouldReturnBatchStockSizeCorrectly() {
-        var dto = TestUtils.getInboundOrderDTOValid();
+        var dto = TestUtils.getInboundOrderDTOValidForCreate();
 
         var warehouseResponseDto = TestUtils.getWarehouseResponseDTOValid();
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
@@ -76,7 +76,7 @@ public class InboundInboundOrderServiceImplTest {
         var order = TestUtils.getOrderValid();
         when(inboundOrderRepository.save(order)).thenReturn(order);
 
-        var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();
+        var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
         service.create(inboundOrderDTO, Mockito.anyLong());
         verify(inboundOrderRepository, times(1)).save(any());
     }
@@ -84,7 +84,7 @@ public class InboundInboundOrderServiceImplTest {
 
     @Test
     public void shouldReturnWarehouseNotFoundWhenWarehouseNotExist() {
-        var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();
+        var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
         when(warehouseService.findById(Mockito.anyLong())).thenThrow(WarehouseNotFoundException.class);
         assertThrows(WarehouseNotFoundException.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
     }
@@ -95,7 +95,7 @@ public class InboundInboundOrderServiceImplTest {
         var warehouseResponseDTO = TestUtils.getWarehouseResponseDTOValid();
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
         when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenThrow(RepresentativeNotFound.class);
-        var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();
+        var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
         assertThrows(RepresentativeNotFound.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
     }
 
@@ -107,7 +107,7 @@ public class InboundInboundOrderServiceImplTest {
 
         when(sectorService.findById(Mockito.anyLong())).thenThrow(SectorNotFoundException.class);
 
-        var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();
+        var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
         assertThrows(SectorNotFoundException.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
     }
 
@@ -125,7 +125,7 @@ public class InboundInboundOrderServiceImplTest {
         when(bathService.create(Mockito.any(), Mockito.any(),any())).thenThrow(CreateBatchStockException.class);
         var order = TestUtils.getOrderValid();
         when(inboundOrderRepository.save(any())).thenReturn(order);
-        var inboundOrderDTO = TestUtils.getInboundOrderDTOValid();
+        var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
         assertThrows(CreateBatchStockException.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
     }
 }

@@ -96,6 +96,7 @@ public interface TestUtils {
         return new Batch(1L, product, sector,order, 0.0f, 0.0f, 10, 5, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
 
+
     static InboundOrder getOrderValid() {
         var representative = getRepresentativeValid();
         return new InboundOrder(LocalDate.now(), representative.getId());
@@ -105,7 +106,15 @@ public interface TestUtils {
         return new SectorDTO(1L, 1L, 10.0, 100.0);
     }
 
-    static InboundOrderDTO getInboundOrderDTOValid() {
+    static InboundOrderDTO getInboundOrderDTOValidForCreate() {
+        var batchList = Arrays.asList(getBatchDTOValidNoId(), getBatchDTOValidNoId());
+        var sector = getSectorDTOValid();
+        return new InboundOrderDTO(10, LocalDate.now(), sector, batchList);
+    }
+
+
+
+    static InboundOrderDTO getInboundOrderDTOValidForUpdate() {
         var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
         var sector = getSectorDTOValid();
         return new InboundOrderDTO(10, LocalDate.now(), sector, batchList);
@@ -114,6 +123,10 @@ public interface TestUtils {
     static BatchDTO getBatchDTOValid() {
         return new BatchDTO(1L, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
+    static BatchDTO getBatchDTOValidNoId() {
+        return new BatchDTO(, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+    }
+
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
         var warehouse = getWarehouseValid();
@@ -130,4 +143,6 @@ public interface TestUtils {
     static SectorResponseDTO getSectorDTOResponseValid() {
         return SectorMapper.toResponseDTO(getSectorValid());
     }
+
+
 }
