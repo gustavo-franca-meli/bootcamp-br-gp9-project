@@ -1,10 +1,8 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
-import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
@@ -32,32 +30,7 @@ public class SectorServiceImpl implements ISectorService {
 
     private Sector findSectorBy(Long sectorId) {
         var sector = this.sectorRepository.findById(sectorId);
-
-        return sector.orElseThrow(() -> new SectorNotFoundException("Sector Not Found. Id:" + sectorId));
-    }
-
-//    @Override
-//    public List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
-//        List<PurchaseOrderBatchResponseDTO> purchaseBatches = new ArrayList<>();
-//        Integer withdrawnQuantity = 0;
-//
-//        for (Batch batch : batches) {
-//            var purchaseBatch = purchaseBatchAndWithdrawStock(orderQuantity, withdrawnQuantity, batch);
-//            withdrawnQuantity += purchaseBatch.getQuantity();
-//            purchaseBatches.add(purchaseBatch);
-//
-//            if (withdrawnQuantity >= orderQuantity)
-//                break;
-//        }
-//        return purchaseBatches;
-//    }
-//
-//    private PurchaseOrderBatchResponseDTO purchaseBatchAndWithdrawStock(Integer orderQuantity, Integer withdrawnQuantity, Batch batch) {
-//        return this.batchService.withdrawStockFromBatch(batch, withdrawnQuantity, orderQuantity);
-//    }
-
-    public Integer getProductStockQuantity(ProductStockForOrderDTO productStock) {
-        return productStock.getBatches().stream().mapToInt(Batch::getCurrentQuantity).sum();
+        return sector.orElseThrow();
     }
 
     @Override

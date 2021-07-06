@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.controller;
 
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
+import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
@@ -25,8 +26,8 @@ public class PurchaseOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<PurchaseOrderResponseDTO> create(@Valid @RequestBody PurchaseOrderDTO dto, String representative) throws Exception {
-        var response = purchaseOrderService.create(dto,representative);
+    public ResponseEntity<PurchaseOrderResponseDTO> create(@Valid @RequestBody PurchaseOrderRequestDTO dto, String token) throws Exception {
+        var response = purchaseOrderService.create(dto,token);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
