@@ -111,4 +111,11 @@ public class ProductServiceImpl implements IProductService {
         return this.batchRepository.getProductQuantityByCountryAndDate(productId,countryId,date);
     }
 
+    @Override
+    public List<ProductResponseDTO> getAllProducts(String token) {
+        // get country id by token ??
+        Long countryId = 1L;
+        return ProductMapper.toListResponseDTO(this.batchRepository.findProductsByCountry(countryId));
+    }
+
 }

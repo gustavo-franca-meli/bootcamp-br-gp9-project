@@ -32,6 +32,14 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
             "GROUP BY A.product")
     List<Product> findProductsByCountryAndDate (Long countryId, LocalDate date);
 
+    @Query("SELECT A.product " +
+            "FROM Batch A " +
+            "INNER JOIN Sector B ON (A.sector=B.id) " +
+            "INNER JOIN Warehouse C ON (B.warehouse=C.id) " +
+            "WHERE C.country=:countryId " +
+            "GROUP BY A.product")
+    List<Product> findProductsByCountry(Long countryId);
+
     @Query("SELECT sum(A.currentQuantity) AS quantity " +
             "FROM Batch A " +
             "INNER JOIN Sector B ON (A.sector=B.id) " +
@@ -39,5 +47,6 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
             "WHERE C.country=:countryId AND A.dueDate >=:date AND A.product=:productId " +
             "GROUP BY A.product ")
     Integer getProductQuantityByCountryAndDate (Long productId, Long countryId, LocalDate date);
+
 
 }

@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.controller;
 
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.service.IProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ public class ProductController {
 
     @GetMapping
     ResponseEntity<List<ProductResponseDTO>> getAllProducts (@PathVariable String token) {
-        return null;
+        List<ProductResponseDTO> response = productService.getAllProducts(token);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
