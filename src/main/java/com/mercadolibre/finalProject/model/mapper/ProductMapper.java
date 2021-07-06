@@ -8,12 +8,17 @@ import java.util.stream.Collectors;
 
 public interface ProductMapper {
 
-    static List<ProductResponseDTO> fromEntityListToResponse(List<Product> products) {
-        return products.stream().map(ProductMapper::fromEntityToResponse).collect(Collectors.toList());
+    static List<ProductResponseDTO> toResponseDTOList(List<Product> products) {
+        return products.stream().map(ProductMapper::toResponseDTO).collect(Collectors.toList());
     }
 
-    static ProductResponseDTO fromEntityToResponse(Product product) {
-        return new ProductResponseDTO(product.getId(), product.getName(), product.getSeller());
+    static ProductResponseDTO toResponseDTO(Product product) {
+        return new ProductResponseDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getTypes()
+        );
     }
-
 }

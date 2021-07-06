@@ -4,16 +4,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 
 @Entity
-@Table(name = "representatives")
+@Table(name = "representative")
 @Data
 @NoArgsConstructor
 public class Representative {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -22,12 +22,22 @@ public class Representative {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    public Representative(String name, Warehouse warehouse) {
-        this.name = name;
-        this.warehouse = warehouse;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    public Representative(Long id) {
+        this.id = id;
     }
 
-    public Boolean worksIn(Long warehouseId) {
-        return this.warehouse.getId().equals(warehouseId);
+    public Representative(String name, Warehouse warehouse, Account account) {
+        this.name = name;
+        this.warehouse = warehouse;
+        this.account = account;
     }
+
+    public Representative(String name) {
+        this.name = name;
+    }
+
 }

@@ -1,33 +1,44 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
-import com.mercadolibre.finalProject.exceptions.SectorNotFound;
+import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
+import com.mercadolibre.finalProject.model.enums.ProductType;
+import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.Set;
 
-
+@Service
 public class SectorServiceImpl implements ISectorService {
 
-    private SectorRepository sectorRepository;
+    private final SectorRepository sectorRepository;
 
     public SectorServiceImpl(SectorRepository sectorRepository) {
         this.sectorRepository = sectorRepository;
     }
 
-    public SectorDTO getById (Sector sector) { return new SectorDTO(sector); }
+    @Override
+    public SectorResponseDTO findById(Long sectorId) throws SectorNotFoundException {
+        var sector = this.findSectorBy(sectorId);
+
+        return SectorMapper.toResponseDTO(sector);
+    }
+
+    private Sector findSectorBy(Long sectorId) {
+        var sector = this.sectorRepository.findById(sectorId);
+        return sector.orElseThrow();
+    }
 
     @Override
-    public Sector findById (Long sectorId) {
-        Optional<Sector> sectorOpt = this.sectorRepository.findById(sectorId);
-
-        if(sectorOpt.isEmpty()) { throw new SectorNotFound(); }
-
-        return sectorOpt.get();
+    public Boolean hasType (Long sectorId, Set<ProductType> productTypes) throws SectorNotFoundException {
+        var sector = this.findSectorBy(sectorId);
+        var sectorTypes = sector.getTypes();
+        return productTypes.stream().anyMatch(p -> sectorTypes.stream().anyMatch((s -> s == p.getCod())));
     }
 
     @Override
@@ -36,11 +47,11 @@ public class SectorServiceImpl implements ISectorService {
     }
 
     @Override
-    public Boolean isThereSpace(Batch batch, Long sectorId) throws Exception{
-        // checks whether there's enough space for batch in the sector
+    public Boolean isThereSpace(Batch batch, Long sectorId) {
+        var sector = this.findSectorBy(sectorId);
+        var totalQuantity = sector.getBatches().size() + batch.getInitialQuantity();
 
-        Sector sector = findById(sectorId);
-        if( (sector.getCurrentQuantityBatches() + batch.getCurrentQuantity()) > sector.getMaxQuantityBatches() ) {
+        if (totalQuantity > sector.getMaxQuantityBatches()) {
             throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space for batch " + batch.getId());
         }
 

@@ -5,27 +5,24 @@ import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 
-public class BatchMapper {
+public interface BatchMapper {
 
-
-    public static Batch toModel(BatchDTO batchDTO, Long sectorId) {
-      return new Batch(
-              batchDTO.getId(),
-              new Product(batchDTO.getProductId()),
-              new Sector(sectorId),
-              batchDTO.getCurrentTemperature(),
-              batchDTO.getMinimumTemperature(),
-              batchDTO.getInitialQuantity(),
-              batchDTO.getCurrentQuantity(),
-              batchDTO.getManufacturingDate(),
-              batchDTO.getManufacturingTime(),
-              batchDTO.getDueDate()
-      );
-
-
+    static Batch toModel(BatchDTO batchDTO, Long sectorId) {
+        return new Batch(
+                batchDTO.getId(),
+                new Product(batchDTO.getProductId()),
+                new Sector(sectorId),
+                batchDTO.getCurrentTemperature(),
+                batchDTO.getMinimumTemperature(),
+                batchDTO.getInitialQuantity(),
+                batchDTO.getCurrentQuantity(),
+                batchDTO.getManufacturingDate(),
+                batchDTO.getManufacturingTime(),
+                batchDTO.getDueDate()
+        );
     }
 
-    public static BatchDTO toDTO(Batch batch) {
+     static BatchDTO toDTO(Batch batch) {
         return new BatchDTO(
                 batch.getId(),
                 batch.getProduct().getId(),
@@ -38,4 +35,5 @@ public class BatchMapper {
                 batch.getDueDate()
         );
     }
+
 }

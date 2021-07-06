@@ -1,23 +1,22 @@
 package com.mercadolibre.finalProject.dtos.request;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class ProductRequestDTO {
 
-    @NotNull
     private String name;
-
+    private String description;
+    private Double price;
+    private List<Integer> types;
     private Long sellerId;
 
-    public ProductRequestDTO(String name, Long sellerId) {
+    public ProductRequestDTO(String name, String description, Double price, List<Integer> types) {
         this.name = name;
-        this.sellerId = sellerId;
+        this.description = description;
+        this.price = price;
+        this.types = types;
     }
 }
