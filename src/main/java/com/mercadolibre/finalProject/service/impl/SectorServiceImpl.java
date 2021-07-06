@@ -1,9 +1,7 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
-import com.mercadolibre.finalProject.dtos.SectorDTO;
-import com.mercadolibre.finalProject.dtos.response.PurchaseOrderBatchResponseDTO;
-import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
+import com.mercadolibre.finalProject.dtos.ProductBatchesPurchaseOrderDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
@@ -40,24 +38,13 @@ public class SectorServiceImpl implements ISectorService {
     }
 
 
-    public Integer getProductStockQuantity (ProductStockForOrderDTO productStock) {
-        return productStock.getBatches().stream().mapToInt(Batch::getCurrentQuantity).sum();
+    public Integer getProductStockQuantity (ProductBatchesPurchaseOrderDTO productStock) {
+        return 1;
     }
 
     @Override
-    public List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
-        List<PurchaseOrderBatchResponseDTO> purchaseBatches = new ArrayList<>();
-        Integer withdrawnQuantity = 0;
-
-        for(Batch batch : batches) {
-            if(withdrawnQuantity >= orderQuantity) {
-                break;
-            }
-            PurchaseOrderBatchResponseDTO purchaseBatch = this.batchService.withdrawStockFromBatch(batch,withdrawnQuantity,orderQuantity);
-            withdrawnQuantity += purchaseBatch.getQuantity();
-            purchaseBatches.add(purchaseBatch);
-        }
-        return purchaseBatches;
+    public List<BatchPurchaseOrderResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
+        return null;
     }
 
     @Override

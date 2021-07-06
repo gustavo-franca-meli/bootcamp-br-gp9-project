@@ -1,46 +1,84 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
-import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
+import com.mercadolibre.finalProject.dtos.StockForOrderDTO;
+import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
-import com.mercadolibre.finalProject.model.Warehouse;
+import com.mercadolibre.finalProject.model.PurchaseOrder;
+import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
+import com.mercadolibre.finalProject.service.IProductBatchesPurchaseOrderService;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
-import com.mercadolibre.finalProject.service.ISectorService;
-import com.mercadolibre.finalProject.service.IWarehouseService;
+import com.mercadolibre.finalProject.service.ISessionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
-    private IProductService productService;
-    private IWarehouseService warehouseService;
-    private ISectorService sectorService;
 
-    public PurchaseOrderServiceImpl(IProductService productService, IWarehouseService warehouseService, ISectorService sectorService) {
+    private PurchaseOrderRepository repository;
+    private ISessionService sessionService;
+    private IProductService productService;
+    private IProductBatchesPurchaseOrderService productBatchesPurchaseOrderService;
+
+    public PurchaseOrderServiceImpl(PurchaseOrderRepository repository, ISessionService sessionService, IProductService productService, IProductBatchesPurchaseOrderService productBatchesPurchaseOrderService) {
+        this.repository = repository;
+        this.sessionService = sessionService;
         this.productService = productService;
-        this.warehouseService = warehouseService;
-        this.sectorService = sectorService;
+        this.productBatchesPurchaseOrderService = productBatchesPurchaseOrderService;
     }
 
     @Override
-    public PurchaseOrderResponseDTO create(PurchaseOrderDTO purchaseOrder, String representative) throws WarehouseNotFoundException {
-//        //buyer registered
-//
-//        Warehouse warehouse = this.warehouseService.findByRepresentative(representative);
-//
-//        List<ProductStockForOrderDTO> productsStocks = this.warehouseService.getProductsStockForOrder(warehouse.getId(),purchaseOrder);
-//
-//        if(!this.warehouseService.isThereStockForOrder(productsStocks)) {
-//            return null;
-//        }
-//
-//        PurchaseOrderResponseDTO purchaseOrderResponse = this.warehouseService.withDrawStockForOrder(productsStocks);
-//        purchaseOrder.setOrderDate(purchaseOrder.getOrderDate());
-//        return purchaseOrderResponse;
+    public PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrderRequest, String token) throws WarehouseNotFoundException {
+        String buyerUsername = SessionServiceImpl.getUsername(token);
+//        Country country = this.sessionService.findByName(buyerUsername).getCountry();
+        Long countryId = 1L;
 
+        List<StockForOrderDTO> stocksForOrder = this.getStocksForOrder(purchaseOrderRequest,countryId);
+
+        if (!this.isStockEnough(stocksForOrder)) { throw new RuntimeException(); }
+
+        PurchaseOrder purchaseOrder = new PurchaseOrder(purchaseOrderRequest.getDate(), purchaseOrderRequest.getOrderStatus());
+        List<ProductBatchesPurchaseOrderResponseDTO> productBatches = new ArrayList<>();
+
+        for (StockForOrderDTO stockForOrder : stocksForOrder) {
+            productBatches.add(
+                    this.productBatchesPurchaseOrderService.create(
+                            stockForOrder.getOrderQuantity(),
+                            stockForOrder.getProductStock(),
+                            purchaseOrder));
+        }
+
+        this.repository.save(purchaseOrder);
+        return new PurchaseOrderResponseDTO(purchaseOrderRequest.getDate(), purchaseOrderRequest.getOrderStatus(), productBatches);
+    }
+
+    public List<StockForOrderDTO> getStocksForOrder (PurchaseOrderRequestDTO purchaseOrderRequest, Long countryId){
+        List<StockForOrderDTO> stocksForOrder = new ArrayList<>();
+        LocalDate date = purchaseOrderRequest.getDate();
+
+        for(ProductPurchaseOrderRequestDTO productRequest : purchaseOrderRequest.getProducts()) {
+            stocksForOrder.add(new StockForOrderDTO(
+                    productRequest.getQuantity(),
+                    this.productService.getStockForProductInCountryByData(productRequest.getProductId(),countryId,date)));
+        }
+
+        return stocksForOrder;
+    }
+
+    public Boolean isStockEnough (List<StockForOrderDTO> stocks) {
+        // retornar lista de erros caso falso
+        return true; }
+
+    @Override
+    public PurchaseOrderResponseDTO update (Long id, List<PurchaseOrderUpdateRequestDTO> updates) {
         return null;
     }
+
 }

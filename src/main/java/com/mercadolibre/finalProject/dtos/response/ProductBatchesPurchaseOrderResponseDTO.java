@@ -7,15 +7,15 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PurchaseOrderItemResponseDTO {
+public class ProductBatchesPurchaseOrderResponseDTO {
 
     private Long productId;
     private String productName;
     private Integer quantity;
     private Double price;
-    private List<PurchaseOrderBatchResponseDTO> batches;
+    private List<BatchPurchaseOrderResponseDTO> batches;
 
-    public PurchaseOrderItemResponseDTO(Long productId, String productName, Integer quantity, Double price, List<PurchaseOrderBatchResponseDTO> batches) {
+    public ProductBatchesPurchaseOrderResponseDTO(Long productId, String productName, Integer quantity, Double price, List<BatchPurchaseOrderResponseDTO> batches) {
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
@@ -23,6 +23,7 @@ public class PurchaseOrderItemResponseDTO {
         this.batches = batches;
     }
 
-    public PurchaseOrderItemResponseDTO() {
+    public ProductBatchesPurchaseOrderResponseDTO() {
     }
+
 }

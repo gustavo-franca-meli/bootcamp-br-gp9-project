@@ -1,6 +1,8 @@
 package com.mercadolibre.finalProject.service;
 
-import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.ProductBatchesPurchaseOrderDTO;
+import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
@@ -28,7 +30,11 @@ public interface IProductService {
 
     Sector findSectorByIdAndWarehouse(Long warehouseId, Product product);
 
-    ProductStockForOrderDTO getProductStockByDate (Long warehouseId, Long productId, LocalDate date, Integer orderQuantity) throws ProductNotFoundException;
+    ProductBatchesPurchaseOrderDTO getProductStockByDate (Long warehouseId, Long productId, LocalDate date, Integer orderQuantity) throws ProductNotFoundException;
 
     Double getTotalPrice (Long productId, Integer quantity) throws ProductNotFoundException;
+
+    ProductStockDTO getStockForProductInCountryByData (Long productId, Long countryId, LocalDate date);
+
+    List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date);
 }

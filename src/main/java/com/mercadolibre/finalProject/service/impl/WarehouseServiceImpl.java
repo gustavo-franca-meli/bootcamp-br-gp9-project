@@ -1,14 +1,13 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.ProductDTO;
-import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
+import com.mercadolibre.finalProject.dtos.ProductBatchesPurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
-import com.mercadolibre.finalProject.dtos.response.PurchaseOrderItemResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
-import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
 import com.mercadolibre.finalProject.repository.WarehouseRepository;
@@ -57,42 +56,45 @@ public class WarehouseServiceImpl implements IWarehouseService {
     }
 
     @Override
-    public List<ProductStockForOrderDTO> getProductsStockForOrder (Long warehouseId, PurchaseOrderDTO purchaseOrder) throws ProductNotFoundException {
+    public List<ProductBatchesPurchaseOrderDTO> getProductsStockForOrder (Long warehouseId, PurchaseOrderDTO purchaseOrder) throws ProductNotFoundException {
+//
+//        List<ProductBatchesPurchaseOrderDTO> productsStocks = new ArrayList<>();
+//
+//        for(ProductDTO productDTO : purchaseOrder.getProducts()) {
+//            productsStocks.add(this.productService.getProductStockByDate(
+//                    warehouseId,productDTO.getId(),purchaseOrder.getOrderDate(),productDTO.getQuantity()));
+//        }
+//        return productsStocks;
 
-        List<ProductStockForOrderDTO> productsStocks = new ArrayList<>();
-
-        for(ProductDTO productDTO : purchaseOrder.getProducts()) {
-            productsStocks.add(this.productService.getProductStockByDate(
-                    warehouseId,productDTO.getId(),purchaseOrder.getOrderDate(),productDTO.getQuantity()));
-        }
-        return productsStocks;
+        return null;
     }
 
-    public Boolean isThereStockForOrder (List<ProductStockForOrderDTO> productsStocks) {
-        for(ProductStockForOrderDTO productStock : productsStocks) {
-            if( this.sectorService.getProductStockQuantity(productStock) < productStock.getOrderQuantity() ) {
-                return false;
-            }
-        }
+    public Boolean isThereStockForOrder (List<ProductBatchesPurchaseOrderDTO> productsStocks) {
+//        for(ProductBatchesPurchaseOrderDTO productStock : productsStocks) {
+//            if( this.sectorService.getProductStockQuantity(productStock) < productStock.getOrderQuantity() ) {
+//                return false;
+//            }
+//        }
         return true;
     }
 
     @Override
-    public PurchaseOrderResponseDTO withDrawStockForOrder(List<ProductStockForOrderDTO> productsStocks) throws ProductNotFoundException {
-        List<PurchaseOrderItemResponseDTO> orderItems = new ArrayList<>();
-        Double totalPrice = 0.0;
-
-        for(ProductStockForOrderDTO productStock : productsStocks) {
-            Double itemPrice = this.productService.getTotalPrice(productStock.getProductId(),productStock.getOrderQuantity());
-            orderItems.add(new PurchaseOrderItemResponseDTO(
-                    productStock.getProductId(),
-                    productStock.getProductName(),
-                    productStock.getOrderQuantity(),
-                    itemPrice,
-                    this.sectorService.withdrawStockFromBatches(productStock.getBatches(),productStock.getOrderQuantity())));
-            totalPrice += itemPrice;
-        }
-
-        return new PurchaseOrderResponseDTO(totalPrice,orderItems);
+    public PurchaseOrderResponseDTO withDrawStockForOrder(List<ProductBatchesPurchaseOrderDTO> productsStocks) throws ProductNotFoundException {
+//        List<ProductBatchesPurchaseOrderResponseDTO> orderItems = new ArrayList<>();
+//        Double totalPrice = 0.0;
+//
+//        for(ProductBatchesPurchaseOrderDTO productStock : productsStocks) {
+//            Double itemPrice = this.productService.getTotalPrice(productStock.getProductId(),productStock.getOrderQuantity());
+//            orderItems.add(new ProductBatchesPurchaseOrderResponseDTO(
+//                    productStock.getProductId(),
+//                    productStock.getProductName(),
+//                    productStock.getOrderQuantity(),
+//                    itemPrice,
+//                    this.sectorService.withdrawStockFromBatches(productStock.getBatches(),productStock.getOrderQuantity())));
+//            totalPrice += itemPrice;
+//        }
+//
+//        return new PurchaseOrderResponseDTO(totalPrice,orderItems);
+        return null;
     }
 }

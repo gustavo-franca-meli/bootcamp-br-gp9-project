@@ -11,17 +11,17 @@ import java.util.List;
 public class PurchaseOrderResponseDTO {
     private LocalDate date;
     private double totalPrice;
-    private List<PurchaseOrderItemResponseDTO> items;
+    private List<ProductBatchesPurchaseOrderResponseDTO> products;
 
-    public PurchaseOrderResponseDTO(LocalDate date, double totalPrice, List<PurchaseOrderItemResponseDTO> items) {
+    public PurchaseOrderResponseDTO(LocalDate date, double totalPrice, List<ProductBatchesPurchaseOrderResponseDTO> products) {
         this.date = date;
         this.totalPrice = totalPrice;
-        this.items = items;
+        this.products = products;
     }
 
-    public PurchaseOrderResponseDTO(double totalPrice, List<PurchaseOrderItemResponseDTO> items) {
+    public PurchaseOrderResponseDTO(double totalPrice, List<ProductBatchesPurchaseOrderResponseDTO> products) {
         this.totalPrice = totalPrice;
-        this.items = items;
+        this.products = products;
     }
 
     public PurchaseOrderResponseDTO() {

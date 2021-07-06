@@ -30,4 +30,9 @@ public class BatchPurchaseOrder {
         this.batch = batch;
         this.productBatchPurchaseOrder = productBatchPurchaseOrder;
     }
+
+    public BatchPurchaseOrder(Integer quantity, Batch batch) {
+        this.quantity = quantity;
+        this.batch = batch;
+    }
 }
