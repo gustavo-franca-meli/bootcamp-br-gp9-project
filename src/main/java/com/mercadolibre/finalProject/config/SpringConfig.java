@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.mercadolibre.routing.RoutingFilter;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,7 @@ public class SpringConfig implements WebMvcConfigurer {
 	public ObjectMapper objectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(createAfterburnerModule());
+		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
