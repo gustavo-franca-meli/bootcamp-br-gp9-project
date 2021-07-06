@@ -4,12 +4,16 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
+import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
+import org.checkerframework.checker.units.qual.A;
+import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,12 +35,14 @@ public interface TestUtils {
     }
 
     static Warehouse getWarehouseValid() {
-//        var sectors = getListSectorsValid();
-//        var representative = getRepresentativeValid();
-//        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
-//        warehouse.setId(1L);
-//        return warehouse;
-        return null;
+        var country = getCountryValid();
+        var warehouse = new Warehouse("Casa central da Argentina", country);
+        warehouse.setId(1L);
+        return warehouse;
+    }
+
+    static Country getCountryValid() {
+        return new Country(1L);
     }
 
     static List<Sector> getListSectorsValid() {
@@ -44,16 +50,13 @@ public interface TestUtils {
     }
 
     static Sector getSectorValid() {
-//        var types = convertSectorsToSetInteger();
-//        var sector = new Sector();
-//        sector.setId(1l);
-//        sector.setTypes(types);
-//        sector.setWarehouse(null);
-//        sector.setCurrentQuantityBatches(1.0);
-//        sector.setMaxQuantityBatches(10.0);
-//
-//        return sector;
-        return null;
+        var types = convertSectorsToSetInteger().stream().map(ProductType::toEnum).collect(Collectors.toSet());
+        var sector = new Sector();
+        sector.setId(1l);
+        sector.setTypes(types);
+        sector.setWarehouse(getWarehouseValid());
+        sector.setMaxQuantityBatches(10);
+        return sector;
     }
 
     static Set<Integer> convertSectorsToSetInteger() {
@@ -61,10 +64,13 @@ public interface TestUtils {
     }
 
     static Representative getRepresentativeValid() {
-//        var representative = new Representative("Leonardo", null);
-//        representative.setId(1l);
-//        return representative;
-        return null;
+        var representative = new Representative("Leonardo", getWarehouseValid(),getAccountValid());
+        representative.setId(1l);
+        return representative;
+    }
+
+    static Account getAccountValid() {
+        return new Account();
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
@@ -86,13 +92,13 @@ public interface TestUtils {
     static Batch getBatchValid() {
         var product = getProductValid();
         var sector = getSectorValid();
-        return new Batch(1L, product, sector, 0.0f, 0.0f, 10, 5, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+        var order = getOrderValid();
+        return new Batch(1L, product, sector,order, 0.0f, 0.0f, 10, 5, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
 
     static InboundOrder getOrderValid() {
         var representative = getRepresentativeValid();
-        var batchs = Arrays.asList(getBatchValid());
-        return new InboundOrder(LocalDate.now(), representative, batchs);
+        return new InboundOrder(LocalDate.now(), representative.getId());
     }
 
     static SectorDTO getSectorDTOValid() {
@@ -110,16 +116,18 @@ public interface TestUtils {
     }
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
-//        var sectors = getListSectorsValid();
-//        var representative = getRepresentativeValid();
-//        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
-//        warehouse.setId(1L);
-//        return WarehouseMapper.toResponseDTO(warehouse);
-        return null;
+        var warehouse = getWarehouseValid();
+       return WarehouseMapper.toResponseDTO(warehouse);
     }
 
     static List<Batch> getBatchListValid() {
         var batchsDTO = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
-        return batchsDTO.stream().map(b -> BatchMapper.toModel(b, 1L)).collect(Collectors.toList());
+        var sector = getSectorValid();
+        var order = getOrderValid();
+        return batchsDTO.stream().map(b -> BatchMapper.toModel(b, sector.getId(),order.getId() )).collect(Collectors.toList());
+    }
+
+    static SectorResponseDTO getSectorDTOResponseValid() {
+        return SectorMapper.toResponseDTO(getSectorValid());
     }
 }

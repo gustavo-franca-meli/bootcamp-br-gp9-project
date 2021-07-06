@@ -19,7 +19,7 @@ public interface SectorMapper {
 
     static SectorResponseDTO toResponseDTO(Sector sector) {
         var sectorTypesDescriptions = getTypesSectorDescriptions(sector.getTypes());
-        return new SectorResponseDTO(sector.getId(), sectorTypesDescriptions, sector.getBatches().size(), sector.getMaxQuantityBatches());
+        return new SectorResponseDTO(sector.getId(), sectorTypesDescriptions, null, sector.getMaxQuantityBatches(),sector.getWarehouseId());
     }
 
     static Set<String> getTypesSectorDescriptions(Set<Integer> types) {

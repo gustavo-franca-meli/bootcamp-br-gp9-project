@@ -17,15 +17,15 @@ public class Batch {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",nullable = false)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "sector_id")
+    @JoinColumn(name = "sector_id", nullable = false)
     private Sector sector;
 
     @ManyToOne
-    @JoinColumn(name = "inbound_order_id")
+    @JoinColumn(name = "inbound_order_id",nullable = false)
     private InboundOrder inboundOrder;
 
     private Float currentTemperature;
@@ -36,9 +36,11 @@ public class Batch {
     private LocalDateTime manufacturingTime;
     private LocalDate dueDate;
 
-    public Batch(Product product, Sector sector, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+    public Batch(Long id, Product product, Sector sector, InboundOrder inboundOrder, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+        this.id = id;
         this.product = product;
         this.sector = sector;
+        this.inboundOrder = inboundOrder;
         this.currentTemperature = currentTemperature;
         this.minimumTemperature = minimumTemperature;
         this.initialQuantity = initialQuantity;
@@ -48,10 +50,10 @@ public class Batch {
         this.dueDate = dueDate;
     }
 
-    public Batch(Long id, Product product, Sector sector, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
-        this.id = id;
+    public Batch(Product product, Sector sector, InboundOrder inboundOrder, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
         this.product = product;
         this.sector = sector;
+        this.inboundOrder = inboundOrder;
         this.currentTemperature = currentTemperature;
         this.minimumTemperature = minimumTemperature;
         this.initialQuantity = initialQuantity;

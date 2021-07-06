@@ -38,7 +38,7 @@ public class WarehouseServiceImplTest {
             service.findById(2l);
         } catch (WarehouseNotFoundException ex) {
             assertEquals(ex.getMessage(),
-                    "Warehouse Not Found");
+                    "Warehouse Not Found. Id:2");
         }
 
     }
