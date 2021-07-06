@@ -36,4 +36,8 @@ public class PurchaseOrder {
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
     }
+
+    public Double getTotalPrice () {
+        return this.getProducts().stream().mapToDouble(ProductBatchesPurchaseOrder::getTotalPrice).sum();
+    }
 }

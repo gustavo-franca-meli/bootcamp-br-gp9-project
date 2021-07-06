@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 public class BatchPurchaseOrderResponseDTO {
     private Long id;
+    private Long batchId;
     private Integer quantity;
     private LocalDate manufacturingDate;
     private LocalDateTime manufacturingTime;
@@ -17,6 +18,15 @@ public class BatchPurchaseOrderResponseDTO {
 
     public BatchPurchaseOrderResponseDTO(Long id, Integer quantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
         this.id = id;
+        this.quantity = quantity;
+        this.manufacturingDate = manufacturingDate;
+        this.manufacturingTime = manufacturingTime;
+        this.dueDate = dueDate;
+    }
+
+    public BatchPurchaseOrderResponseDTO(Long id, Long batchId, Integer quantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+        this.id = id;
+        this.batchId = batchId;
         this.quantity = quantity;
         this.manufacturingDate = manufacturingDate;
         this.manufacturingTime = manufacturingTime;

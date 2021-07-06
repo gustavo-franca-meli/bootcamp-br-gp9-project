@@ -9,7 +9,9 @@ import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderRe
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
+import com.mercadolibre.finalProject.model.ProductBatchesPurchaseOrder;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
+import com.mercadolibre.finalProject.model.mapper.PurchaseOrderMapper;
 import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
 import com.mercadolibre.finalProject.service.IProductBatchesPurchaseOrderService;
 import com.mercadolibre.finalProject.service.IProductService;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
@@ -55,7 +58,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         }
 
         this.repository.save(purchaseOrder);
-        return new PurchaseOrderResponseDTO(purchaseOrderRequest.getDate(), purchaseOrderRequest.getOrderStatus(), productBatches);
+        return PurchaseOrderMapper.toResponseDTO(purchaseOrder,productBatches);
     }
 
     public Boolean isStockEnough (List<ProductPurchaseOrderRequestDTO> productRequests, Long countryId, LocalDate date) {
@@ -71,6 +74,26 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
     @Override
     public PurchaseOrderResponseDTO update (Long id, List<PurchaseOrderUpdateRequestDTO> updates) {
         return null;
+    }
+
+    private PurchaseOrder findById (Long id) {
+        Optional<PurchaseOrder> purchaseOrderOpt = this.repository.findById(id);
+        if(purchaseOrderOpt.isEmpty()) { throw new RuntimeException(); } // purchase order id invalid
+        return purchaseOrderOpt.get();
+    }
+
+    @Override
+    public PurchaseOrderResponseDTO getById (Long id, String token) throws ProductNotFoundException {
+        //token verification
+
+        PurchaseOrder purchaseOrder = this.findById(id);
+        List<ProductBatchesPurchaseOrderResponseDTO> productBatches = new ArrayList<>();
+
+        for(ProductBatchesPurchaseOrder productBatch : purchaseOrder.getProducts()) {
+            productBatches.add(this.productBatchesPurchaseOrderService.findById(productBatch.getId()));
+        }
+
+        return PurchaseOrderMapper.toResponseDTO(purchaseOrder,productBatches);
     }
 
 }

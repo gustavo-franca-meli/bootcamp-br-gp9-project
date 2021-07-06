@@ -16,7 +16,7 @@ public class ProductBatchesPurchaseOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private Long productId;
     private Double currentPricePerUnit;
 
     @OneToMany(mappedBy = "productBatchPurchaseOrder")
@@ -32,12 +32,17 @@ public class ProductBatchesPurchaseOrder {
         this.purchaseOrder = purchaseOrder;
     }
 
-    public ProductBatchesPurchaseOrder(Double currentPricePerUnit, PurchaseOrder purchaseOrder) {
+    public ProductBatchesPurchaseOrder(Long productId, Double currentPricePerUnit, PurchaseOrder purchaseOrder) {
+        this.productId = productId;
         this.currentPricePerUnit = currentPricePerUnit;
         this.purchaseOrder = purchaseOrder;
     }
 
     public Integer getTotalQuantity () {
         return this.getPurchaseBatches().stream().mapToInt(BatchPurchaseOrder::getQuantity).sum();
+    }
+
+    public Double getTotalPrice () {
+        return this.getTotalQuantity() * this.getCurrentPricePerUnit();
     }
 }

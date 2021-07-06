@@ -11,6 +11,8 @@ import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.ProductBatchesPurchaseOrder;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
+import com.mercadolibre.finalProject.model.mapper.BatchPurchaseOrderMapper;
+import com.mercadolibre.finalProject.model.mapper.ProductBatchesPurchaseOrderMapper;
 import com.mercadolibre.finalProject.repository.ProductBatchesPurchaseOrderRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.service.IBatchPurchaseOrderService;
@@ -55,10 +57,11 @@ public class ProductBatchesPurchaseOrderServiceImpl implements IProductBatchesPu
 
 
     @Override
-    public ProductBatchesPurchaseOrderResponseDTO findById(Long id) {
+    public ProductBatchesPurchaseOrderResponseDTO findById (Long id) throws ProductNotFoundException {
         ProductBatchesPurchaseOrder productBatches = this.getModelById(id);
+        ProductResponseDTO product = this.productService.findById(productBatches.getProductId());
 
-        return new ProductBatchesPurchaseOrderResponseDTO();
+        return ProductBatchesPurchaseOrderMapper.toResponseDTO(productBatches, product.getName(), BatchPurchaseOrderMapper.toListResponseDTO(productBatches.getPurchaseBatches()));
     }
 
     @Override
@@ -81,7 +84,7 @@ public class ProductBatchesPurchaseOrderServiceImpl implements IProductBatchesPu
         Integer withdrawnQuantity = 0, orderQuantity = productRequest.getQuantity();
 
         ProductStockDTO productStock = this.productService.getStockForProductInCountryByData(productRequest.getProductId(), countryId, date);
-        ProductBatchesPurchaseOrder productBatchesPurchaseOrder = new ProductBatchesPurchaseOrder(productStock.getProductPrice(),purchaseOrder);
+        ProductBatchesPurchaseOrder productBatchesPurchaseOrder = new ProductBatchesPurchaseOrder(productStock.getProductId(),productStock.getProductPrice(),purchaseOrder);
 
         for(BatchDTO batchDTO : productStock.getBatches()) {
             if(withdrawnQuantity >= orderQuantity) { break; }
@@ -92,8 +95,8 @@ public class ProductBatchesPurchaseOrderServiceImpl implements IProductBatchesPu
         }
 
         this.repository.save(productBatchesPurchaseOrder);
-        return new ProductBatchesPurchaseOrderResponseDTO(productStock.getProductId(),productStock.getProductName(),orderQuantity,productStock.getProductPrice(),batchesOrder);
-    }
+        return ProductBatchesPurchaseOrderMapper.toResponseDTO(productBatchesPurchaseOrder,productStock.getProductName(),batchesOrder);
+   }
 
     private Integer calculateQuantity (Integer batchCurrentQuantity, Integer quantityLeftForOrder) {
         if(batchCurrentQuantity > quantityLeftForOrder) {
