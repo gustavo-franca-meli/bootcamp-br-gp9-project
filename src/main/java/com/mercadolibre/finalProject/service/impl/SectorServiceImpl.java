@@ -36,31 +36,13 @@ public class SectorServiceImpl implements ISectorService {
     private Sector findSectorBy(Long sectorId) {
         var sector = this.sectorRepository.findById(sectorId);
 
-        return sector.orElseThrow(() -> new SectorNotFoundException("Sector Not Found. Id:" + sectorId));
+    public Integer getProductStockQuantity (ProductBatchesPurchaseOrderDTO productStock) {
+        return 1;
     }
 
-//    @Override
-//    public List<PurchaseOrderBatchResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
-//        List<PurchaseOrderBatchResponseDTO> purchaseBatches = new ArrayList<>();
-//        Integer withdrawnQuantity = 0;
-//
-//        for (Batch batch : batches) {
-//            var purchaseBatch = purchaseBatchAndWithdrawStock(orderQuantity, withdrawnQuantity, batch);
-//            withdrawnQuantity += purchaseBatch.getQuantity();
-//            purchaseBatches.add(purchaseBatch);
-//
-//            if (withdrawnQuantity >= orderQuantity)
-//                break;
-//        }
-//        return purchaseBatches;
-//    }
-//
-//    private PurchaseOrderBatchResponseDTO purchaseBatchAndWithdrawStock(Integer orderQuantity, Integer withdrawnQuantity, Batch batch) {
-//        return this.batchService.withdrawStockFromBatch(batch, withdrawnQuantity, orderQuantity);
-//    }
-
-    public Integer getProductStockQuantity(ProductStockForOrderDTO productStock) {
-        return productStock.getBatches().stream().mapToInt(Batch::getCurrentQuantity).sum();
+    @Override
+    public List<BatchPurchaseOrderResponseDTO> withdrawStockFromBatches(List<Batch> batches, Integer orderQuantity) {
+        return null;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.ProductStockForOrderDTO;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.ProductBatchesPurchaseOrderDTO;
+import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
@@ -14,9 +16,8 @@ import com.mercadolibre.finalProject.service.IProductService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -100,5 +101,17 @@ public class ProductServiceImpl implements IProductService {
         Product product = this.findById(productId);
         return 0.0 * quantity; // refactor to include price attribute in product
      }
+
+     @Override
+    public ProductStockDTO getStockForProductInCountryByData (Long productId, Long countryId, LocalDate date) {
+        Product product = this.productRepository.findById(productId).get(); //arrumar isso aqui
+        return new ProductStockDTO(
+                productId, product.getName(),product.getPrice(),this.getBatchesOfProductInCountry(productId,countryId,date));
+     }
+
+    @Override
+    public List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date) {
+        return new ArrayList<>();
+    }
 
 }

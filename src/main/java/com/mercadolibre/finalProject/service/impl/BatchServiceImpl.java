@@ -1,19 +1,22 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
-import com.mercadolibre.finalProject.dtos.response.PurchaseOrderBatchResponseDTO;
+import com.mercadolibre.finalProject.dtos.BatchPurchaseOrderDTO;
+import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.BatchCreateException;
 import com.mercadolibre.finalProject.exceptions.CreateBatchStockException;
-import com.mercadolibre.finalProject.exceptions.ProductTypeNotSuportedInSectorException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
+import com.mercadolibre.finalProject.model.mapper.BatchPurchaseOrderMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,27 +72,28 @@ public class BatchServiceImpl implements IBatchService {
         //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }
 
+
     @Override
-    public PurchaseOrderBatchResponseDTO withdrawStockFromBatch(Batch batch, Integer withdrawnQuantity, Integer orderQuantity) {
-        Integer quantityTakenFromBatch;
-        if(batch.getCurrentQuantity() > (orderQuantity - withdrawnQuantity)) {
-            quantityTakenFromBatch = orderQuantity - withdrawnQuantity;
-        }
-        else {
-            quantityTakenFromBatch = batch.getCurrentQuantity();
-        }
+    public Boolean isThereStockForPurchaseOrder(PurchaseOrderRequestDTO purchaseOrder, Long countryId) {
 
-        this.withdrawQuantity(batch, quantityTakenFromBatch);
-        return new PurchaseOrderBatchResponseDTO(
-                batch.getId(),
-                quantityTakenFromBatch,
-                batch.getManufacturingDate(),
-                batch.getManufacturingTime(),
-                batch.getDueDate());
+//        Map<Long,Boolean> verification = new HashMap<>();
+//        LocalDate date = purchaseOrder.getDate();
+//
+//        for(ProductPurchaseOrderRequestDTO productRequest : purchaseOrder.getProducts()) {
+//            Long productId = productRequest.getProductId();
+//            Integer productStock = this.batchRepository.getProductStockByCountryAndDate(productId,countryId,date).size();
+//            verification.put(productId, productStock >= productRequest.getQuantity());
+//        }
+//
+//        return !verification.values().contains(false);
+        return null;
     }
 
-    public void withdrawQuantity (Batch batch, Integer quantityTakenFromBatch) {
-        batch.withdrawQuantity(quantityTakenFromBatch);
+    public BatchDTO withdrawQuantity (Long batchId, Integer withdrawnQuantity) {
+        Batch batch = this.batchRepository.findById(batchId).get(); //arrumar isso
+        batch.withdrawQuantity(withdrawnQuantity);
         this.batchRepository.save(batch);
+        return BatchMapper.toDTO(batch);
     }
+
 }

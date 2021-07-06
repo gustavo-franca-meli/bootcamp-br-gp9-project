@@ -31,4 +31,13 @@ public class ProductBatchesPurchaseOrder {
         this.purchaseBatches = purchaseBatches;
         this.purchaseOrder = purchaseOrder;
     }
+
+    public ProductBatchesPurchaseOrder(Double currentPricePerUnit, PurchaseOrder purchaseOrder) {
+        this.currentPricePerUnit = currentPricePerUnit;
+        this.purchaseOrder = purchaseOrder;
+    }
+
+    public Integer getTotalQuantity () {
+        return this.getPurchaseBatches().stream().mapToInt(BatchPurchaseOrder::getQuantity).sum();
+    }
 }
