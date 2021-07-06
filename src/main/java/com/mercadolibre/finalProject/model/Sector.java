@@ -21,9 +21,7 @@ public class Sector {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "SECTOR_TYPES")
-    private Set<Integer> types = new HashSet<>();
+    private Integer sectorType;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Batch> batches = new ArrayList<>();
@@ -38,17 +36,13 @@ public class Sector {
         this.id = id;
     }
 
-    public Sector(Set<Integer> types, Warehouse warehouse, Integer maxQuantityBatches) {
-        this.types = types;
+    public Sector(Integer sectorType, Warehouse warehouse, Integer maxQuantityBatches) {
+        this.sectorType = sectorType;
         this.warehouse = warehouse;
         this.maxQuantityBatches = maxQuantityBatches;
     }
 
-    private void setTypes (Set<ProductType> types) {
-        this.types = types.stream().map(ProductType::getCod).collect(Collectors.toSet());
-    }
-
-    public Set<ProductType> getTypesInProductType () {
-        return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
+    public Long getWareHouseId() {
+        return this.warehouse.getId();
     }
 }

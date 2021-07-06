@@ -61,12 +61,16 @@ public class Batch {
         this.dueDate = dueDate;
     }
 
-    public Batch (Long id) {
+    public Batch(Long id) {
         this.id = id;
     }
 
     public void withdrawQuantity(Integer quantityTakenFromBatch) {
         Integer newQuantity = this.getCurrentQuantity() - quantityTakenFromBatch;
         this.setCurrentQuantity(newQuantity);
+    }
+
+    public Integer getSectortype() {
+        return this.sector.getSectorType();
     }
 }

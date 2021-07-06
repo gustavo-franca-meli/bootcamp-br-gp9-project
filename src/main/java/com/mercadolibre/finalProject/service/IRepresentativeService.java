@@ -9,5 +9,5 @@ public interface IRepresentativeService {
 
     RepresentativeResponseDTO findById(Long representativeId);
 
-    RepresentativeResponseDTO findByIdAndWarehouseId(Long representativeId, Long warehouseId) throws RepresentativeNotFound;
+    RepresentativeResponseDTO findByIdAndWarehouseId(Long representativeId, Long warehouseId);
 }

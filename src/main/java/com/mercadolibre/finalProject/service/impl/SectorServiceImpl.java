@@ -5,13 +5,10 @@ import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
-import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 public class SectorServiceImpl implements ISectorService {
@@ -35,10 +32,10 @@ public class SectorServiceImpl implements ISectorService {
     }
 
     @Override
-    public Boolean hasType (Long sectorId, Set<ProductType> productTypes) throws SectorNotFoundException {
+    public Boolean hasType(Long sectorId, Integer productType) throws SectorNotFoundException {
         var sector = this.findSectorBy(sectorId);
-        var sectorTypes = sector.getTypes();
-        return productTypes.stream().anyMatch(p -> sectorTypes.stream().anyMatch((s -> s == p.getCod())));
+
+        return sector.getSectorType() == productType;
     }
 
     @Override

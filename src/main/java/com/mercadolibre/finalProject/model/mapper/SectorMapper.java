@@ -6,7 +6,6 @@ import com.mercadolibre.finalProject.model.enums.ProductType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface SectorMapper {
@@ -18,12 +17,9 @@ public interface SectorMapper {
     }
 
     static SectorResponseDTO toResponseDTO(Sector sector) {
-        var sectorTypesDescriptions = getTypesSectorDescriptions(sector.getTypes());
-        return new SectorResponseDTO(sector.getId(), sectorTypesDescriptions, sector.getBatches().size(), sector.getMaxQuantityBatches());
+        var sectorTypeDescription = ProductType.toEnum(sector.getSectorType()).getDescription();
+        return new SectorResponseDTO(sector.getId(), sectorTypeDescription, sector.getBatches().size(), sector.getMaxQuantityBatches());
     }
 
-    static Set<String> getTypesSectorDescriptions(Set<Integer> types) {
-        return types.stream().map(t -> ProductType.toEnum(t).getDescription()).collect(Collectors.toSet());
-    }
 
 }

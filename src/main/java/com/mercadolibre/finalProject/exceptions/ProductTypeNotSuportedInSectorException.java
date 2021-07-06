@@ -1,7 +1,7 @@
 package com.mercadolibre.finalProject.exceptions;
 
-public class ProductTypeNotSuportedInSectorException extends Exception {
-    public ProductTypeNotSuportedInSectorException(String productId,String type,String sectorId) {
-        super("Product" + productId + "with  Type" + type +"not suported in sector"+ sectorId );
+public class ProductTypeNotSuportedInSectorException extends RuntimeException {
+    public ProductTypeNotSuportedInSectorException(Long productId, String productTypeDescription, Long sectorId) {
+        super("Product " + productId + " with type" + productTypeDescription + "not supported in sector" + sectorId);
     }
 }

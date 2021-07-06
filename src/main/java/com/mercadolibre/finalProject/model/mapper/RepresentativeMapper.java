@@ -6,6 +6,6 @@ import com.mercadolibre.finalProject.model.Representative;
 public interface RepresentativeMapper {
 
     static RepresentativeResponseDTO toResponseDTO(Representative representative) {
-        return new RepresentativeResponseDTO(representative.getId(), representative.getName());
+        return new RepresentativeResponseDTO(representative.getId(), representative.getName(), representative.getWarehouse().getId());
     }
 }
