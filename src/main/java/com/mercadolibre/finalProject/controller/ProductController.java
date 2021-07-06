@@ -22,7 +22,7 @@ public class ProductController {
     @GetMapping(value = "/list")
     public ResponseEntity<SectorBatchResponseDTO> getSectionBatchesByProductId(@RequestParam(required = true) Long productId, @RequestParam(required = false) String ordered) {
         var request = new SectorBatchRequestDTO(productId, 1L, ordered);
-        var response = this.batchService.getSectionBatchesByProductId(request);
+        var response = this.batchService.getSectorBatchesByProductId(request);
         return ResponseEntity.ok().body(response);
     }
 }

@@ -1,5 +1,6 @@
 package com.mercadolibre.finalProject.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,15 @@ public class Product {
 
     public Product (Long id) {
         this.id = id;
+    }
+
+    public Product(Long id, String name, String description, Double price, Integer productType, Seller seller) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.productType = productType;
+        this.seller = seller;
     }
 
     public Product(String name, String description, Double price, Integer productType, Seller seller) {

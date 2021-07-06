@@ -1,5 +1,6 @@
 package com.mercadolibre.finalProject.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "representative")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Representative {
 
     @Id
@@ -35,9 +37,4 @@ public class Representative {
         this.warehouse = warehouse;
         this.account = account;
     }
-
-    public Representative(String name) {
-        this.name = name;
-    }
-
 }

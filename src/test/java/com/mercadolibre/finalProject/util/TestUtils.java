@@ -3,13 +3,14 @@ package com.mercadolibre.finalProject.util;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
-import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,10 +62,10 @@ public interface TestUtils {
     }
 
     static Representative getRepresentativeValid() {
-//        var representative = new Representative("Leonardo", null);
-//        representative.setId(1l);
-//        return representative;
-        return null;
+        var warehouse = new Warehouse(1L);
+        var representative = new Representative("Leonardo", warehouse, null);
+        representative.setId(1l);
+        return representative;
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
@@ -79,8 +80,8 @@ public interface TestUtils {
     }
 
     static Product getProductValid() {
-        //return new Product("Pizza", null);
-        return new Product(1L);
+        var seller = getSellerValid();
+        return new Product(1L, "Product Name", "Product description", 1.0, 1, seller);
     }
 
     static Batch getBatchValid() {
@@ -121,5 +122,26 @@ public interface TestUtils {
     static List<Batch> getBatchListValid() {
         var batchsDTO = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
         return batchsDTO.stream().map(b -> BatchMapper.toModel(b, 1L)).collect(Collectors.toList());
+    }
+
+    static Batch getBatchValid() {
+        var product = getProductValid();
+        var batch = new Batch(1L, Product product, Sector sector, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate);
+    }
+
+    static ProductResponseDTO getProductResponseDTO() {
+        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0, 1);
+    }
+
+    static SectorBatchRequestDTO getSectorBatchRequestDTO() {
+        return new SectorBatchRequestDTO(1L, 1L, null);
+    }
+
+    static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedC() {
+        return new SectorBatchRequestDTO(1L, 1L, "C");
+    }
+
+    static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedF() {
+        return new SectorBatchRequestDTO(1L, 1L, "F");
     }
 }

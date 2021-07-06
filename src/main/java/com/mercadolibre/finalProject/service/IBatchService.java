@@ -13,6 +13,6 @@ public interface IBatchService {
 
     BatchDTO withdrawQuantity(Long batchId, Integer withdrawnQuantity);
 
-    SectorBatchResponseDTO getSectionBatchesByProductId(SectorBatchRequestDTO request);
+    SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request);
 
 }

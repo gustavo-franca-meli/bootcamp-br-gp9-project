@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BatchStockResponseDTO {
 
-    private Integer batchNumber;
+    private Long batchNumber;
     private Integer currentQuantity;
     private LocalDate dueDate;
 }

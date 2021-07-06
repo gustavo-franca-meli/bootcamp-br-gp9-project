@@ -28,7 +28,7 @@ public interface BatchMapper {
         );
     }
 
-     static BatchDTO toDTO(Batch batch) {
+    static BatchDTO toDTO(Batch batch) {
         return new BatchDTO(
                 batch.getId(),
                 batch.getProduct().getId(),
@@ -43,7 +43,7 @@ public interface BatchMapper {
     }
 
     static SectorBatchResponseDTO toSectorBatchResponseDTO(List<Batch> batches) {
-        var sector= batches.get(0).getSector();
+        var sector = batches.get(0).getSector();
         var batchIdentification = assembleBatchIdentificationResponseDTOOf(sector.getId(), sector.getWareHouseId());
         var product = batches.get(0).getProduct();
         var batchStock = toListBatchStockResponseDTO(batches);
@@ -59,7 +59,7 @@ public interface BatchMapper {
     }
 
     static BatchStockResponseDTO toBatchStockResponseDTO(Batch batch) {
-        return new BatchStockResponseDTO(batch.getInitialQuantity(), batch.getCurrentQuantity(), batch.getDueDate());
+        return new BatchStockResponseDTO(batch.getId(), batch.getCurrentQuantity(), batch.getDueDate());
     }
 
 }
