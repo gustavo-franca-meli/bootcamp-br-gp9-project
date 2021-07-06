@@ -47,4 +47,10 @@ public class Seller {
         this.name = name;
         this.account = account;
     }
+
+    public Seller(Long id, String name, Account account) {
+        this.id = id;
+        this.name = name;
+        this.account = account;
+    }
 }

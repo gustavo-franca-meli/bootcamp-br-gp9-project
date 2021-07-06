@@ -30,8 +30,8 @@ public class ProductServiceImpl implements IProductService {
                 productRequestDTO.getName(),
                 productRequestDTO.getDescription(),
                 productRequestDTO.getPrice(),
-                (Set<Integer>) productRequestDTO.getTypes(),
-                productRequestDTO.getSellerId());
+                new HashSet<>(productRequestDTO.getTypes()),
+                sellerService.findSellerById(productRequestDTO.getSellerId()));
 
         var createdProduct = productRepository.save(p1);
 
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements IProductService {
         product.setName(productRequestDTO.getName() == null ? productRequestDTO.getName() : product.getName());
         product.setDescription(productRequestDTO.getDescription() == null ? productRequestDTO.getDescription() : product.getDescription());
         product.setPrice(productRequestDTO.getPrice() == null ? productRequestDTO.getPrice() : product.getPrice());
-        product.setTypes(productRequestDTO.getTypes() == null ? (Set<Integer>) productRequestDTO.getTypes() : product.getTypes());
+        product.setTypes(productRequestDTO.getTypes() == null ? new HashSet<>(productRequestDTO.getTypes()) : product.getTypes());
         product.setSeller(sellerService.findSellerById(productRequestDTO.getSellerId()));
 
         productRepository.save(product);

@@ -48,19 +48,20 @@ public class Product {
         this.id = id;
     }
 
-    public Product(String name, String description, Double price, Set<Integer> types, Long sellerId) {
+    public Product(String name, String description, Double price, Set<Integer> types, Seller seller) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.types = types;
-        this.seller = new Seller(sellerId);
-    }
-
-    public Product(Long id, String name, Set<Integer> types, Seller seller) {
-        this.id = id;
-        this.name = name;
-        this.types = types;
         this.seller = seller;
     }
 
+    public Product(Long id, String name, String description, Double price, Set<Integer> types, Seller seller) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.types = types;
+        this.seller = seller;
+    }
 }

@@ -18,14 +18,7 @@ public class ProductResponseDTO implements Comparable<ProductResponseDTO> {
     private String description;
     private Double price;
     private Set<Integer> types = new HashSet<>();
-
     private Seller seller;
-
-    public ProductResponseDTO(Long id, String name, Seller seller) {
-        this.id = id;
-        this.name = name;
-        this.seller = seller;
-    }
 
     public ProductResponseDTO(Long id, String name, String description, Double price, Set<Integer> types) {
         this.id = id;
@@ -33,6 +26,15 @@ public class ProductResponseDTO implements Comparable<ProductResponseDTO> {
         this.description = description;
         this.price = price;
         this.types = types;
+    }
+
+    public ProductResponseDTO(Long id, String name, String description, Double price, Set<Integer> types, Seller seller) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.types = types;
+        this.seller = seller;
     }
 
     public Set<ProductType> getProductTypes () {

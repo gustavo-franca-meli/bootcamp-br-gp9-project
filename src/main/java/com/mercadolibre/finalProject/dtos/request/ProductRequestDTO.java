@@ -13,10 +13,11 @@ public class ProductRequestDTO {
     private List<Integer> types;
     private Long sellerId;
 
-    public ProductRequestDTO(String name, String description, Double price, List<Integer> types) {
+    public ProductRequestDTO(String name, String description, Double price, List<Integer> types, Long sellerId) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.types = types;
+        this.sellerId = sellerId;
     }
 }
