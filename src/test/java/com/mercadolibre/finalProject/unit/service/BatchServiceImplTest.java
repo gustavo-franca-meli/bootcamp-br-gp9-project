@@ -2,7 +2,9 @@ package com.mercadolibre.finalProject.unit.service;
 
 import com.mercadolibre.finalProject.exceptions.BatchNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
+import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
+import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.IRepresentativeService;
@@ -41,14 +43,16 @@ public class BatchServiceImplTest {
         var dto = TestUtils.getInboundOrderDTOValid();
         var listBath = dto.getBatchStock();
 
-        var product = TestUtils.getProductResponseDTO();
-        var bath = BatchMapper.toModel(listBath.get(0), dto.getSection().getCode());
+        var product = ProductMapper.toResponseDTO(new Product(1L)); //new Product(1L);
+        var bath = BatchMapper.toModel(listBath.get(0),dto.getSection().getCode(),1L);
+
+
         when(productService.findById(any())).thenReturn(product);
         when(sectorService.hasType(dto.getSection().getCode(), product.getType())).thenReturn(true);
-        when(sectorService.isThereSpace(any(), anyLong())).thenReturn(true);
+        when(sectorService.isThereSpace(Mockito.any(), anyLong())).thenReturn(true);
         when(batchRepository.save(any())).thenReturn(bath);
-        var response = service.create(listBath, dto.getSection().getCode());
-        assertEquals(response.size(), listBath.size());
+        var response =  service.create(listBath,dto.getSection().getCode(),1L);
+        assertEquals(response.size(),listBath.size());
     }
 
     @Test

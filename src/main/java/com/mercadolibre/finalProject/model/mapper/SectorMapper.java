@@ -18,7 +18,7 @@ public interface SectorMapper {
 
     static SectorResponseDTO toResponseDTO(Sector sector) {
         var sectorTypeDescription = ProductType.toEnum(sector.getSectorType()).getDescription();
-        return new SectorResponseDTO(sector.getId(), sectorTypeDescription, sector.getBatches().size(), sector.getMaxQuantityBatches());
+        return new SectorResponseDTO(sector.getId(), sectorTypeDescription, sector.getBatches().size(), sector.getMaxQuantityBatches(), sector.getWareHouseId());
     }
 
 

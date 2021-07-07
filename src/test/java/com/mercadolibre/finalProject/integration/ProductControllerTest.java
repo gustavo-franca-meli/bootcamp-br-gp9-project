@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.util.TestUtils;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -51,9 +47,6 @@ public class ProductControllerTest extends ControllerTest {
 
     @Test
     void shouldGetSectorBatchesByProductId() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
         var expected = TestUtils.getSectorBatchResponseDTO();
         var expectedBatch = expected.getBatchStock().get(0);
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
@@ -61,7 +54,6 @@ public class ProductControllerTest extends ControllerTest {
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("productId", "1")
-                .param("ordered", "")
         )
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -77,9 +69,6 @@ public class ProductControllerTest extends ControllerTest {
 
     @Test
     void shouldGetSectorBatchesByProductIdOrderedByCurrentQuantity() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
         var expected = TestUtils.getSectorBatchResponseDTO();
         var expectedBatch = expected.getBatchStock().get(0);
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
@@ -103,9 +92,6 @@ public class ProductControllerTest extends ControllerTest {
 
     @Test
     void shouldGetSectorBatchesByProductIdOrderedByDueDate() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
         var expected = TestUtils.getSectorBatchResponseDTO();
         var expectedBatch = expected.getBatchStock().get(1);
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
@@ -125,5 +111,27 @@ public class ProductControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.batch_stock[0].batch_number").value(expectedBatch.getBatchNumber()))
                 .andExpect(jsonPath("$.batch_stock[0].current_quantity").value(expectedBatch.getCurrentQuantity()))
                 .andExpect(jsonPath("$.batch_stock[0].due_date").value(expectedBatch.getDueDate().toString()));
+    }
+
+    @Test
+    void shouldFailGetSectorBatchesByProductIdOnProductNotFound() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("productId", "99999")
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldFailGetSectorBatchesByProductIdOnBatchNotFound() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("productId", "2")
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }

@@ -8,6 +8,7 @@ import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
+import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,9 +34,11 @@ public interface TestUtils {
     }
 
     static Warehouse getWarehouseValid() {
-        var representative = getRepresentativeValid();
         var country = getCountry();
-        return new Warehouse(1L, "São Paulo", country, null, representative);
+        var sectors = Arrays.asList(getSectorValid());
+        var representative = getRepresentativeValid();
+
+        return new Warehouse(1L, "São Paulo", country, sectors, representative);
     }
 
     static List<Sector> getListSectorsValid() {
@@ -43,9 +46,13 @@ public interface TestUtils {
     }
 
     static Sector getSectorValid() {
-        var warehouse = getWarehouseValid();
+        var warehouse = new Warehouse(1L);
         var batches = getBatchListValid();
-        return new Sector(1L, 1, batches, warehouse, 100);
+        return new Sector(1L, 1, batches, warehouse, 1100);
+    }
+
+    static SectorResponseDTO getSectorDTOResponseValid() {
+        return SectorMapper.toResponseDTO(getSectorValid());
     }
 
     static Set<Integer> convertSectorsToSetInteger() {
@@ -54,9 +61,7 @@ public interface TestUtils {
 
     static Representative getRepresentativeValid() {
         var warehouse = new Warehouse(1L);
-        var representative = new Representative("Leonardo", warehouse, null);
-        representative.setId(1l);
-        return representative;
+        return new Representative(1L,"Leonardo", warehouse, null);
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
@@ -75,12 +80,11 @@ public interface TestUtils {
 
     static InboundOrder getOrderValid() {
         var representative = getRepresentativeValid();
-        var batchs = Arrays.asList(getBatchValid());
-        return new InboundOrder(LocalDate.now(), representative, batchs);
+        return new InboundOrder(LocalDate.now(), representative.getId());
     }
 
     static SectorDTO getSectorDTOValid() {
-        return new SectorDTO(1L, 1L, 10.0, 100.0);
+        return new SectorDTO(1L, 1L, 10.0, 1100.0);
     }
 
     static InboundOrderDTO getInboundOrderDTOValid() {
@@ -94,12 +98,9 @@ public interface TestUtils {
     }
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
-//        var sectors = getListSectorsValid();
-//        var representative = getRepresentativeValid();
-//        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
-//        warehouse.setId(1L);
-//        return WarehouseMapper.toResponseDTO(warehouse);
-        return null;
+        var sectors = Arrays.asList(getSectorDTOResponseValid());
+        var representative = getRepresentativeResponseDTOValid();
+        return new WarehouseResponseDTO(1L, "São Paulo", sectors, representative);
     }
 
     static List<Batch> getBatchListValid() {
@@ -110,14 +111,16 @@ public interface TestUtils {
         var product = getProductValid();
         var warehouse = new Warehouse(1L);
         var sector = new Sector(1L, 1, null, warehouse, 100);
-        return new Batch(1L, product, sector, 0.0f, 0.0f, 1000, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(10));
+        var inboundOrder = getOrderValid();
+        return new Batch(1L, product, sector, inboundOrder, 0.0f, 0.0f, 1000, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(10));
     }
 
     static Batch getBatchValidTwo() {
         var product = getProductValid();
         var warehouse = new Warehouse(1L);
         var sector = new Sector(1L, 1, null, warehouse, 100);
-        return new Batch(1L, product, sector, 0.0f, 0.0f, 1000, 50, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(5));
+        var inboundOrder = getOrderValid();
+        return new Batch(1L, product, sector, inboundOrder, 0.0f, 0.0f, 1000, 50, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(5));
     }
 
     static ProductResponseDTO getProductResponseDTO() {
