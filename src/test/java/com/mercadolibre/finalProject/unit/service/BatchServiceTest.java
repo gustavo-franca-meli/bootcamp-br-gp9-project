@@ -12,6 +12,9 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -33,17 +36,18 @@ public class BatchServiceTest {
     public void shouldReturnBathStockSizeCorrectly() {
 
         var dto = TestUtils.getInboundOrderDTOValidForCreate();
-        var listBath = dto.getBatchStock();
+        var listBath = dto.getBatchStock().stream().map(BatchMapper::toDTO).collect(Collectors.toList());
 
         var product = ProductMapper.toResponseDTO(new Product(1L)); //new Product(1L);
         var bath = BatchMapper.toModel(listBath.get(0),dto.getSection().getCode(),1L);
 
 
         when(productService.findById(any())).thenReturn(product);
+        when(bathRepository.findById(any())).thenReturn(Optional.empty());
         when(sectorService.hasType(dto.getSection().getCode(), product.getProductTypes())).thenReturn(true);
         when(sectorService.isThereSpace(anyLong())).thenReturn(true);
         when(bathRepository.save(any())).thenReturn(bath);
-        var response =  service.create(listBath,dto.getSection().getCode(),1L);
+        var response =  service.save(listBath,dto.getSection().getCode(),1L);
         assertEquals(response.size(),listBath.size());
 
     }

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class Batch {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

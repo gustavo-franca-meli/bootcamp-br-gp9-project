@@ -7,9 +7,11 @@ import java.util.List;
 
 @Data
 public class InboundOrderResponseDTO {
+    Long orderId;
     List<BatchDTO> batchStock;
 
-    public InboundOrderResponseDTO(List<BatchDTO> batchStock) {
+    public InboundOrderResponseDTO(Long orderId, List<BatchDTO> batchStock) {
+        this.orderId = orderId;
         this.batchStock = batchStock;
     }
 }

@@ -1,15 +1,16 @@
 package com.mercadolibre.finalProject.dtos.request.inboundOrder;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class InboundOrderCreateRequestDTO {
-    @NotNull
-    private Integer orderNumber;
+
     @NotNull
     private LocalDate orderDate;
     @NotNull
@@ -23,6 +24,4 @@ public class InboundOrderCreateRequestDTO {
         this.batchStock = batchStock;
     }
 
-    public InboundOrderCreateRequestDTO() {
-    }
 }

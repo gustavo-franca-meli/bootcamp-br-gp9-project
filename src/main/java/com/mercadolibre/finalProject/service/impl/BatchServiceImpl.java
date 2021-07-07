@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
@@ -34,12 +36,13 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<Batch> create(List<BatchDTO> batchStock, Long sectorId,Long orderId) throws CreateBatchStockException {
+    public List<Batch> save(List<BatchDTO> batchStock, Long sectorId,Long orderId) throws CreateBatchStockException {
 
         var errorList = new ArrayList<BatchCreateException>();
         var responseBathList = new ArrayList<Batch>();
         //iterate all product if find a error throws all
-        batchStock.forEach((batch)->{
+        Long i = 0L;
+        for (var batch: batchStock){
             try{
                 var batchModel = BatchMapper.toModel(batch,sectorId,orderId);
                 //product seller is registered if not throws
@@ -48,6 +51,10 @@ public class BatchServiceImpl implements IBatchService {
                 if(sectorService.hasType(sectorId,product.getProductTypes())){
                     //verify if has space
                     sectorService.isThereSpace(sectorId);
+                    //verify if batch exist and has the same order
+
+                    Optional<Batch> findBatch = batchModel.getId() != null?batchRepository.findById(batchModel.getId()): Optional.empty();
+                    if(findBatch.isPresent() && !findBatch.get().getInboundOrder().getId().equals(orderId))throw new Exception("this batch id alrealdy in use in other order");
                     //save batch
                     var batchResponse = batchRepository.save(batchModel);
                     responseBathList.add(batchResponse);
@@ -57,10 +64,11 @@ public class BatchServiceImpl implements IBatchService {
 
 
             }catch (Exception e){
-                errorList.add(new BatchCreateException(batch.getId(),e.getMessage()));
+                errorList.add(new BatchCreateException(i,e.getMessage()));
             }
+            i++;
 
-        });
+        }
         if(errorList.isEmpty()){
             return responseBathList;
         }else{
@@ -78,6 +86,11 @@ public class BatchServiceImpl implements IBatchService {
         batch.withdrawQuantity(withdrawnQuantity);
         this.batchRepository.save(batch);
         return BatchMapper.toDTO(batch);
+    }
+
+    @Override
+    public void deleteAll(List<Batch> batches) {
+        batchRepository.deleteAll(batches);
     }
 
 }

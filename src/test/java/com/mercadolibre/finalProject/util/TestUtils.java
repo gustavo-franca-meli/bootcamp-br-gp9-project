@@ -3,6 +3,9 @@ package com.mercadolibre.finalProject.util;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestCreateDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.InboundOrderCreateRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.SectorRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
@@ -106,10 +109,10 @@ public interface TestUtils {
         return new SectorDTO(1L, 1L, 10.0, 100.0);
     }
 
-    static InboundOrderDTO getInboundOrderDTOValidForCreate() {
-        var batchList = Arrays.asList(getBatchDTOValidNoId(), getBatchDTOValidNoId());
+    static InboundOrderCreateRequestDTO getInboundOrderDTOValidForCreate() {
+        var batchList = Arrays.asList(getBatchDTOValidNoId(), getBatchDTOValidNoId()).stream().map(BatchRequestCreateDTO::new).collect(Collectors.toList());
         var sector = getSectorDTOValid();
-        return new InboundOrderDTO(10, LocalDate.now(), sector, batchList);
+        return new InboundOrderCreateRequestDTO(LocalDate.now(), new SectorRequestDTO(sector.getCode(), sector.getWarehouseCode()), batchList);
     }
 
 
@@ -117,14 +120,14 @@ public interface TestUtils {
     static InboundOrderDTO getInboundOrderDTOValidForUpdate() {
         var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
         var sector = getSectorDTOValid();
-        return new InboundOrderDTO(10, LocalDate.now(), sector, batchList);
+        return new InboundOrderDTO(10L, LocalDate.now(), sector, batchList);
     }
 
     static BatchDTO getBatchDTOValid() {
         return new BatchDTO(1L, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
     static BatchDTO getBatchDTOValidNoId() {
-        return new BatchDTO(, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+        return new BatchDTO(1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
 
 

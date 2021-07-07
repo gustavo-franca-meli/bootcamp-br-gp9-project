@@ -1,10 +1,14 @@
 package com.mercadolibre.finalProject.model.mapper;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestCreateDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestUpdateDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.InboundOrder;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
+
+import java.util.List;
 
 public interface BatchMapper {
 
@@ -38,4 +42,29 @@ public interface BatchMapper {
         );
     }
 
+    static BatchDTO toDTO(BatchRequestCreateDTO batchStock) {
+        return new BatchDTO(
+                batchStock.getProductId(),
+                batchStock.getCurrentTemperature(),
+                batchStock.getMinimumTemperature(),
+                batchStock.getInitialQuantity(),
+                batchStock.getCurrentQuantity(),
+                batchStock.getManufacturingDate(),
+                batchStock.getManufacturingTime(),
+                batchStock.getDueDate()
+        );
+    }
+    static BatchDTO toDTO(BatchRequestUpdateDTO batchStock) {
+        return new BatchDTO(
+                batchStock.getId(),
+                batchStock.getProductId(),
+                batchStock.getCurrentTemperature(),
+                batchStock.getMinimumTemperature(),
+                batchStock.getInitialQuantity(),
+                batchStock.getCurrentQuantity(),
+                batchStock.getManufacturingDate(),
+                batchStock.getManufacturingTime(),
+                batchStock.getDueDate()
+        );
+    }
 }

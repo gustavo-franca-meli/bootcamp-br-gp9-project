@@ -31,6 +31,7 @@ public class InboundOrder {
         this.id = id;
     }
 
+
     public InboundOrder(LocalDate orderDate, Representative representative, List<Batch> bathStock) {
         this.orderDate = orderDate;
         this.batches = bathStock;
@@ -45,6 +46,12 @@ public class InboundOrder {
     public InboundOrder(LocalDate orderDate, Long representativeId, List<Batch> bathStock) {
         this.orderDate = orderDate;
         this.batches = bathStock;
+        this.representative = new Representative(representativeId);
+    }
+
+    public InboundOrder(Long orderNumber, Long representativeId, LocalDate orderDate) {
+        this.orderDate = orderDate;
+        this.id = orderNumber;
         this.representative = new Representative(representativeId);
     }
 }

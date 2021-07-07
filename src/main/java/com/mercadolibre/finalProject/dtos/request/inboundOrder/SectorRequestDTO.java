@@ -1,9 +1,12 @@
 package com.mercadolibre.finalProject.dtos.request.inboundOrder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-
+@Data
+@NoArgsConstructor
 public class SectorRequestDTO {
     @JsonProperty("sectionCode")
     @NotNull
