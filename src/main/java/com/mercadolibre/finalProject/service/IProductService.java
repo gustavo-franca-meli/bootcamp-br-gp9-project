@@ -4,6 +4,7 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,4 +26,6 @@ public interface IProductService {
     ProductStockDTO getStockForProductInCountryByData(Long productId, Long countryId, LocalDate date);
 
     List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date);
+
+    SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId);
 }
