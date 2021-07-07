@@ -4,12 +4,9 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
-import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
 
 import java.time.LocalDate;
@@ -106,7 +103,7 @@ public interface TestUtils {
     }
 
     static List<Batch> getBatchListValid() {
-        return Arrays.asList(getBatchValid(), getBatchValid());
+        return Arrays.asList(getBatchValid(), getBatchValidTwo());
     }
 
     static Batch getBatchValid() {
@@ -114,6 +111,13 @@ public interface TestUtils {
         var warehouse = new Warehouse(1L);
         var sector = new Sector(1L, 1, null, warehouse, 100);
         return new Batch(1L, product, sector, 0.0f, 0.0f, 1000, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(10));
+    }
+
+    static Batch getBatchValidTwo() {
+        var product = getProductValid();
+        var warehouse = new Warehouse(1L);
+        var sector = new Sector(1L, 1, null, warehouse, 100);
+        return new Batch(1L, product, sector, 0.0f, 0.0f, 1000, 50, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(5));
     }
 
     static ProductResponseDTO getProductResponseDTO() {
@@ -130,5 +134,23 @@ public interface TestUtils {
 
     static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedF() {
         return new SectorBatchRequestDTO(1L, 1L, "F");
+    }
+
+    static SectorBatchResponseDTO getSectorBatchResponseDTO() {
+        var batchIdentificationResponseDTO = getBatchIdentificationResponseDTO();
+        var listBatchStockResponseDTO = Arrays.asList(getBatchStockResponseDTO(), getBatchStockResponseDTOTwo());
+        return new SectorBatchResponseDTO(batchIdentificationResponseDTO, 1l, listBatchStockResponseDTO);
+    }
+
+    static BatchIdentificationResponseDTO getBatchIdentificationResponseDTO() {
+        return new BatchIdentificationResponseDTO(1l, 1l);
+    }
+
+    static BatchStockResponseDTO getBatchStockResponseDTO() {
+        return new BatchStockResponseDTO(1l, 10, LocalDate.of(2021, 8, 8));
+    }
+
+    static BatchStockResponseDTO getBatchStockResponseDTOTwo() {
+        return new BatchStockResponseDTO(3l, 40, LocalDate.of(2021, 7, 30));
     }
 }

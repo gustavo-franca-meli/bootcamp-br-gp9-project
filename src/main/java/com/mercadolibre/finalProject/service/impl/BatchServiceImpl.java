@@ -12,16 +12,19 @@ import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.IRepresentativeService;
 import com.mercadolibre.finalProject.service.ISectorService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
     private static final LocalDate MINIMUM_DUE_DATE = LocalDate.now().plusWeeks(3l);
-    private static final String ORDERED_BY_CURRENT_QUANTITY = "C";
+    private static final Map<String, String> ORDER_BY_FIELDS = new HashMap<>();
 
     private final BatchRepository batchRepository;
     private final ISectorService sectorService;
@@ -33,6 +36,9 @@ public class BatchServiceImpl implements IBatchService {
         this.sectorService = sectorService;
         this.productService = productService;
         this.representativeService = representativeService;
+
+        this.ORDER_BY_FIELDS.put("C", "currentQuantity");
+        this.ORDER_BY_FIELDS.put("F", "dueDate");
     }
 
     @Override
@@ -113,17 +119,15 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     private void isCorrectSectorForProducts(Integer productType, Integer sectorType) {
-        if (productType != sectorType)
+        if (!productType.equals(sectorType))
             throw new IncorrectSectorTypeException("This product doesn't should stay in this sector");
     }
 
     private List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBy(Long warehouseId, Long productId, String ordered) {
-        List<Batch> batches = new ArrayList<>();
-        if (ordered.equals(ORDERED_BY_CURRENT_QUANTITY)) {
-            batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByCurrentQuantity(warehouseId, productId, MINIMUM_DUE_DATE);
-        } else {
-            batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(warehouseId, productId, MINIMUM_DUE_DATE);
-        }
+        var orderField = ORDER_BY_FIELDS.getOrDefault(ordered, "id");
+        var sort = Sort.by(Sort.DEFAULT_DIRECTION, orderField);
+
+        var batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(warehouseId, productId, MINIMUM_DUE_DATE, sort);
 
         this.validateFillBatches(batches, productId);
         return batches;

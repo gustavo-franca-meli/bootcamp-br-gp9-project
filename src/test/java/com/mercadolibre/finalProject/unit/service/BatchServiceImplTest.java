@@ -21,11 +21,13 @@ import static org.mockito.Mockito.*;
 
 public class BatchServiceImplTest {
 
+    private static final String BATCH_NOT_FOUND_MESSAGE = "Doesn't has valid batches with this product. Id product: ";
+
     private BatchServiceImpl service;
-    private BatchRepository batchRepository = mock(BatchRepository.class);
-    private ISectorService sectorService = mock(ISectorService.class);
-    private IProductService productService = mock(IProductService.class);
-    private IRepresentativeService representativeService = mock(IRepresentativeService.class);
+    private final BatchRepository batchRepository = mock(BatchRepository.class);
+    private final ISectorService sectorService = mock(ISectorService.class);
+    private final IProductService productService = mock(IProductService.class);
+    private final IRepresentativeService representativeService = mock(IRepresentativeService.class);
 
     @BeforeEach
     public void setup() {
@@ -76,18 +78,18 @@ public class BatchServiceImplTest {
         when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
 
         var expected = TestUtils.getBatchListValid();
-        when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByCurrentQuantity(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);
+        when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any())).thenReturn(expected);
 
         var request = TestUtils.getSectorBatchRequestDTOWithOrderedC();
         var got = service.getSectorBatchesByProductId(request);
-        verify(batchRepository, Mockito.times(1)).findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByCurrentQuantity(Mockito.anyLong(), Mockito.anyLong(), Mockito.any());
+        verify(batchRepository, Mockito.times(1)).findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any());
 
         var gotBatch = got.getBatchStock().get(0);
         assertEquals(expected.get(0).getId(), gotBatch.getBatchNumber());
     }
 
     @Test
-    public void shouldGetSectionBatchesByProductIdOrderedByDueDate() {
+    public void shouldGetSectorBatchesByProductIdOrderedByDueDate() {
         var productResponseDTO = TestUtils.getProductResponseDTO();
         when(productService.findById(Mockito.anyLong())).thenReturn(productResponseDTO);
 
@@ -95,11 +97,11 @@ public class BatchServiceImplTest {
         when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
 
         var expected = TestUtils.getBatchListValid();
-        when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);
+        when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any())).thenReturn(expected);
 
         var request = TestUtils.getSectorBatchRequestDTOWithOrderedF();
         var got = service.getSectorBatchesByProductId(request);
-        verify(batchRepository, Mockito.times(1)).findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any());
+        verify(batchRepository, Mockito.times(1)).findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any());
 
         var gotBatch = got.getBatchStock().get(0);
         assertEquals(expected.get(0).getId(), gotBatch.getBatchNumber());
@@ -114,16 +116,35 @@ public class BatchServiceImplTest {
         when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
 
         var expected = new ArrayList<Batch>();
-        when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);
+        when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);
 
         var request = TestUtils.getSectorBatchRequestDTO();
 
         try {
             service.getSectorBatchesByProductId(request);
         } catch (BatchNotFoundException ex) {
-            assertEquals("Doesn't has valid batches with this product. Id product: 1", ex.getMessage());
+            assertEquals(BATCH_NOT_FOUND_MESSAGE + productResponseDTO.getId(), ex.getMessage());
         }
+    }
 
+    @Test
+    public void shouldFailGetSectorBatchesByProductIdOrderedBy() {
+        var productResponseDTO = TestUtils.getProductResponseDTO();
+        when(productService.findById(Mockito.anyLong())).thenReturn(productResponseDTO);
+
+        var representativeDTO = TestUtils.getRepresentativeResponseDTOValid();
+        when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
+
+        var expected = new ArrayList<Batch>();
+        when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);
+
+        var request = TestUtils.getSectorBatchRequestDTOWithOrderedC();
+
+        try {
+            service.getSectorBatchesByProductId(request);
+        } catch (BatchNotFoundException ex) {
+            assertEquals(BATCH_NOT_FOUND_MESSAGE + productResponseDTO.getId(), ex.getMessage());
+        }
     }
 
 }

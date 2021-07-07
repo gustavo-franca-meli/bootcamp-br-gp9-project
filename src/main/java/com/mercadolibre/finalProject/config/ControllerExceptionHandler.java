@@ -48,4 +48,5 @@ public class ControllerExceptionHandler {
 		return ResponseEntity.status(apiError.getStatus())
 				.body(apiError);
 	}
+
 }
