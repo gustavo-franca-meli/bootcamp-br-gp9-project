@@ -28,4 +28,6 @@ public interface IProductService {
     List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date);
 
     SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId);
+
+    SumOfProductStockDTO getSumOfProductStockInValidWarehouses(Long productId, Long countryId);
 }

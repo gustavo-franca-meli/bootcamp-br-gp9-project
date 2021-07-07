@@ -8,6 +8,7 @@ import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseProductSumDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Product;
+import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -108,9 +110,21 @@ public class ProductServiceImpl implements IProductService {
 
         query.forEach(c -> dto.add(new WarehouseProductSumDTO(Long.valueOf(c.getWarehouse_id()), Integer.valueOf(c.getQuantity()))));
 
-//        if (dto.isEmpty()){
-//            throw new RuntimeException("Não existe produto com o id: " + productId);
-//        }
         return new SumOfProductStockDTO(productId, dto);
+    }
+
+    @Override
+    public SumOfProductStockDTO getSumOfProductStockInValidWarehouses(Long productId, Long countryId) {
+        List<Long> validIds = productRepository.getWarehousesByCountry(countryId);
+        SumOfProductStockDTO dto = getSumOfProductStockInAllWarehouses(productId);
+        List<WarehouseProductSumDTO> filteredWarehouses = new ArrayList<WarehouseProductSumDTO>();
+        for(Long id: validIds){
+            filteredWarehouses = dto.getWarehouses().stream().filter((WarehouseProductSumDTO wareDTO) -> {
+                return wareDTO.getWarehouseCode() != id;
+            }).collect(Collectors.toList());
+        }
+
+        dto.setWarehouses(filteredWarehouses);
+        return dto;
     }
 }
