@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.util;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
 import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
@@ -96,24 +97,54 @@ public interface TestUtils {
         return new Batch(1L, product, sector,order, 0.0f, 0.0f, 10, 5, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
 
+
     static InboundOrder getOrderValid() {
         var representative = getRepresentativeValid();
-        return new InboundOrder(LocalDate.now(), representative.getId());
+        return new InboundOrder(1L, representative.getId(),LocalDate.now());
     }
 
     static SectorDTO getSectorDTOValid() {
         return new SectorDTO(1L, 1L, 10.0, 100.0);
     }
 
-    static InboundOrderDTO getInboundOrderDTOValid() {
-        var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
+    static InboundOrderCreateRequestDTO getInboundOrderDTOValidForCreate() {
+        var batchList = Arrays.asList(getBatchDTOValidNoId(), getBatchDTOValidNoId()).stream().map(BatchRequestCreateDTO::new).collect(Collectors.toList());
         var sector = getSectorDTOValid();
-        return new InboundOrderDTO(10, LocalDate.now(), sector, batchList);
+        return new InboundOrderCreateRequestDTO(LocalDate.now(), new SectorRequestDTO(sector.getCode(), sector.getWarehouseCode()), batchList);
     }
 
+
+
+    static InboundOrderDTO getInboundOrderDTOValidForUpdate() {
+        var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid(),getBatchDTOValid(),getBatchDTOValid(),getBatchDTOValid());
+        Long i = 1L;
+        for(var batch : batchList){
+            batch.setId(i);
+            i++;
+        }
+        var sector = getSectorDTOValid();
+        return new InboundOrderDTO(1L, LocalDate.now(),sector, batchList);
+    }
+    static InboundOrderUpdateRequestDTO getInboundOrderUpdateDTOValidForUpdate() {
+        var batchList = Arrays.asList( getBatchRequestUpdateDTOValidNoId(),getBatchRequestUpdateDTOValidNoId());
+        Long i = 1L;
+        for(var batch : batchList){
+            batch.setId(i);
+            i++;
+        }
+        var sector = getSectorDTOValid();
+        return new InboundOrderUpdateRequestDTO(1L, LocalDate.now(),new SectorRequestDTO(sector.getCode(),sector.getWarehouseCode()), batchList);
+    }
     static BatchDTO getBatchDTOValid() {
         return new BatchDTO(1L, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
+    static BatchDTO getBatchDTOValidNoId() {
+        return new BatchDTO(1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+    }
+    static BatchRequestUpdateDTO getBatchRequestUpdateDTOValidNoId() {
+        return new BatchRequestUpdateDTO(1L, 1L,10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+    }
+
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
         var warehouse = getWarehouseValid();
@@ -130,4 +161,6 @@ public interface TestUtils {
     static SectorResponseDTO getSectorDTOResponseValid() {
         return SectorMapper.toResponseDTO(getSectorValid());
     }
+
+
 }

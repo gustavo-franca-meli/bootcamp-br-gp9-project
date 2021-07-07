@@ -4,7 +4,7 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 
 public class BatchCreateException extends SubError {
 
-    public BatchCreateException(Long batchId, String message) {
-        super("[ERROR] create batch id "+ batchId + " error: " + message);
+    public BatchCreateException(Long position, String message) {
+        super("[ERROR] create batch position "+ position + " error: " + message);
     }
 }
