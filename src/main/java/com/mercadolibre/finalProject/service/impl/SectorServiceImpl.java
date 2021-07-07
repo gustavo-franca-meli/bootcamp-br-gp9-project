@@ -20,19 +20,20 @@ public class SectorServiceImpl implements ISectorService {
 
     @Override
     public SectorResponseDTO findById(Long sectorId) throws SectorNotFoundException {
-        var sector = this.findSectorBy(sectorId);
+        var sector = this.findSectorById(sectorId);
 
         return SectorMapper.toResponseDTO(sector);
     }
 
-    private Sector findSectorBy(Long sectorId) {
+    private Sector findSectorById(Long sectorId) {
         var sector = this.sectorRepository.findById(sectorId);
+
         return sector.orElseThrow(() -> new SectorNotFoundException("Sector " + sectorId +" Not Found"));
     }
 
     @Override
     public Boolean hasType(Long sectorId, Integer productType) throws SectorNotFoundException {
-        var sector = this.findSectorBy(sectorId);
+        var sector = this.findSectorById(sectorId);
 
         return sector.getSectorType() == productType;
     }
@@ -45,7 +46,7 @@ public class SectorServiceImpl implements ISectorService {
     @Override
     public Boolean isThereSpace(Long sectorId) {
         //TODO: change de method of verify if sector has space!!
-        var sector = this.findSectorBy(sectorId);
+        var sector = this.findSectorById(sectorId);
         var totalQuantity = this.sectorRepository.countBatchesIn(sectorId);
 
         if (totalQuantity >= sector.getMaxQuantityBatches()) {

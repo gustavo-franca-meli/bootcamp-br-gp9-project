@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchSectorResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.exceptions.*;
 import com.mercadolibre.finalProject.model.Batch;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
-    private static final LocalDate MINIMUM_DUE_DATE = LocalDate.now().plusWeeks(3l);
+    private static final LocalDate MINIMUM_DUE_DATE = LocalDate.now().plusWeeks(3L);
     private static final String ORDERED_BY_CURRENT_QUANTITY = "C";
 
     private final BatchRepository batchRepository;
@@ -101,6 +102,17 @@ public class BatchServiceImpl implements IBatchService {
         this.isCorrectSectorForProducts(productResponseDTO.getType(), batches.get(0).getSectortype());
 
         return BatchMapper.toSectorBatchResponseDTO(batches);
+    }
+
+    @Override
+    public List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId) {
+        if (!this.sectorService.exist(sectorId)) throw new SectorNotFoundException("Sector " + sectorId +" Not Found");
+
+        var batches = this.batchRepository.findBatchesBySectorId(sectorId, MINIMUM_DUE_DATE);
+
+        if (batches.isEmpty()) throw new NotFoundException("List is empty");
+
+        return BatchMapper.toListSectorResponseDTO(batches);
     }
 
     private List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Long warehouseId, Long productId) {

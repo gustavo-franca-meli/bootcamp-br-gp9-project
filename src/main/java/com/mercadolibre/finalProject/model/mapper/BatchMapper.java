@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.model.mapper;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchIdentificationResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchSectorResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchStockResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.model.Batch;
@@ -42,6 +43,20 @@ public interface BatchMapper {
                 batch.getManufacturingTime(),
                 batch.getDueDate()
         );
+    }
+
+    static BatchSectorResponseDTO toSectorResponseDTO(Batch batch) {
+        return new BatchSectorResponseDTO(
+                batch.getId(),
+                batch.getProduct().getId(),
+                batch.getProduct().getProductType(),
+                batch.getDueDate(),
+                batch.getCurrentQuantity()
+        );
+    }
+
+    static List<BatchSectorResponseDTO> toListSectorResponseDTO(List<Batch> batches) {
+        return batches.stream().map(BatchMapper::toSectorResponseDTO).collect(Collectors.toList());
     }
 
     static SectorBatchResponseDTO toSectorBatchResponseDTO(List<Batch> batches) {

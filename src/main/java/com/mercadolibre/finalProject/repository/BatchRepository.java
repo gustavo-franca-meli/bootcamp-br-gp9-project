@@ -16,18 +16,23 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
             "INNER JOIN Sector s ON b.sector_id = s.id " +
             "INNER JOIN Warehouse w ON s.warehouse_id = w.id " +
             "WHERE s.warehouse_id = :warehouseId AND b.product_id = :productId AND b.due_date >= :minimumDueDate", nativeQuery = true)
-    public List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Long warehouseId, Long productId, LocalDate minimumDueDate);
+    List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Long warehouseId, Long productId, LocalDate minimumDueDate);
 
     @Query(value = "SELECT b.* FROM Batch b " +
             "INNER JOIN Sector s ON b.sector_id = s.id " +
             "INNER JOIN Warehouse w ON s.warehouse_id = w.id " +
             "WHERE s.warehouse_id = :warehouseId AND b.product_id = :productId AND b.due_date >= :minimumDueDate ORDER BY b.due_date ASC", nativeQuery = true)
-    public List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(Long warehouseId, Long productId, LocalDate minimumDueDate);
+    List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(Long warehouseId, Long productId, LocalDate minimumDueDate);
 
     @Query(value = "SELECT b.* FROM Batch b " +
             "INNER JOIN Sector s ON b.sector_id = s.id " +
             "INNER JOIN Warehouse w ON s.warehouse_id = w.id " +
             "WHERE s.warehouse_id = :warehouseId AND b.product_id = :productId AND b.due_date >= :minimumDueDate ORDER BY b.current_quantity ASC", nativeQuery = true)
-    public List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByCurrentQuantity(Long warehouseId, Long productId, LocalDate minimumDueDate);
+    List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByCurrentQuantity(Long warehouseId, Long productId, LocalDate minimumDueDate);
+
+    @Query(value = "SELECT b.* FROM Batch b"
+            + " INNER JOIN Sector s ON b.sector_id = :sectorId"
+            + " WHERE b.due_date >= :minimumDueDate ORDER BY b.due_date ASC", nativeQuery = true)
+    List<Batch> findBatchesBySectorId(Long sectorId, LocalDate minimumDueDate);
 
 }
