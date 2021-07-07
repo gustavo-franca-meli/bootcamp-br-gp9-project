@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.TimeZone;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -350,7 +352,6 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
-                .andExpect(status().isCreated())
                 .andDo(print())
                 .andExpect(jsonPath("$.batch_stock").isArray())
                 .andExpect(jsonPath("$.batch_stock[5].batchNumber").exists());

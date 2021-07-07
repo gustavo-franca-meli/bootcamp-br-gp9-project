@@ -44,7 +44,7 @@ INSERT INTO batch (current_quantity, current_temperature, due_date, inbound_orde
 INSERT INTO batch (current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (10, 10.0, now(), 1, 10, now(), now(), 10.0, 1, 1);
 INSERT INTO batch (id,current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (6,10, 10.0, now(), 2, 10, now(), now(), 10.0, 1, 1);
 --
-
 --INSERT INTO `seller` (`name`) VALUES ('Carolina Fugita');
 --INSERT INTO `seller` (`name`) VALUES ('Gustavo França');
 --INSERT INTO `seller` (`name`) VALUES ('Leonardo Carias');
+--INSERT INTO `seller` (`name`) VALUES ('Nycolas Vieira');
