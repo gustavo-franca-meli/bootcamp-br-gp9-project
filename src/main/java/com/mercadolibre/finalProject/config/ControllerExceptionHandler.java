@@ -1,7 +1,6 @@
 package com.mercadolibre.finalProject.config;
 
-import com.mercadolibre.finalProject.exceptions.ApiError;
-import com.mercadolibre.finalProject.exceptions.ApiException;
+import com.mercadolibre.finalProject.exceptions.*;
 import com.newrelic.api.agent.NewRelic;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -11,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.List;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -47,5 +48,20 @@ public class ControllerExceptionHandler {
 		ApiError apiError = new ApiError("internal_error", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		return ResponseEntity.status(apiError.getStatus())
 				.body(apiError);
+	}
+	@ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class,NotFoundException.class})
+	protected ResponseEntity<ApiError> handleNotFoundException(Exception e){
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.toString(), e.getMessage(), HttpStatus.NOT_FOUND.value());
+		return ResponseEntity.status(apiError.getStatus())
+				.body(apiError);
+	}
+	@ExceptionHandler(CreateBatchStockException.class)
+	protected  ResponseEntity<ApiError> handleCreateBatchStockException(CreateBatchStockException e){
+
+
+		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(),e.getSubErros());
+		return ResponseEntity.status(apiError.getStatus())
+				.body(apiError);
+
 	}
 }

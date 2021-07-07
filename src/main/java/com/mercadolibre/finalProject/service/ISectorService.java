@@ -4,7 +4,7 @@ import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.model.Batch;
 
 public interface ISectorService {
-    Boolean isThereSpace(Batch batch, Long sectorId);
+    Boolean isThereSpace(Long sectorId);
 
     Boolean exist(Long sectorId);
 

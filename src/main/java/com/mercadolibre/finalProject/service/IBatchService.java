@@ -9,7 +9,7 @@ import com.mercadolibre.finalProject.model.Batch;
 import java.util.List;
 
 public interface IBatchService {
-    List<Batch> create(List<BatchDTO> batchStock, Long sectorId) throws CreateBatchStockException;
+    List<Batch> create(List<BatchDTO> batchStock, Long sectorId, Long orderId) throws CreateBatchStockException;
 
     BatchDTO withdrawQuantity(Long batchId, Integer withdrawnQuantity);
 

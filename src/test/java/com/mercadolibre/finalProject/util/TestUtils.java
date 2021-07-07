@@ -6,11 +6,16 @@ import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
+import com.mercadolibre.finalProject.model.mapper.SectorMapper;
+import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
+import org.checkerframework.checker.units.qual.A;
+import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,9 +41,14 @@ public interface TestUtils {
     }
 
     static Warehouse getWarehouseValid() {
-        var representative = getRepresentativeValid();
-        var country = getCountry();
-        return new Warehouse(1L, "São Paulo", country, null, representative);
+        var country = getCountryValid();
+        var warehouse = new Warehouse("Casa central da Argentina", country);
+        warehouse.setId(1L);
+        return warehouse;
+    }
+
+    static Country getCountryValid() {
+        return new Country(1L);
     }
 
     static List<Sector> getListSectorsValid() {
@@ -78,8 +88,7 @@ public interface TestUtils {
 
     static InboundOrder getOrderValid() {
         var representative = getRepresentativeValid();
-        var batchs = Arrays.asList(getBatchValid());
-        return new InboundOrder(LocalDate.now(), representative, batchs);
+        return new InboundOrder(LocalDate.now(), representative.getId());
     }
 
     static SectorDTO getSectorDTOValid() {
@@ -97,12 +106,8 @@ public interface TestUtils {
     }
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
-//        var sectors = getListSectorsValid();
-//        var representative = getRepresentativeValid();
-//        var warehouse = new Warehouse("Casa central da Argentina", sectors, representative);
-//        warehouse.setId(1L);
-//        return WarehouseMapper.toResponseDTO(warehouse);
-        return null;
+        var warehouse = getWarehouseValid();
+       return WarehouseMapper.toResponseDTO(warehouse);
     }
 
     static List<Batch> getBatchListValid() {
@@ -130,5 +135,9 @@ public interface TestUtils {
 
     static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedF() {
         return new SectorBatchRequestDTO(1L, 1L, "F");
+    }
+
+    static SectorResponseDTO getSectorDTOResponseValid() {
+        return SectorMapper.toResponseDTO(getSectorValid());
     }
 }

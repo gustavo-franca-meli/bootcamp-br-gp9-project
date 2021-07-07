@@ -40,12 +40,12 @@ public class BatchServiceImplTest {
         var listBath = dto.getBatchStock();
 
         var product = TestUtils.getProductResponseDTO();
-        var bath = BatchMapper.toModel(listBath.get(0), dto.getSection().getCode());
+        var bath = BatchMapper.toModel(listBath.get(0), dto.getSection().getCode(), 1L);
         when(productService.findById(any())).thenReturn(product);
         when(sectorService.hasType(dto.getSection().getCode(), product.getType())).thenReturn(true);
-        when(sectorService.isThereSpace(any(), anyLong())).thenReturn(true);
+        when(sectorService.isThereSpace(any())).thenReturn(true);
         when(batchRepository.save(any())).thenReturn(bath);
-        var response = service.create(listBath, dto.getSection().getCode());
+        var response = service.create(listBath, dto.getSection().getCode(), 1L);
         assertEquals(response.size(), listBath.size());
     }
 

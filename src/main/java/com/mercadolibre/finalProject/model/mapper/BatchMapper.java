@@ -5,6 +5,7 @@ import com.mercadolibre.finalProject.dtos.response.BatchIdentificationResponseDT
 import com.mercadolibre.finalProject.dtos.response.BatchStockResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.model.Batch;
+import com.mercadolibre.finalProject.model.InboundOrder;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 
@@ -13,11 +14,12 @@ import java.util.stream.Collectors;
 
 public interface BatchMapper {
 
-    static Batch toModel(BatchDTO batchDTO, Long sectorId) {
+    static Batch toModel(BatchDTO batchDTO, Long sectorId, Long orderId) {
         return new Batch(
                 batchDTO.getId(),
                 new Product(batchDTO.getProductId()),
                 new Sector(sectorId),
+                new InboundOrder(orderId),
                 batchDTO.getCurrentTemperature(),
                 batchDTO.getMinimumTemperature(),
                 batchDTO.getInitialQuantity(),
