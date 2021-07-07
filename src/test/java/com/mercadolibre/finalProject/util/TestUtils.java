@@ -3,17 +3,12 @@ package com.mercadolibre.finalProject.util;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
-import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
+import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
-import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
-import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,15 +29,16 @@ public interface TestUtils {
         return Optional.ofNullable(null);
     }
 
-    static Warehouse getWarehouseValid() {
-        var country = getCountryValid();
-        var warehouse = new Warehouse("Casa central da Argentina", country);
-        warehouse.setId(1L);
-        return warehouse;
+    static Country getCountry() {
+        return new Country("Brasil");
     }
 
-    static Country getCountryValid() {
-        return new Country(1L);
+    static Warehouse getWarehouseValid() {
+        var country = getCountry();
+        var sectors = Arrays.asList(getSectorValid());
+        var representative = getRepresentativeValid();
+
+        return new Warehouse(1L, "São Paulo", country, sectors, representative);
     }
 
     static List<Sector> getListSectorsValid() {
@@ -50,13 +46,13 @@ public interface TestUtils {
     }
 
     static Sector getSectorValid() {
-        var types = convertSectorsToSetInteger().stream().map(ProductType::toEnum).collect(Collectors.toSet());
-        var sector = new Sector();
-        sector.setId(1l);
-        sector.setTypes(types);
-        sector.setWarehouse(getWarehouseValid());
-        sector.setMaxQuantityBatches(10);
-        return sector;
+        var warehouse = new Warehouse(1L);
+        var batches = getBatchListValid();
+        return new Sector(1L, 1, batches, warehouse, 1100);
+    }
+
+    static SectorResponseDTO getSectorDTOResponseValid() {
+        return SectorMapper.toResponseDTO(getSectorValid());
     }
 
     static Set<Integer> convertSectorsToSetInteger() {
@@ -64,13 +60,8 @@ public interface TestUtils {
     }
 
     static Representative getRepresentativeValid() {
-        var representative = new Representative("Leonardo", getWarehouseValid(),getAccountValid());
-        representative.setId(1l);
-        return representative;
-    }
-
-    static Account getAccountValid() {
-        return new Account();
+        var warehouse = new Warehouse(1L);
+        return new Representative(1L,"Leonardo", warehouse, null);
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
@@ -78,22 +69,13 @@ public interface TestUtils {
     }
 
     static Seller getSellerValid() {
-        var products = Arrays.asList(getProductValid());
-        var seller = new Seller("Leonardo", products);
-        seller.setId(1L);
+        var seller = new Seller(1L, "Leonardo");
         return seller;
     }
 
     static Product getProductValid() {
-        //return new Product("Pizza", null);
-        return new Product(1L);
-    }
-
-    static Batch getBatchValid() {
-        var product = getProductValid();
-        var sector = getSectorValid();
-        var order = getOrderValid();
-        return new Batch(1L, product, sector,order, 0.0f, 0.0f, 10, 5, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+        var seller = getSellerValid();
+        return new Product(1L, "Product Name", "Product description", 1.0, 1, seller);
     }
 
     static InboundOrder getOrderValid() {
@@ -102,7 +84,7 @@ public interface TestUtils {
     }
 
     static SectorDTO getSectorDTOValid() {
-        return new SectorDTO(1L, 1L, 10.0, 100.0);
+        return new SectorDTO(1L, 1L, 10.0, 1100.0);
     }
 
     static InboundOrderDTO getInboundOrderDTOValid() {
@@ -116,18 +98,62 @@ public interface TestUtils {
     }
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
-        var warehouse = getWarehouseValid();
-       return WarehouseMapper.toResponseDTO(warehouse);
+        var sectors = Arrays.asList(getSectorDTOResponseValid());
+        var representative = getRepresentativeResponseDTOValid();
+        return new WarehouseResponseDTO(1L, "São Paulo", sectors, representative);
     }
 
     static List<Batch> getBatchListValid() {
-        var batchsDTO = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
-        var sector = getSectorValid();
-        var order = getOrderValid();
-        return batchsDTO.stream().map(b -> BatchMapper.toModel(b, sector.getId(),order.getId() )).collect(Collectors.toList());
+        return Arrays.asList(getBatchValid(), getBatchValidTwo());
     }
 
-    static SectorResponseDTO getSectorDTOResponseValid() {
-        return SectorMapper.toResponseDTO(getSectorValid());
+    static Batch getBatchValid() {
+        var product = getProductValid();
+        var warehouse = new Warehouse(1L);
+        var sector = new Sector(1L, 1, null, warehouse, 100);
+        var inboundOrder = getOrderValid();
+        return new Batch(1L, product, sector, inboundOrder, 0.0f, 0.0f, 1000, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(10));
+    }
+
+    static Batch getBatchValidTwo() {
+        var product = getProductValid();
+        var warehouse = new Warehouse(1L);
+        var sector = new Sector(1L, 1, null, warehouse, 100);
+        var inboundOrder = getOrderValid();
+        return new Batch(1L, product, sector, inboundOrder, 0.0f, 0.0f, 1000, 50, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(5));
+    }
+
+    static ProductResponseDTO getProductResponseDTO() {
+        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0, 1);
+    }
+
+    static SectorBatchRequestDTO getSectorBatchRequestDTO() {
+        return new SectorBatchRequestDTO(1L, 1L, null);
+    }
+
+    static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedC() {
+        return new SectorBatchRequestDTO(1L, 1L, "C");
+    }
+
+    static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedF() {
+        return new SectorBatchRequestDTO(1L, 1L, "F");
+    }
+
+    static SectorBatchResponseDTO getSectorBatchResponseDTO() {
+        var batchIdentificationResponseDTO = getBatchIdentificationResponseDTO();
+        var listBatchStockResponseDTO = Arrays.asList(getBatchStockResponseDTO(), getBatchStockResponseDTOTwo());
+        return new SectorBatchResponseDTO(batchIdentificationResponseDTO, 1l, listBatchStockResponseDTO);
+    }
+
+    static BatchIdentificationResponseDTO getBatchIdentificationResponseDTO() {
+        return new BatchIdentificationResponseDTO(1l, 1l);
+    }
+
+    static BatchStockResponseDTO getBatchStockResponseDTO() {
+        return new BatchStockResponseDTO(1l, 10, LocalDate.of(2021, 8, 8));
+    }
+
+    static BatchStockResponseDTO getBatchStockResponseDTOTwo() {
+        return new BatchStockResponseDTO(3l, 40, LocalDate.of(2021, 7, 30));
     }
 }

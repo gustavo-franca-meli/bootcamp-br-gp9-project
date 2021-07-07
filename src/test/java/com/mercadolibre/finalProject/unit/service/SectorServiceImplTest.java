@@ -65,20 +65,20 @@ public class SectorServiceImplTest {
         var batch = TestUtils.getBatchValid();
         when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.of(sector));
 
-        var got = service.isThereSpace(Mockito.anyLong());
+        var got = service.isThereSpace(batch, Mockito.anyLong());
         assertTrue(got);
     }
 
     @Test
     void shouldVerifyThereIsNoSpaceInSector() throws Exception {
         var sector = TestUtils.getSectorValid();
-        sector.setMaxQuantityBatches(1);
+        sector.setMaxQuantityBatches(1000);
 
         var batch = TestUtils.getBatchValid();
+        batch.setCurrentQuantity(1000);
 
         when(this.repository.findById(Mockito.anyLong())).thenReturn(Optional.of(sector));
-        when(this.repository.countBatchesIn(Mockito.anyLong())).thenReturn(1);
 
-        assertThrows(NoSpaceInSectorException.class, () -> this.service.isThereSpace(Mockito.anyLong()));
+        assertThrows(NoSpaceInSectorException.class, () -> this.service.isThereSpace(batch, Mockito.anyLong()));
     }
 }

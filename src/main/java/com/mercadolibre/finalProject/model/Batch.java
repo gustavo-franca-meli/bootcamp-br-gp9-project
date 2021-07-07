@@ -14,10 +14,11 @@ import java.time.LocalDateTime;
 public class Batch {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id",nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @ManyToOne
@@ -25,7 +26,7 @@ public class Batch {
     private Sector sector;
 
     @ManyToOne
-    @JoinColumn(name = "inbound_order_id",nullable = false)
+    @JoinColumn(name = "inbound_order_id", nullable = false)
     private InboundOrder inboundOrder;
 
     private Float currentTemperature;
@@ -63,12 +64,16 @@ public class Batch {
         this.dueDate = dueDate;
     }
 
-    public Batch (Long id) {
+    public Batch(Long id) {
         this.id = id;
     }
 
     public void withdrawQuantity(Integer quantityTakenFromBatch) {
         Integer newQuantity = this.getCurrentQuantity() - quantityTakenFromBatch;
         this.setCurrentQuantity(newQuantity);
+    }
+
+    public Integer getSectortype() {
+        return this.sector.getSectorType();
     }
 }

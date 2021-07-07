@@ -1,6 +1,5 @@
 package com.mercadolibre.finalProject.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,6 +31,14 @@ public class Warehouse {
 
     public Warehouse(Long id) {
         this.id = id;
+    }
+
+    public Warehouse(Long id, String name, Country country, List<Sector> sectors, Representative representative) {
+        this.id = id;
+        this.name = name;
+        this.country = country;
+        this.sectors = sectors;
+        this.representative = representative;
     }
 
     public Warehouse(String name, Country country, List<Sector> sectors, Representative representative) {

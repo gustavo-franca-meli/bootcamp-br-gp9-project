@@ -3,7 +3,6 @@ package com.mercadolibre.finalProject.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

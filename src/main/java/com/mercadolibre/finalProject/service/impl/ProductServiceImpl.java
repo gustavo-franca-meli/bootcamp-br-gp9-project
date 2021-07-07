@@ -1,106 +1,100 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
-import com.mercadolibre.finalProject.dtos.ProductBatchesPurchaseOrderDTO;
-import com.mercadolibre.finalProject.dtos.ProductDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Product;
-import com.mercadolibre.finalProject.model.Sector;
-import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
-import com.mercadolibre.finalProject.repository.SectorRepository;
-import com.mercadolibre.finalProject.service.IProductService;
+import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
 
     private ProductRepository productRepository;
-    private SectorRepository sectorRepository;
-    private BatchRepository batchRepository;
+    private ISellerService sellerService;
 
-    public ProductServiceImpl(ProductRepository productRepository, SectorRepository sectorRepository, BatchRepository batchRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ISellerService sellerService) {
         this.productRepository = productRepository;
-        this.sectorRepository = sectorRepository;
-        this.batchRepository = batchRepository;
+        this.sellerService = sellerService;
     }
 
     @Override
-    public ProductResponseDTO create (ProductRequestDTO productRequestDTO) {
-        Product p1 = new Product();
-        p1.setName(productRequestDTO.getName());
-        p1.setDescription(productRequestDTO.getDescription());
-        p1.setPrice(productRequestDTO.getPrice());
-        p1.setTypes((Set<Integer>) productRequestDTO.getTypes());
+    public ProductResponseDTO create(ProductRequestDTO productRequestDTO) {
+        var seller = sellerService.findSellerById(productRequestDTO.getSellerId());
+        var product = new Product(
+                productRequestDTO.getName(),
+                productRequestDTO.getDescription(),
+                productRequestDTO.getPrice(),
+                productRequestDTO.getProductType(),
+                seller);
 
-        var createdProduct = productRepository.save(p1);
-
-        return ProductMapper.toResponseDTO(createdProduct);
-    }
-
-    @Override
-    public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) throws ProductNotFoundException {
-
-        Product product = this.getModelById(id);
-        product.setName(productRequestDTO.getName());
-        product.setSeller(null);
-
-        productRepository.save(product);
+        product = productRepository.save(product);
 
         return ProductMapper.toResponseDTO(product);
     }
 
     @Override
-    public void delete (Long id) {
-        productRepository.deleteById(id);
-    }
+    public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
+        var product = this.findProductBy(id);
+        product.setName(productRequestDTO.getName() == null ? productRequestDTO.getName() : product.getName());
+        product.setDescription(productRequestDTO.getDescription() == null ? productRequestDTO.getDescription() : product.getDescription());
+        product.setPrice(productRequestDTO.getPrice() == null ? productRequestDTO.getPrice() : product.getPrice());
+        product.setProductType(productRequestDTO.getProductType() == null ? productRequestDTO.getProductType() : product.getProductType());
+        product.setSeller(sellerService.findSellerById(productRequestDTO.getSellerId()));
 
-    private Product getModelById (Long id) throws ProductNotFoundException {
+        this.productRepository.save(product);
 
-        var product =  productRepository.findById(id);
-        if(product.isPresent())return product.get();
-        throw new ProductNotFoundException();
-    }
-
-    @Override
-    public ProductResponseDTO findById (Long id) throws ProductNotFoundException {
-
-        Product product =  this.getModelById(id);
         return ProductMapper.toResponseDTO(product);
     }
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public void delete(Long id) {
+        this.productRepository.deleteById(id);
     }
 
     @Override
-    public Double getTotalPrice(Long productId, Integer quantity) throws ProductNotFoundException {
-        Product product = this.getModelById(productId);
+    public ProductResponseDTO findById(Long id) {
+        var product = this.findProductBy(id);
+        return ProductMapper.toResponseDTO(product);
+    }
+
+    private Product findProductBy(Long id) {
+        var product = this.productRepository.findById(id);
+
+        return product.orElseThrow(() -> new ProductNotFoundException("The product doesn't exist. Id: " + id));
+    }
+
+    @Override
+    public List<ProductResponseDTO> findAll() {
+        var products = productRepository.findAll();
+        return ProductMapper.toListResponseDTO(products);
+    }
+
+    @Override
+    public Double getTotalPrice(Long productId, Integer quantity) {
+        var product = this.findProductBy(productId);
         return product.getPrice() * quantity;
-     }
-
-     @Override
-    public ProductStockDTO getStockForProductInCountryByData (Long productId, Long countryId, LocalDate date) throws ProductNotFoundException {
-        Product product = this.getModelById(productId);
-        return new ProductStockDTO(
-                productId, product.getName(),product.getPrice(),this.getBatchesOfProductInCountry(productId,countryId,date));
-     }
+    }
 
     @Override
-    public List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date) {
+    public ProductStockDTO getStockForProductInCountryByData(Long productId, Long countryId, LocalDate date) {
+        Product product = this.findProductBy(productId);
+        return new ProductStockDTO(
+                productId, product.getName(), product.getPrice(), this.getBatchesOfProductInCountry(productId, countryId, date));
+    }
+
+    @Override
+    public List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date) {
         return new ArrayList<>();
     }
-
 }

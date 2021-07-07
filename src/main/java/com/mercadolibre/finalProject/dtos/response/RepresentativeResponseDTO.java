@@ -11,4 +11,5 @@ public class RepresentativeResponseDTO {
 
     private Long id;
     private String name;
+    private Long warehouseId;
 }

@@ -1,5 +1,7 @@
 package com.mercadolibre.finalProject.service.impl;
 
+import com.mercadolibre.finalProject.exceptions.NotFoundException;
+import com.mercadolibre.finalProject.exceptions.SellerNotFoundException;
 import com.mercadolibre.finalProject.model.Seller;
 import com.mercadolibre.finalProject.repository.SellerRepository;
 import com.mercadolibre.finalProject.service.ISellerService;
@@ -11,31 +13,38 @@ import java.util.List;
 @Service
 public class SellerServiceImpl implements ISellerService {
 
-    SellerRepository repo;
+    SellerRepository sellerRepository;
 
-    public SellerServiceImpl(SellerRepository repo) {
-        this.repo = repo;
+    public SellerServiceImpl(SellerRepository sellerRepository) {
+        this.sellerRepository = sellerRepository;
     }
 
     @Override
     public Long createSeller(Seller seller) {
-        return repo.save(seller).getId();
+        return sellerRepository.save(seller).getId();
     }
 
     @Override
     public Seller findSellerById(Long id) {
-        return repo.findById(id).get();
+        var seller = sellerRepository.findById(id);
+
+        if (seller.isEmpty()) {
+            throw new SellerNotFoundException();
+        }
+
+        return seller.get();
     }
 
     @Override
     public List<Seller> listAllSellers() {
         List<Seller> result = new ArrayList<>();
-        repo.findAll().forEach(result::add);
+        sellerRepository.findAll().forEach(result::add);
+
         return result;
     }
 
     @Override
     public Seller updateSeller(Seller seller) {
-        return repo.save(seller);
+        return sellerRepository.save(seller);
     }
 }

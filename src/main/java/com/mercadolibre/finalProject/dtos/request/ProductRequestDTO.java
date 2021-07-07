@@ -1,26 +1,23 @@
 package com.mercadolibre.finalProject.dtos.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.util.List;
-
-@Getter
-@Setter
+@Data
 public class ProductRequestDTO {
 
     private String name;
     private String description;
     private Double price;
-    private List<Integer> types;
+    private Integer productType;
+    private Long sellerId;
 
     public ProductRequestDTO() {
     }
 
-    public ProductRequestDTO(String name, String description, Double price, List<Integer> types) {
+    public ProductRequestDTO(String name, String description, Double price, Integer productType) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.types = types;
+        this.productType = productType;
     }
 }
