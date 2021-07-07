@@ -4,6 +4,8 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
+import com.mercadolibre.finalProject.dtos.response.WarehouseProductSumDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
@@ -96,5 +98,19 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date) {
         return new ArrayList<>();
+    }
+
+    @Override
+    public SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId) {
+        List<ProductRepository.ISumOfProductStockDTO> query = productRepository.getSumOfProductStockInAllWarehouses(productId);
+
+        List<WarehouseProductSumDTO> dto = new ArrayList<WarehouseProductSumDTO>();
+
+        query.forEach(c -> dto.add(new WarehouseProductSumDTO(Long.valueOf(c.getWarehouse_id()), Integer.valueOf(c.getQuantity()))));
+
+//        if (dto.isEmpty()){
+//            throw new RuntimeException("Não existe produto com o id: " + productId);
+//        }
+        return new SumOfProductStockDTO(productId, dto);
     }
 }
