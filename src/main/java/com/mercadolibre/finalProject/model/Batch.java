@@ -18,7 +18,7 @@ public class Batch {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id",nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @ManyToOne
@@ -71,5 +71,9 @@ public class Batch {
     public void withdrawQuantity(Integer quantityTakenFromBatch) {
         Integer newQuantity = this.getCurrentQuantity() - quantityTakenFromBatch;
         this.setCurrentQuantity(newQuantity);
+    }
+
+    public Integer getSectortype() {
+        return this.sector.getSectorType();
     }
 }

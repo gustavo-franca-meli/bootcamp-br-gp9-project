@@ -5,6 +5,8 @@ import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.enums.ProductType;
+import com.mercadolibre.finalProject.model.Batch;
+import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
@@ -30,14 +32,14 @@ public class SectorServiceImpl implements ISectorService {
 
     private Sector findSectorBy(Long sectorId) {
         var sector = this.sectorRepository.findById(sectorId);
-        return sector.orElseThrow(() -> new SectorNotFoundException("Sector " + sectorId +" Not Found"));
+        return sector.orElseThrow();
     }
 
     @Override
-    public Boolean hasType(Long sectorID, Set<ProductType> productTypes) throws SectorNotFoundException {
-        var sector = this.findSectorBy(sectorID);
-        var sectorTypes = sector.getTypesInProductType();
-        return productTypes.stream().anyMatch(p -> sectorTypes.stream().anyMatch((s -> s .getCod() == p.getCod())));
+    public Boolean hasType(Long sectorId, Integer productType) throws SectorNotFoundException {
+        var sector = this.findSectorBy(sectorId);
+
+        return sector.getSectorType() == productType;
     }
 
     @Override

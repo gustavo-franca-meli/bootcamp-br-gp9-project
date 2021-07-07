@@ -7,7 +7,8 @@ public interface WarehouseMapper {
 
     static WarehouseResponseDTO toResponseDTO(Warehouse warehouse) {
         var sectors = SectorMapper.toListResponseDTO(warehouse.getSectors());
-        return new WarehouseResponseDTO(warehouse.getId(),warehouse.getName(), sectors);
+        var representative = RepresentativeMapper.toResponseDTO(warehouse.getRepresentative());
+        return new WarehouseResponseDTO(warehouse.getId(),warehouse.getName(), sectors, representative);
     }
 
 }

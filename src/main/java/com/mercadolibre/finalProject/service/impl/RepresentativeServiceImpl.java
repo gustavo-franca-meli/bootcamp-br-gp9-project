@@ -3,7 +3,6 @@ package com.mercadolibre.finalProject.service.impl;
 import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
 import com.mercadolibre.finalProject.exceptions.RepresentativeNotFound;
 import com.mercadolibre.finalProject.model.Representative;
-import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
 import com.mercadolibre.finalProject.repository.RepresentativeRepository;
 import com.mercadolibre.finalProject.service.IRepresentativeService;

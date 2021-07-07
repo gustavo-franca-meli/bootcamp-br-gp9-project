@@ -1,12 +1,10 @@
 package com.mercadolibre.finalProject.unit.model.mapper;
 
-import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.util.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SectorMapperTest {
 
@@ -26,11 +24,4 @@ public class SectorMapperTest {
         assertEquals(expected.getId(), got.getId());
     }
 
-    @Test
-    void shouldAssembleSetTypesSectorDescription() {
-        var expected = TestUtils.getSectorValid();
-        var got = SectorMapper.getTypesSectorDescriptions(expected.getTypes());
-
-        assertTrue(got.contains(ProductType.PERISHABLE.getDescription()));
-    }
 }

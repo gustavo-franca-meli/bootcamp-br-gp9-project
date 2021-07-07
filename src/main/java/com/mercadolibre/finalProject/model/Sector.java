@@ -1,15 +1,11 @@
 package com.mercadolibre.finalProject.model;
 
-import com.mercadolibre.finalProject.model.enums.ProductType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "sector")
@@ -21,12 +17,10 @@ public class Sector {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "SECTOR_TYPES")
-    private Set<Integer> types = new HashSet<>();
+    private Integer sectorType;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Batch> batches;
+    private List<Batch> batches = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
@@ -38,21 +32,21 @@ public class Sector {
         this.id = id;
     }
 
-    public Sector(Set<Integer> types, Warehouse warehouse, Integer maxQuantityBatches) {
-        this.types = types;
+    public Sector(Long id, Integer sectorType, List<Batch> batches, Warehouse warehouse, Integer maxQuantityBatches) {
+        this.id = id;
+        this.sectorType = sectorType;
+        this.batches = batches;
         this.warehouse = warehouse;
         this.maxQuantityBatches = maxQuantityBatches;
     }
 
-    public void setTypes (Set<ProductType> types) {
-        this.types = types.stream().map(ProductType::getCod).collect(Collectors.toSet());
+    public Sector(Integer sectorType, Warehouse warehouse, Integer maxQuantityBatches) {
+        this.sectorType = sectorType;
+        this.warehouse = warehouse;
+        this.maxQuantityBatches = maxQuantityBatches;
     }
 
-    public Set<ProductType> getTypesInProductType () {
-        return this.types.stream().map(ProductType::toEnum).collect(Collectors.toSet());
-    }
-
-    public Long getWarehouseId() {
+    public Long getWareHouseId() {
         return this.warehouse.getId();
     }
 }

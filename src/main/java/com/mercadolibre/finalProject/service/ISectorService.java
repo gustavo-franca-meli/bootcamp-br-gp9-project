@@ -12,7 +12,8 @@ public interface ISectorService {
 
     Boolean exist(Long sectorId);
 
-    SectorResponseDTO findById(Long sectorId) throws SectorNotFoundException;
+    SectorResponseDTO findById(Long sectorId);
 
-    Boolean hasType (Long sectorID, Set<ProductType> productTypes) throws SectorNotFoundException;
+    Boolean hasType(Long sectorID, Integer productType);
+
 }

@@ -18,12 +18,9 @@ public interface SectorMapper {
     }
 
     static SectorResponseDTO toResponseDTO(Sector sector) {
-        var sectorTypesDescriptions = getTypesSectorDescriptions(sector.getTypes());
-        return new SectorResponseDTO(sector.getId(), sectorTypesDescriptions, null, sector.getMaxQuantityBatches(),sector.getWarehouseId());
+        var sectorTypeDescription = ProductType.toEnum(sector.getSectorType()).getDescription();
+        return new SectorResponseDTO(sector.getId(), sectorTypeDescription, sector.getBatches().size(), sector.getMaxQuantityBatches(), sector.getWareHouseId());
     }
 
-    static Set<String> getTypesSectorDescriptions(Set<Integer> types) {
-        return types.stream().map(t -> ProductType.toEnum(t).getDescription()).collect(Collectors.toSet());
-    }
 
 }
