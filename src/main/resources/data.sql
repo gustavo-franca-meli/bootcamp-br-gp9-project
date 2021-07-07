@@ -30,8 +30,8 @@ INSERT INTO warehouse (name, country_id, representative_id) VALUES ("Centro de T
 UPDATE representative SET warehouse_id = 1 WHERE (`id` = 2);
 UPDATE representative SET warehouse_id = 2 WHERE (`id` = 1);
 
-INSERT INTO sector (`max_quantity_batches`, `warehouse_id`) VALUES (50, 1);
-INSERT INTO sector (`max_quantity_batches`, `warehouse_id`) VALUES (15, 2);
+INSERT INTO sector (max_quantity_batches, warehouse_id, sector_type) VALUES (50, 1, 1);
+INSERT INTO sector (max_quantity_batches, warehouse_id, sector_type) VALUES (15, 2, 3);
 
 INSERT INTO batch (`id`, `current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_time`, `minimum_temperature`, `inbound_order_id`, `product_id`, `sector_id`) VALUES (1, 10, 20.0, '2021-08-08', 100, '2021-04-10', '2021-04-10', 10.0, null, 1,1);
 INSERT INTO batch (`id`, `current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_time`, `minimum_temperature`, `inbound_order_id`, `product_id`, `sector_id`) VALUES (2, 70, 20.0, '2021-09-08', 100, '2021-04-10', '2021-04-10', 10.0, null, 2,2);
