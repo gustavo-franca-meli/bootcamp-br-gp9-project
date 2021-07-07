@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchPurchaseOrderResponseDTO;
+import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.BatchPurchaseOrder;
 import com.mercadolibre.finalProject.model.ProductBatchesPurchaseOrder;
@@ -29,7 +30,7 @@ public class BatchPurchaseOrderServiceImpl implements IBatchPurchaseOrderService
 
     private BatchPurchaseOrder getModelById (Long id) {
         Optional<BatchPurchaseOrder> batchPurchaseOpt = this.repository.findById(id);
-        if(batchPurchaseOpt.isEmpty()) { throw new RuntimeException(); } //can't find batch purchase order
+        if(batchPurchaseOpt.isEmpty()) { throw new NotFoundException("Purchase Order Batch ID " + id + " invalid"); } //can't find batch purchase order
 
         return batchPurchaseOpt.get();
     }

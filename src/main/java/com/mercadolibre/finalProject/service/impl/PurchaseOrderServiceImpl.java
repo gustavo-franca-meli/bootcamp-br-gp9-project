@@ -1,14 +1,11 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.StockForOrderDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
-import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
-import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
+import com.mercadolibre.finalProject.exceptions.*;
 import com.mercadolibre.finalProject.model.ProductBatchesPurchaseOrder;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
 import com.mercadolibre.finalProject.model.mapper.PurchaseOrderMapper;
@@ -17,7 +14,6 @@ import com.mercadolibre.finalProject.service.IProductBatchesPurchaseOrderService
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
 import com.mercadolibre.finalProject.service.ISessionService;
-import net.bytebuddy.asm.Advice;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -62,23 +58,29 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
     }
 
     public Boolean isStockEnough (List<ProductPurchaseOrderRequestDTO> productRequests, Long countryId, LocalDate date) {
-        LocalDate minimumDate = date; // fazer -3 semanas
+        List<ProductStockInsufficientException> exceptions = new ArrayList<>();
+
         for(ProductPurchaseOrderRequestDTO productRequestDTO : productRequests) {
             Integer quantityProduct = this.productService.getQuantityOfProductByCountryAndDate(productRequestDTO.getProductId(), countryId, date);
-            if (quantityProduct < productRequestDTO.getQuantity()) { // lista de excecao com productId e quantidade de estoque disponivel
-                }
+
+            if (quantityProduct < productRequestDTO.getQuantity()) {
+                exceptions.add(new ProductStockInsufficientException(
+                        "Stock for product " + productRequestDTO.getProductId() + " is insufficient for order: " + quantityProduct)); }
         }
+
+        if(!exceptions.isEmpty()) { throw new StockInsufficientException("Stock insufficient for order ", exceptions); }
         return true;
     }
 
     @Override
-    public PurchaseOrderResponseDTO update (Long id, List<PurchaseOrderUpdateRequestDTO> updates) {
+    public PurchaseOrderResponseDTO update (Long id, List<PurchaseOrderUpdateRequestDTO> updateRequest) {
+        PurchaseOrder purchaseOrder = this.findById(id);
         return null;
     }
 
     private PurchaseOrder findById (Long id) {
         Optional<PurchaseOrder> purchaseOrderOpt = this.repository.findById(id);
-        if(purchaseOrderOpt.isEmpty()) { throw new RuntimeException(); } // purchase order id invalid
+        if(purchaseOrderOpt.isEmpty()) { throw new NotFoundException("Purchase Order ID " + id + " invalid"); }
         return purchaseOrderOpt.get();
     }
 

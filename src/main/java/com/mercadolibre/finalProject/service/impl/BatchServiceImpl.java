@@ -6,6 +6,7 @@ import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchPurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.BatchCreateException;
 import com.mercadolibre.finalProject.exceptions.CreateBatchStockException;
+import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.exceptions.ProductTypeNotSuportedInSectorException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
@@ -36,7 +37,7 @@ public class BatchServiceImpl implements IBatchService {
 
     private Batch getModelById (Long id) {
         Optional<Batch> batchOpt = this.batchRepository.findById(id);
-        if(batchOpt.isEmpty()) { throw new RuntimeException(); }
+        if(batchOpt.isEmpty()) { throw new NotFoundException("Batch ID " + id + " invalid"); }
         return batchOpt.get();
     }
 
