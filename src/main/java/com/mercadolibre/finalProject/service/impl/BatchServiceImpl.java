@@ -54,7 +54,7 @@ public class BatchServiceImpl implements IBatchService {
                     //verify if batch exist and has the same order
 
                     Optional<Batch> findBatch = batchModel.getId() != null?batchRepository.findById(batchModel.getId()): Optional.empty();
-                    if(findBatch.isPresent() && !findBatch.get().getInboundOrder().getId().equals(orderId))throw new Exception("this batch id alrealdy in use in other order");
+                    if(findBatch.isPresent() && !findBatch.get().getInboundOrder().getId().equals(orderId))throw new Exception("this batch id already in use in other order");
                     //save batch
                     var batchResponse = batchRepository.save(batchModel);
                     responseBathList.add(batchResponse);

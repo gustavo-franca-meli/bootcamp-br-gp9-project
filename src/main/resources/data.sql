@@ -33,7 +33,18 @@ INSERT INTO sector_product_types (product_id,types) VALUES (3,  2);
 INSERT INTO sector_types (sector_id,types) VALUES (1,1);
 INSERT INTO sector_types (sector_id,types) VALUES (2,2);
 INSERT INTO sector_types (sector_id,types) VALUES (3,1);
+
+-- to test update inbound Order
+INSERT INTO inbound_order (order_date, representative_id) values (now(),1);
+INSERT INTO inbound_order (order_date, representative_id) values (now(),1);
+INSERT INTO batch (current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (10, 10.0, now(), 1, 10, now(), now(), 10.0, 1, 1);
+INSERT INTO batch (current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (10, 10.0, now(), 1, 10, now(), now(), 10.0, 1, 1);
+INSERT INTO batch (current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (10, 10.0, now(), 1, 10, now(), now(), 10.0, 1, 1);
+INSERT INTO batch (current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (10, 10.0, now(), 1, 10, now(), now(), 10.0, 1, 1);
+INSERT INTO batch (current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (10, 10.0, now(), 1, 10, now(), now(), 10.0, 1, 1);
+INSERT INTO batch (id,current_quantity, current_temperature, due_date, inbound_order_id, initial_quantity, manufacturing_date, manufacturing_time, minimum_temperature, product_id, sector_id) values (6,10, 10.0, now(), 2, 10, now(), now(), 10.0, 1, 1);
 --
+
 --INSERT INTO `seller` (`name`) VALUES ('Carolina Fugita');
 --INSERT INTO `seller` (`name`) VALUES ('Gustavo França');
 --INSERT INTO `seller` (`name`) VALUES ('Leonardo Carias');

@@ -56,7 +56,8 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
                 batchService.deleteAll(toDelete);
             return  response;
             }catch (Exception e){
-                batchService.save(batches.stream().map(BatchMapper::toDTO).collect(Collectors.toList()), batches.get(0).getSector().getId(),order.get().getId());
+                if(!batches.isEmpty())
+                    batchService.save(batches.stream().map(BatchMapper::toDTO).collect(Collectors.toList()), batches.get(0).getSector().getId(),order.get().getId());
                 throw e;
             }
 

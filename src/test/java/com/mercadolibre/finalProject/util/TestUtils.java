@@ -118,9 +118,14 @@ public interface TestUtils {
 
 
     static InboundOrderDTO getInboundOrderDTOValidForUpdate() {
-        var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
+        var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid(),getBatchDTOValid(),getBatchDTOValid(),getBatchDTOValid());
+        Long i = 1L;
+        for(var batch : batchList){
+            batch.setId(i);
+            i++;
+        }
         var sector = getSectorDTOValid();
-        return new InboundOrderDTO(10L, LocalDate.now(), sector, batchList);
+        return new InboundOrderDTO(1L, LocalDate.now(), sector, batchList);
     }
 
     static BatchDTO getBatchDTOValid() {

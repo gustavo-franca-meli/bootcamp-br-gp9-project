@@ -2,8 +2,10 @@ package com.mercadolibre.finalProject.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
 import com.mercadolibre.finalProject.util.TestUtils;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.TimeZone;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,15 +31,15 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
     @Autowired@Qualifier("objectMapper")
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+
+
+
     //POST  CREATE INBOUND ORDER
     @Test
     void shouldCreateInboundOrderDTOCorrectly() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForCreate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         var json = mapper.writeValueAsString(request);
-        System.out.println(json);
 
         var expectedBatch = request.getBatchStock().get(0);
 
@@ -252,22 +255,22 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
    /// PUT METHOD UPDATE INBOUND ORDER
 
     @Test
-    void shouldUpdateInboundOrderDTOCorrectly() throws Exception {
+    @Order(1)
+    void shouldReturnInboundOrderDTOWhenUpdateInboundOrderDTOCorrectly() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForUpdate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        var json = mapper.writeValueAsString(request);
+        var jsonUpdate = mapper.writeValueAsString(request);
 
-        var expectedBatch = request.getBatchStock().get(0);
+        var expectedBatch = request.getBatchStock().get(1);
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id","1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
+                .content(jsonUpdate)
         )
                 .andExpect(status().isCreated())
                 .andDo(print())
+                .andExpect(jsonPath("$.order_id").isNumber())
                 .andExpect(jsonPath("$.batch_stock").exists())
                 .andExpect(jsonPath("$.batch_stock").isArray())
                 .andExpect(jsonPath("$.batch_stock[0].product_id").value(expectedBatch.getProductId()))
@@ -278,19 +281,17 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.batch_stock[0].manufacturing_date").value(expectedBatch.getManufacturingDate().toString()))
                 .andExpect(jsonPath("$.batch_stock[0].manufacturing_time").exists())
                 .andExpect(jsonPath("$.batch_stock[0].due_date").value(expectedBatch.getDueDate().toString()))
-                .andExpect(jsonPath("$.batch_stock[0].batchNumber").value(expectedBatch.getId()));
+                .andExpect(jsonPath("$.batch_stock[1].batchNumber").value(expectedBatch.getId()));
 
     }
 
     @Test
     void shouldReturnErrorWhenOrderIsNotFound() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForUpdate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        request.setOrderNumber(3L);
 
         var json = mapper.writeValueAsString(request);
 
-        var expectedBatch = request.getBatchStock().get(0);
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id","1")
@@ -304,21 +305,67 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
     }
 
-    /*
-    @SneakyThrows
     @Test
-    void shouldReturnNotFoundWhenRepresentativeNotWorkInWarehouse() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValidForCreate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    void shouldReturnErrorWhenBatchIdExistInOterOrder() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
+        var batch = TestUtils.getBatchDTOValidNoId();
+        var batches =   new ArrayList<>(request.getBatchStock());
+        batch.setId(6L);
+        batches.add(batch);
+        request.setBatchStock(batches);
 
         var json = mapper.writeValueAsString(request);
-        System.out.println(json);
+
+        var expectedBatch = request.getBatchStock().get(0);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+                .header("X-Representative-Id","1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+        )
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.message").value("Error in save 1 bath in sector"))
+                .andExpect(jsonPath("$.errors").isArray())
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 5 error: this batch id already in use in other order"));
+
+    }
+
+    @Test
+    void shouldCreateANewBatchWhenNoHasBatchNumberInBatchStock() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
+        var batch = TestUtils.getBatchDTOValidNoId();
+        var batches =   new ArrayList<>(request.getBatchStock());
+        batch.setId(null);
+        batches.add(batch);
+        request.setBatchStock(batches);
+
+        var json = mapper.writeValueAsString(request);
+
+        var expectedBatch = request.getBatchStock().get(0);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+                .header("X-Representative-Id","1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+        )
+                .andExpect(status().isCreated())
+                .andDo(print())
+                .andExpect(jsonPath("$.batch_stock").isArray())
+                .andExpect(jsonPath("$.batch_stock[5].batchNumber").exists());
+
+    }
+    @Test
+    void shouldReturnNotFoundWhenRepresentativeNotWorkInWarehouseInPUTMethod() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
+
+        var json = mapper.writeValueAsString(request);
 
         var representativeIdWithNotWorkInWarehouseOne = 2;
         var expectedMessage = "The representative doesn't work in this warehouse. Id: " + representativeIdWithNotWorkInWarehouseOne;
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeIdWithNotWorkInWarehouseOne)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -326,11 +373,10 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(expectedMessage));
     }
+
     @Test
-    void shouldReturnNotFoundWhenWarehouseNotExist() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValidForCreate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    void shouldReturnNotFoundWhenWarehouseNotExistInPutMethod() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
 
         var invalidWarehouseId = 3L;
         request.getSection().setWarehouseCode(invalidWarehouseId);
@@ -341,7 +387,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         var expectedMessage = "Warehouse Not Found. Id:" + invalidWarehouseId;
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -351,10 +397,8 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
     }
 
     @Test
-    void shouldReturnNotFoundWhenSectorNotExistInWarehouse() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValidForCreate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    void shouldReturnNotFoundWhenSectorNotExistInWarehouseInPutMethod() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
 
         var invalidSectorId = 2L;
         request.getSection().setCode(invalidSectorId);
@@ -365,7 +409,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         var expectedMessage = "Sector id " + request.getSection().getCode() +" not found in warehouse Id " + request.getSection().getWarehouseCode();
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -375,10 +419,8 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
     }
 
     @Test
-    void shouldReturnAnErrorListOfCreateBatchWhenProductBatchNotRegistered() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValidForCreate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    void shouldReturnAnErrorListOfCreateBatchWhenProductBatchNotRegisteredInPutMethod() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
 
         var invalidProductId = 2L;
         request.getBatchStock().get(0).setProductId(invalidProductId);
@@ -390,7 +432,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         var expectedMessage = "Error in save 2 bath in sector";
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -400,13 +442,12 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch id 1 error: Product Not Found Exception"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product Not Found Exception"));
     }
 
-
     @Test
-    void shouldReturnAnErrorListOfCreateBatchWhenSectorTypeIsIncompatibleWithProduct() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValidForCreate();
+    void shouldReturnAnErrorListOfCreateBatchWhenSectorTypeIsIncompatibleWithProductInPutMethod() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -420,7 +461,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         var expectedMessage = "Error in save 2 bath in sector";
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -430,11 +471,11 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch id 1 error: Product 3 with  TypeNot Perishable not supported in sector 1"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 3 with  TypeNot Perishable not supported in sector 1"));
     }
     @Test
-    void shouldReturnAnErrorListOfCreateBatchWhenSectorNoHasSpaceForBatch() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValidForCreate();
+    void shouldReturnAnErrorListOfCreateBatchWhenSectorNoHasSpaceForBatchInPutMethod() throws Exception {
+        var request = TestUtils.getInboundOrderDTOValidForUpdate();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -447,9 +488,9 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         var representativeId = 1L;
 
-        var expectedMessage = "Error in save 1 bath in sector";
+        var expectedMessage = "Error in save 4 bath in sector";
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -458,10 +499,8 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.message").value(expectedMessage))
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch id 1 error: Sector 3 doesn't have enough space"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 1 error: Sector 3 doesn't have enough space"));
     }
-*/
-
 
 
 }
