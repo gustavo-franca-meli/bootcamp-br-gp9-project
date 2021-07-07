@@ -15,12 +15,13 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query(value = " SELECT id as warehouse_id, current_quantity as quantity from batch where product_id = :productId ", nativeQuery = true)
+    @Query(value = " SELECT sector.warehouse_id as warehouse_id, SUM(current_quantity) as quantity FROM batch, sector " +
+            " WHERE batch.sector_id = sector.id AND product_id = :productId " +
+            " GROUP BY warehouse_id ", nativeQuery = true)
     public List<ISumOfProductStockDTO> getSumOfProductStockInAllWarehouses (@Param("productId") Long productId);
 
     public static interface ISumOfProductStockDTO {
         String getWarehouse_id();
         String getQuantity();
-
     }
 }
