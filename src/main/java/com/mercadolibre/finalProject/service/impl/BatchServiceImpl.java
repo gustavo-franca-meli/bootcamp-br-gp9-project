@@ -9,6 +9,7 @@ import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ import java.util.*;
 @Service
 public class BatchServiceImpl implements IBatchService {
     private static final LocalDate MINIMUM_DUE_DATE = LocalDate.now().plusWeeks(3L);
-    private static final String ORDERED_BY_CURRENT_QUANTITY = "C";
+    private static final Map<String, String> ORDER_BY_FIELDS = new HashMap<>();
     private static final Map<String, ProductType> PRODUCT_CATEGORY_MAPPER = new HashMap<>();
 
     private final BatchRepository batchRepository;
@@ -31,39 +32,53 @@ public class BatchServiceImpl implements IBatchService {
         this.productService = productService;
         this.representativeService = representativeService;
 
-        PRODUCT_CATEGORY_MAPPER.put("FS", ProductType.FRESH);
-        PRODUCT_CATEGORY_MAPPER.put("RF", ProductType.REFRIGERATED);
-        PRODUCT_CATEGORY_MAPPER.put("FF", ProductType.FROZEN);
+        this.ORDER_BY_FIELDS.put("C", "currentQuantity");
+        ORDER_BY_FIELDS.put("F", "dueDate");
+
+        this.PRODUCT_CATEGORY_MAPPER.put("FS", ProductType.FRESH);
+        this.PRODUCT_CATEGORY_MAPPER.put("RF", ProductType.REFRIGERATED);
+        this.PRODUCT_CATEGORY_MAPPER.put("FF", ProductType.FROZEN);
     }
 
     @Override
-    public List<Batch> create(List<BatchDTO> batchStock, Long sectorId,Long orderId) throws CreateBatchStockException {
+    public List<Batch> save(List<BatchDTO> batchStock, Long sectorId,Long orderId) throws CreateBatchStockException {
+        //sector has space for batchStock length else throws
+        var size = batchStock.size();
 
         var errorList = new ArrayList<BatchCreateException>();
         var responseBathList = new ArrayList<Batch>();
         //iterate all product if find a error throws all
-        batchStock.forEach((batch) -> {
-            try {
-                var batchModel = BatchMapper.toModel(batch, sectorId, orderId);
+        Long i = 0L;
+        for (var batch: batchStock){
+            try{
+                var batchModel = BatchMapper.toModel(batch,sectorId,orderId);
                 //product seller is registered if not throws
                 var product = productService.findById(batch.getProductId());
                 //product type pertence a sector
-                if (sectorService.hasType(sectorId, product.getType())) {
+                if(sectorService.hasType(sectorId,product.getType())){
+                    //verify if has space
                     sectorService.isThereSpace(sectorId);
-                    var bathResponse = batchRepository.save(batchModel);
-                    responseBathList.add(bathResponse);
-                } else {
-                    throw new ProductTypeNotSuportedInSectorException(product.getId(), ProductType.toEnum(product.getType()).getDescription(), sectorId);
+                    //verify if batch exist and has the same order
+
+                    Optional<Batch> findBatch = batchModel.getId() != null?batchRepository.findById(batchModel.getId()): Optional.empty();
+                    if(findBatch.isPresent() && !findBatch.get().getInboundOrder().getId().equals(orderId))throw new Exception("this batch id already in use in other order");
+                    //save batch
+                    var batchResponse = batchRepository.save(batchModel);
+                    responseBathList.add(batchResponse);
+                }else{
+                    throw new ProductTypeNotSuportedInSectorException(product.getId(),ProductType.toEnum(product.getType()).getDescription(),sectorId);
                 }
 
-            } catch (Exception e) {
-                errorList.add(new BatchCreateException(batch.getId(), e.getMessage()));
-            }
 
-        });
-        if (errorList.isEmpty()) {
+            }catch (Exception e){
+                errorList.add(new BatchCreateException(i,e.getMessage()));
+            }
+            i++;
+
+        }
+        if(errorList.isEmpty()){
             return responseBathList;
-        } else {
+        }else{
             //rollback all
             responseBathList.forEach((batch -> {
                 batchRepository.deleteById(batch.getId());
@@ -81,6 +96,11 @@ public class BatchServiceImpl implements IBatchService {
         return BatchMapper.toDTO(batch);
     }
 
+    @Override
+    public void deleteAll(List<Batch> batches) {
+        batchRepository.deleteAll(batches);
+    }
+    
     private Batch findBatchBy(Long batchId) {
         var batch = this.batchRepository.findById(batchId);
 
@@ -137,17 +157,15 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     private void isCorrectSectorForProducts(Integer productType, Integer sectorType) {
-        if (productType != sectorType)
+        if (!productType.equals(sectorType))
             throw new IncorrectSectorTypeException("This product doesn't should stay in this sector");
     }
 
     private List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBy(Long warehouseId, Long productId, String ordered) {
-        List<Batch> batches = new ArrayList<>();
-        if (ordered.equals(ORDERED_BY_CURRENT_QUANTITY)) {
-            batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByCurrentQuantity(warehouseId, productId, MINIMUM_DUE_DATE);
-        } else {
-            batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderByDueDate(warehouseId, productId, MINIMUM_DUE_DATE);
-        }
+        var orderField = ORDER_BY_FIELDS.getOrDefault(ordered, "id");
+        var sort = Sort.by(Sort.DEFAULT_DIRECTION, orderField);
+
+        var batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(warehouseId, productId, MINIMUM_DUE_DATE, sort);
 
         this.validateFillBatches(batches, productId);
         return batches;

@@ -37,4 +37,9 @@ public class Representative {
         this.warehouse = warehouse;
         this.account = account;
     }
+
+    public Representative(String name) {
+        this.name = name;
+    }
+
 }

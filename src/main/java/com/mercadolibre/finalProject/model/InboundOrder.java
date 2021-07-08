@@ -47,4 +47,10 @@ public class InboundOrder {
         this.batches = bathStock;
         this.representative = new Representative(representativeId);
     }
+    public InboundOrder(Long id, Long representativeId,LocalDate orderDate) {
+        this.id = id;
+        this.orderDate = orderDate;
+        this.representative = new Representative(representativeId);
+    }
+
 }

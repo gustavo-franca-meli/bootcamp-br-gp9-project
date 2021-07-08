@@ -20,7 +20,7 @@ public class Batch {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id",nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @ManyToOne
@@ -49,7 +49,6 @@ public class Batch {
                  LocalDate manufacturingDate,
                  LocalDateTime manufacturingTime,
                  LocalDate dueDate) {
-
         this.id = id;
         this.product = product;
         this.sector = sector;
@@ -84,7 +83,7 @@ public class Batch {
         this.dueDate = dueDate;
     }
 
-    public Batch(Long id) {
+    public Batch (Long id) {
         this.id = id;
     }
 

@@ -4,10 +4,15 @@ import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Sector;
+import com.mercadolibre.finalProject.model.enums.ProductType;
+import com.mercadolibre.finalProject.model.Batch;
+import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class SectorServiceImpl implements ISectorService {

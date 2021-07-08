@@ -2,216 +2,139 @@ package com.mercadolibre.finalProject.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.util.TestUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProductControllerTest {
+@AutoConfigureMockMvc
+public class ProductControllerTest extends ControllerTest {
 
-    private static final String PATH = "/api/v1/fresh-products/inboundorder/";
+    private static final String BASIC_PATH = "/api/v1";
+    private static final String PATH = BASIC_PATH + "/fresh-products/list";
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private String token = "";
 
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired@Qualifier("objectMapper")
+    @Autowired
+    @Qualifier("objectMapper")
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    @Test
-    void shouldCreateInboundOrderDTOCorrectly() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValid();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        var json = mapper.writeValueAsString(request);
-        System.out.println(json);
-
-        var expectedBatch = request.getBatchStock().get(0);
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("X-Representative-Id","1")
+    @BeforeEach
+    public void setUp() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(BASIC_PATH + "/sign-in")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
+                .param("username", "onias-rocha")
+                .param("password", "pass123"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        var account = mapper.readValue(result, AccountResponseDTO.class);
+        token = account.getToken();
+    }
+
+    @Test
+    void shouldGetSectorBatchesByProductId() throws Exception {
+        var expected = TestUtils.getSectorBatchResponseDTO();
+        var expectedBatch = expected.getBatchStock().get(0);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+                .header("X-Representative-Id", "1")
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("productId", "2")
         )
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andDo(print())
+                .andExpect(jsonPath("$.sector.sector_code").value(expected.getSector().getSectorCode()))
+                .andExpect(jsonPath("$.sector.warehouse_code").value(expected.getSector().getWarehouseCode()))
+                .andExpect(jsonPath("$.product_id").value(expected.getProductId()))
                 .andExpect(jsonPath("$.batch_stock").exists())
                 .andExpect(jsonPath("$.batch_stock").isArray())
-                .andExpect(jsonPath("$.batch_stock[0].product_id").value(expectedBatch.getProductId()))
-                .andExpect(jsonPath("$.batch_stock[0].current_temperature").value(expectedBatch.getCurrentTemperature()))
-                .andExpect(jsonPath("$.batch_stock[0].minimum_temperature").value(expectedBatch.getMinimumTemperature()))
-                .andExpect(jsonPath("$.batch_stock[0].initial_quantity").value(expectedBatch.getInitialQuantity()))
+                .andExpect(jsonPath("$.batch_stock[0].batch_number").value(expectedBatch.getBatchNumber()))
                 .andExpect(jsonPath("$.batch_stock[0].current_quantity").value(expectedBatch.getCurrentQuantity()))
-                .andExpect(jsonPath("$.batch_stock[0].manufacturing_date").value(expectedBatch.getManufacturingDate().toString()))
-                .andExpect(jsonPath("$.batch_stock[0].manufacturing_time").exists())
-                .andExpect(jsonPath("$.batch_stock[0].due_date").value(expectedBatch.getDueDate().toString()))
-                .andExpect(jsonPath("$.batch_stock[0].batchNumber").value(expectedBatch.getId()));
-
-
+                .andExpect(jsonPath("$.batch_stock[0].due_date").value(expectedBatch.getDueDate().toString()));
     }
+
     @Test
-    void shouldReturnNotFoundWhenRepresentativeNotWorkInWarehouse() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValid();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        var json = mapper.writeValueAsString(request);
-        System.out.println(json);
-
-        var representativeIdWithNotWorkInWarehouseOne = 2;
-        var expectedMessage = "The representative doesn't work in this warehouse. Id: " + representativeIdWithNotWorkInWarehouseOne;
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("X-Representative-Id",representativeIdWithNotWorkInWarehouseOne)
+    void shouldGetSectorBatchesByProductIdOrderedByCurrentQuantity() throws Exception {
+        var expected = TestUtils.getSectorBatchResponseDTO();
+        var expectedBatch = expected.getBatchStock().get(0);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+                .header("X-Representative-Id", "1")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
+                .param("productId", "2")
+                .param("ordered", "C")
         )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.sector.sector_code").value(expected.getSector().getSectorCode()))
+                .andExpect(jsonPath("$.sector.warehouse_code").value(expected.getSector().getWarehouseCode()))
+                .andExpect(jsonPath("$.product_id").value(expected.getProductId()))
+                .andExpect(jsonPath("$.batch_stock").exists())
+                .andExpect(jsonPath("$.batch_stock").isArray())
+                .andExpect(jsonPath("$.batch_stock[0].batch_number").value(expectedBatch.getBatchNumber()))
+                .andExpect(jsonPath("$.batch_stock[0].current_quantity").value(expectedBatch.getCurrentQuantity()))
+                .andExpect(jsonPath("$.batch_stock[0].due_date").value(expectedBatch.getDueDate().toString()));
+    }
+
+    @Test
+    void shouldGetSectorBatchesByProductIdOrderedByDueDate() throws Exception {
+        var expected = TestUtils.getSectorBatchResponseDTO();
+        var expectedBatch = expected.getBatchStock().get(1);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+                .header("X-Representative-Id", "1")
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("productId", "2")
+                .param("ordered", "F")
+        )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.sector.sector_code").value(expected.getSector().getSectorCode()))
+                .andExpect(jsonPath("$.sector.warehouse_code").value(expected.getSector().getWarehouseCode()))
+                .andExpect(jsonPath("$.product_id").value(expected.getProductId()))
+                .andExpect(jsonPath("$.batch_stock").exists())
+                .andExpect(jsonPath("$.batch_stock").isArray())
+                .andExpect(jsonPath("$.batch_stock[0].batch_number").value(expectedBatch.getBatchNumber()))
+                .andExpect(jsonPath("$.batch_stock[0].current_quantity").value(expectedBatch.getCurrentQuantity()))
+                .andExpect(jsonPath("$.batch_stock[0].due_date").value(expectedBatch.getDueDate().toString()));
+    }
+
+    @Test
+    void shouldFailGetSectorBatchesByProductIdOnProductNotFound() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("productId", "99999")
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldFailGetSectorBatchesByProductIdOnBatchNotFound() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("productId", "3")
+        )
+                .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(expectedMessage));
-    }
-    @Test
-    void shouldReturnNotFoundWhenWarehouseNotExist() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValid();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        var invalidWarehouseId = 3L;
-        request.getSection().setWarehouseCode(invalidWarehouseId);
-
-        var json = mapper.writeValueAsString(request);
-
-        var representativeId = 1L;
-
-        var expectedMessage = "Warehouse Not Found. Id:" + invalidWarehouseId;
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("X-Representative-Id",representativeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        )
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(expectedMessage));
-    }
-
-    @Test
-    void shouldReturnNotFoundWhenSectorNotExistInWarehouse() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValid();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        var invalidSectorId = 2L;
-        request.getSection().setCode(invalidSectorId);
-
-        var json = mapper.writeValueAsString(request);
-
-        var representativeId = 1L;
-
-        var expectedMessage = "Sector id " + request.getSection().getCode() +" not found in warehouse Id " + request.getSection().getWarehouseCode();
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("X-Representative-Id",representativeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        )
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(expectedMessage));
-    }
-
-    @Test
-    void shouldReturnAnErrorListOfCreateBatchWhenProductBatchNotRegistered() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValid();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        var invalidProductId = 2L;
-        request.getBatchStock().get(0).setProductId(invalidProductId);
-        request.getBatchStock().get(1).setProductId(invalidProductId);
-
-        var json = mapper.writeValueAsString(request);
-
-        var representativeId = 1L;
-
-        var expectedMessage = "Error in save 2 bath in sector";
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("X-Representative-Id",representativeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(expectedMessage))
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0].message").exists())
-                .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch id 1 error: Product Not Found Exception"));
-    }
-
-
-    @Test
-    void shouldReturnAnErrorListOfCreateBatchWhenSectorTypeIsIncompatibleWithProduct() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValid();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        var productIdIncompatibleWithSectorOne = 3L;
-        request.getBatchStock().get(0).setProductId(productIdIncompatibleWithSectorOne);
-        request.getBatchStock().get(1).setProductId(productIdIncompatibleWithSectorOne);
-
-        var json = mapper.writeValueAsString(request);
-
-        var representativeId = 1L;
-
-        var expectedMessage = "Error in save 2 bath in sector";
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("X-Representative-Id",representativeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(expectedMessage))
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0].message").exists())
-                .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch id 1 error: Product 3 with  TypeNot Perishable not supported in sector 1"));
-    }
-    @Test
-    void shouldReturnAnErrorListOfCreateBatchWhenSectorNoHasSpaceForBatch() throws Exception {
-        var request = TestUtils.getInboundOrderDTOValid();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-
-
-        var stockWithLowCapability = 3L;
-        request.getSection().setCode(stockWithLowCapability);
-
-        var json = mapper.writeValueAsString(request);
-
-        var representativeId = 1L;
-
-        var expectedMessage = "Error in save 1 bath in sector";
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("X-Representative-Id",representativeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(expectedMessage))
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch id 1 error: Sector 3 doesn't have enough space"));
+                .andExpect(jsonPath("$.message").value("Doesn't has valid batches with this product. Id product: 3"));
     }
 }

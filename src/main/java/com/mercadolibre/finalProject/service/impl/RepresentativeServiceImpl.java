@@ -31,7 +31,7 @@ public class RepresentativeServiceImpl implements IRepresentativeService {
     }
 
     @Override
-    public RepresentativeResponseDTO findByIdAndWarehouseId(Long representativeId, Long warehouseId) {
+    public RepresentativeResponseDTO findByIdAndWarehouseId(Long representativeId, Long warehouseId) throws RepresentativeNotFound {
         var representative = this.findBy(representativeId, warehouseId);
         return RepresentativeMapper.toResponseDTO(representative);
     }

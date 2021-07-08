@@ -14,11 +14,4 @@ public class SectorResponseDTO {
     private Integer currentQuantityBatches;
     private Integer maxQuantityBatches;
     private Long warehouseId;
-
-    public SectorResponseDTO(Long id, String sectorType, Integer currentQuantityBatches, Integer maxQuantityBatches) {
-        this.id = id;
-        this.sectorType = sectorType;
-        this.currentQuantityBatches = currentQuantityBatches;
-        this.maxQuantityBatches = maxQuantityBatches;
-    }
 }

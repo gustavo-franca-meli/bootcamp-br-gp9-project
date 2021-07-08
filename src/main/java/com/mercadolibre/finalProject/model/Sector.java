@@ -20,7 +20,7 @@ public class Sector {
     private Integer sectorType;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Batch> batches;
+    private List<Batch> batches = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
@@ -47,10 +47,6 @@ public class Sector {
     }
 
     public Long getWareHouseId() {
-        return this.warehouse.getId();
-    }
-
-    public Long getWarehouseId() {
         return this.warehouse.getId();
     }
 }

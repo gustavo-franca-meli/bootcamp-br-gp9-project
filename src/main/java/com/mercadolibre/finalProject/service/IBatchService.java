@@ -7,11 +7,10 @@ import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.exceptions.CreateBatchStockException;
 import com.mercadolibre.finalProject.model.Batch;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface IBatchService {
-    List<Batch> create(List<BatchDTO> batchStock, Long sectorId, Long orderId) throws CreateBatchStockException;
-
     BatchDTO withdrawQuantity(Long batchId, Integer withdrawnQuantity);
 
     SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request);
@@ -19,4 +18,8 @@ public interface IBatchService {
     List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId);
 
     List<BatchSectorResponseDTO> getBatchesByProductType(String category, String order);
+
+    List<Batch> save(@NotNull List<BatchDTO> batchStock, Long sectorId, Long OrderId) throws CreateBatchStockException;
+
+    void deleteAll(List<Batch> batches);
 }
