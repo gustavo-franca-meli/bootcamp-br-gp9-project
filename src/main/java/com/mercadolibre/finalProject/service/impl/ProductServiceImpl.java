@@ -5,7 +5,9 @@ import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
+import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
+import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
@@ -87,14 +89,27 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductStockDTO getStockForProductInCountryByData(Long productId, Long countryId, LocalDate date) {
+    public ProductStockDTO getStockForProductInCountryByDate (Long productId, Long countryId, LocalDate date) throws ProductNotFoundException {
         Product product = this.findProductBy(productId);
         return new ProductStockDTO(
-                productId, product.getName(), product.getPrice(), this.getBatchesOfProductInCountry(productId, countryId, date));
+                productId, product.getName(),product.getPrice(),this.getBatchesOfProductInCountry(productId,countryId,date));
     }
 
     @Override
-    public List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date) {
-        return new ArrayList<>();
+    public List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date) {
+        List<Batch> batchesByProductCountryAndDate = this.productRepository.findByProductCountryAndDate(productId,countryId,date);
+        return BatchMapper.toListDTO(batchesByProductCountryAndDate);
+    }
+
+    @Override
+    public Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date) {
+        return this.productRepository.getProductQuantityByCountryAndDate(productId,countryId,date);
+    }
+
+    @Override
+    public List<ProductResponseDTO> getProductsByCountry() {
+        // get country id by token ??
+        Long countryId = 5L;
+        return ProductMapper.toListResponseDTO(this.productRepository.findByCountry(countryId));
     }
 }

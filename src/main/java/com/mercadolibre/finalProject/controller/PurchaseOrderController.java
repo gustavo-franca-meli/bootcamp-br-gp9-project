@@ -3,15 +3,13 @@ package com.mercadolibre.finalProject.controller;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -26,8 +24,20 @@ public class PurchaseOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<PurchaseOrderResponseDTO> create(@Valid @RequestBody PurchaseOrderRequestDTO dto, String token) throws Exception {
-        var response = purchaseOrderService.create(dto,token);
+    public ResponseEntity<PurchaseOrderResponseDTO> create(@RequestBody PurchaseOrderRequestDTO dto) throws Exception {
+        PurchaseOrderResponseDTO response = purchaseOrderService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PurchaseOrderResponseDTO> getById (@PathVariable Long id) throws Exception {
+        PurchaseOrderResponseDTO response = purchaseOrderService.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<PurchaseOrderResponseDTO> update(@RequestBody PurchaseOrderUpdateRequestDTO dto) throws Exception {
+        PurchaseOrderResponseDTO response = purchaseOrderService.update(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

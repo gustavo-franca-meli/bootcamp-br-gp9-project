@@ -128,6 +128,19 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
+    public BatchDTO findById (Long id) {
+        return BatchMapper.toDTO(this.findBatchBy(id));
+    }
+
+    @Override
+    public void returnQuantity(Batch batch, Integer quantity) {
+        batch.setCurrentQuantity(batch.getCurrentQuantity() + quantity);
+        this.batchRepository.save(batch);
+    }
+
+
+
+    @Override
     public SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request) {
         var productResponseDTO = this.productService.findById(request.getProductId());
         var representativeDTO = this.representativeService.findById(request.getRepresentativeId());
@@ -170,5 +183,7 @@ public class BatchServiceImpl implements IBatchService {
         if (batches.isEmpty())
             throw new BatchNotFoundException("Doesn't has valid batches with this product. Id product: " + productId);
     }
+
+
 
 }

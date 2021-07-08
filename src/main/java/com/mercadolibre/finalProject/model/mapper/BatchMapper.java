@@ -71,6 +71,11 @@ public interface BatchMapper {
                 batchStock.getDueDate()
         );
     }
+
+    static List<BatchDTO> toListDTO(List<Batch> batches) {
+        return batches.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
+    }
+
     static SectorBatchResponseDTO toSectorBatchResponseDTO(List<Batch> batches) {
         var sector = batches.get(0).getSector();
         var batchIdentification = assembleBatchIdentificationResponseDTOOf(sector.getId(), sector.getWareHouseId());
