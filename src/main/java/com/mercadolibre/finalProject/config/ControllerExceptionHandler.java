@@ -59,11 +59,17 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {BadRequestException.class, CreateBatchStockException.class})
+    @ExceptionHandler(CreateBatchStockException.class)
     protected ResponseEntity<ApiError> handleCreateBatchStockException(CreateBatchStockException e) {
-
-
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(), e.getSubErros());
+        return ResponseEntity.status(apiError.getStatus())
+                .body(apiError);
+
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<ApiError> handleBadRequestException(BadRequestException e) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
 

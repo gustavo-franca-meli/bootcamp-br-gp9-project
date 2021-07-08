@@ -83,7 +83,7 @@ public class BatchServiceImpl implements IBatchService {
             responseBathList.forEach((batch -> {
                 batchRepository.deleteById(batch.getId());
             }));
-            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector ", errorList);
+            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector",errorList);
         }
         //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }

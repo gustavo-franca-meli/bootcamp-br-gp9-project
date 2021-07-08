@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
 import com.mercadolibre.finalProject.util.TestUtils;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +31,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 public class InboundInboundOrderControllerTest extends ControllerTest{
-    private static final String PATH = "/api/v1/fresh-products/inboundorder/";
+    private static final String BASIC_PATH = "/api/v1";
+    private static final String PATH = BASIC_PATH + "/fresh-products/inboundorder/";
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    private String token = "";
 
     @Autowired
     MockMvc mockMvc;
     @Autowired@Qualifier("objectMapper")
     ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(BASIC_PATH + "/sign-in")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "onias-rocha")
+                .param("password", "pass123"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        var account = mapper.readValue(result, AccountResponseDTO.class);
+        token = account.getToken();
+    }
 
     //POST  CREATE INBOUND ORDER
     @Test
@@ -48,6 +66,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("X-Representative-Id","1")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -80,6 +99,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("X-Representative-Id","1")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -112,6 +132,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("X-Representative-Id",representativeIdWithNotWorkInWarehouseOne)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -185,6 +206,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("X-Representative-Id",representativeId)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", token)
                 .content(json)
         )
                 .andExpect(status().isBadRequest())
@@ -214,6 +236,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("X-Representative-Id",representativeId)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -240,6 +263,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("X-Representative-Id",representativeId)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -263,6 +287,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id","1")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonUpdate)
         )
@@ -293,6 +318,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id","1")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -304,7 +330,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
     }
 
     @Test
-    void shouldReturnErrorWhenBatchIdExistInOterOrder() throws Exception {
+    void shouldReturnErrorWhenBatchIdExistInOtherOrder() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForUpdate();
         var batch = TestUtils.getBatchDTOValidNoId();
         var batches =   new ArrayList<>(request.getBatchStock());
@@ -318,6 +344,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id","1")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -345,6 +372,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id","1")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -364,6 +392,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeIdWithNotWorkInWarehouseOne)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -386,6 +415,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -408,6 +438,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -434,6 +465,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -463,6 +495,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
@@ -489,6 +522,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )

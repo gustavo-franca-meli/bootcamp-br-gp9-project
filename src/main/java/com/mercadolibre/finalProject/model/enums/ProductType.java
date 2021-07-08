@@ -2,9 +2,6 @@ package com.mercadolibre.finalProject.model.enums;
 
 public enum ProductType {
 
-//    PERISHABLE(1, "Perishable"),
-//    NOT_PERISHABLE(2, "Not Perishable"),
-//    FRAGILE(3, "Fragile");
     FRESH(1, "Fresh"),
     REFRIGERATED(2, "Refrigerated"),
     FROZEN(3, "Frozen");
