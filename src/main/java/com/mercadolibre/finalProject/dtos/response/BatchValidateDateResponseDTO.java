@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class BatchSectorResponseDTO {
+public class BatchValidateDateResponseDTO {
 
     private Long batchNumber;
     private Long productId;
@@ -14,7 +14,7 @@ public class BatchSectorResponseDTO {
     private LocalDate dueDate;
     private Integer quantity;
 
-    public BatchSectorResponseDTO(Long batchNumber, Long productId, Integer productTypeId, LocalDate dueDate, Integer quantity) {
+    public BatchValidateDateResponseDTO(Long batchNumber, Long productId, Integer productTypeId, LocalDate dueDate, Integer quantity) {
         this.batchNumber = batchNumber;
         this.productId = productId;
         this.productTypeId = productTypeId;

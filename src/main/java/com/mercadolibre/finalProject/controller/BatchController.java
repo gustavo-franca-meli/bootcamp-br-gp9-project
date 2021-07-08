@@ -1,11 +1,10 @@
 package com.mercadolibre.finalProject.controller;
 
-import com.mercadolibre.finalProject.dtos.response.BatchSectorResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchValidateDateResponseDTO;
 import com.mercadolibre.finalProject.service.IBatchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RequestMapping(path = "/api/v1/fresh-products/due-date")
@@ -19,7 +18,7 @@ public class BatchController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BatchSectorResponseDTO>> getBatchesBySector(
+    public ResponseEntity<List<BatchValidateDateResponseDTO>> getBatchesBySector(
             @RequestParam(required = true) Long sectorId,
             @RequestParam(required = true) Integer daysQuantity) {
         var batches = batchService.getBatchesBySectorId(sectorId, daysQuantity);
@@ -28,7 +27,7 @@ public class BatchController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<BatchSectorResponseDTO>> getBatchesByProductType(
+    public ResponseEntity<List<BatchValidateDateResponseDTO>> getBatchesByProductType(
             @RequestParam(required = true) Integer daysQuantity,
             @RequestParam(required = true) String category,
             @RequestParam(required = false) String direction) {

@@ -125,18 +125,18 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity) {
+    public List<BatchValidateDateResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity) {
         if (!this.sectorService.exist(sectorId)) throw new SectorNotFoundException("Sector " + sectorId +" Not Found");
 
         var batches = this.batchRepository.findBatchesBySectorId(sectorId, LocalDate.now().plusDays(daysQuantity));
 
         if (batches.isEmpty()) throw new NotFoundException("List is empty");
 
-        return BatchMapper.toListSectorResponseDTO(batches);
+        return BatchMapper.toListBatchValidateDateResponseDTO(batches);
     }
 
     @Override
-    public List<BatchSectorResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction) {
+    public List<BatchValidateDateResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction) {
         Sort.Direction sortDirection;
         if (direction != null && direction.equals("desc")) {
             sortDirection = Sort.Direction.DESC;
@@ -150,7 +150,7 @@ public class BatchServiceImpl implements IBatchService {
 
         var batches = findBatchesByProductTypeAndOrderAscAndDesc(productType.getCod(), sortDirection, daysQuantity);
 
-        return BatchMapper.toListSectorResponseDTO(batches);
+        return BatchMapper.toListBatchValidateDateResponseDTO(batches);
     }
 
     private List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Long warehouseId, Long productId) {

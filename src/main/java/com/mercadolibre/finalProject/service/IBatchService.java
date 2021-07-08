@@ -2,7 +2,7 @@ package com.mercadolibre.finalProject.service;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.BatchSectorResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchValidateDateResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.exceptions.CreateBatchStockException;
 import com.mercadolibre.finalProject.model.Batch;
@@ -15,9 +15,9 @@ public interface IBatchService {
 
     SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request);
 
-    List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity);
+    List<BatchValidateDateResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity);
 
-    List<BatchSectorResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction);
+    List<BatchValidateDateResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction);
 
     List<Batch> save(@NotNull List<BatchDTO> batchStock, Long sectorId, Long OrderId) throws CreateBatchStockException;
 

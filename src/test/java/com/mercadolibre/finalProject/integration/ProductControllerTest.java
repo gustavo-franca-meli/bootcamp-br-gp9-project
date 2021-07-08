@@ -128,7 +128,7 @@ public class ProductControllerTest extends ControllerTest {
 
     @Test
     void shouldFailGetSectorBatchesByProductIdOnBatchNotFound() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH + "/list")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("productId", "3")
