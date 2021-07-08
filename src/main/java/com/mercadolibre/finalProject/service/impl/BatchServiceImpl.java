@@ -1,28 +1,24 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.BatchDTO;
-import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.BatchSectorResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
+import com.mercadolibre.finalProject.dtos.request.*;
+import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.exceptions.*;
+import com.mercadolibre.finalProject.service.*;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
-import com.mercadolibre.finalProject.service.IBatchService;
-import com.mercadolibre.finalProject.service.IProductService;
-import com.mercadolibre.finalProject.service.IRepresentativeService;
-import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
     private static final LocalDate MINIMUM_DUE_DATE = LocalDate.now().plusWeeks(3L);
     private static final String ORDERED_BY_CURRENT_QUANTITY = "C";
+    private static final Map<String, ProductType> PRODUCT_CATEGORY_MAPPER = new HashMap<>();
 
     private final BatchRepository batchRepository;
     private final ISectorService sectorService;
@@ -34,6 +30,10 @@ public class BatchServiceImpl implements IBatchService {
         this.sectorService = sectorService;
         this.productService = productService;
         this.representativeService = representativeService;
+
+        PRODUCT_CATEGORY_MAPPER.put("FS", ProductType.FRESH);
+        PRODUCT_CATEGORY_MAPPER.put("RF", ProductType.REFRIGERATED);
+        PRODUCT_CATEGORY_MAPPER.put("FF", ProductType.FROZEN);
     }
 
     @Override
@@ -109,6 +109,20 @@ public class BatchServiceImpl implements IBatchService {
         if (!this.sectorService.exist(sectorId)) throw new SectorNotFoundException("Sector " + sectorId +" Not Found");
 
         var batches = this.batchRepository.findBatchesBySectorId(sectorId, MINIMUM_DUE_DATE);
+
+        if (batches.isEmpty()) throw new NotFoundException("List is empty");
+
+        return BatchMapper.toListSectorResponseDTO(batches);
+    }
+
+    @Override
+    public List<BatchSectorResponseDTO> getBatchesByProductType(String category, String order) {
+        order = ((order == null || order.isBlank()) ? "asc" : order).toUpperCase();
+
+        var productType = PRODUCT_CATEGORY_MAPPER.get(category);
+        if (productType == null) throw new BadRequestException("Category cannot be null");
+
+        var batches = this.batchRepository.findBatchesByProductType(productType.getCod(), MINIMUM_DUE_DATE);
 
         if (batches.isEmpty()) throw new NotFoundException("List is empty");
 

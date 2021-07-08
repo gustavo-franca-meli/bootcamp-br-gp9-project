@@ -3,7 +3,6 @@ package com.mercadolibre.finalProject.repository;
 import com.mercadolibre.finalProject.model.Batch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -32,7 +31,13 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
 
     @Query(value = "SELECT b.* FROM Batch b"
             + " INNER JOIN Sector s ON b.sector_id = :sectorId"
-            + " WHERE b.due_date >= :minimumDueDate ORDER BY b.due_date ASC", nativeQuery = true)
+            + " WHERE b.due_date >= :minimumDueDate"
+            + " ORDER BY b.due_date ASC", nativeQuery = true)
     List<Batch> findBatchesBySectorId(Long sectorId, LocalDate minimumDueDate);
 
+    @Query(value = "SELECT b.* FROM Batch b"
+            + " INNER JOIN Product p ON p.id = b.product_id AND p.product_type = :productTypeCode"
+            + " WHERE b.due_date >= :minimumDueDate"
+            + " ORDER BY b.due_date ASC", nativeQuery = true)
+    List<Batch> findBatchesByProductType(Integer productTypeCode, LocalDate minimumDueDate);
 }

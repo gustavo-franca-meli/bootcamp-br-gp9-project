@@ -17,4 +17,6 @@ public interface IBatchService {
     SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request);
 
     List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId);
+
+    List<BatchSectorResponseDTO> getBatchesByProductType(String category, String order);
 }

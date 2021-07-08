@@ -49,16 +49,14 @@ public class ControllerExceptionHandler {
 		return ResponseEntity.status(apiError.getStatus())
 				.body(apiError);
 	}
-	@ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class,NotFoundException.class})
+	@ExceptionHandler(value = {NotFoundException.class, WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class})
 	protected ResponseEntity<ApiError> handleNotFoundException(Exception e){
 		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.toString(), e.getMessage(), HttpStatus.NOT_FOUND.value());
 		return ResponseEntity.status(apiError.getStatus())
 				.body(apiError);
 	}
-	@ExceptionHandler(CreateBatchStockException.class)
+	@ExceptionHandler(value = {BadRequestException.class, CreateBatchStockException.class})
 	protected  ResponseEntity<ApiError> handleCreateBatchStockException(CreateBatchStockException e){
-
-
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(),e.getSubErros());
 		return ResponseEntity.status(apiError.getStatus())
 				.body(apiError);

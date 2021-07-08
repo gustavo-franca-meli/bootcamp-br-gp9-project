@@ -48,10 +48,10 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
         var product = this.findProductBy(id);
-        product.setName(productRequestDTO.getName() == null ? productRequestDTO.getName() : product.getName());
-        product.setDescription(productRequestDTO.getDescription() == null ? productRequestDTO.getDescription() : product.getDescription());
-        product.setPrice(productRequestDTO.getPrice() == null ? productRequestDTO.getPrice() : product.getPrice());
-        product.setProductType(productRequestDTO.getProductType() == null ? productRequestDTO.getProductType() : product.getProductType());
+        product.setName(productRequestDTO.getName() != null ? productRequestDTO.getName() : product.getName());
+        product.setDescription(productRequestDTO.getDescription() != null ? productRequestDTO.getDescription() : product.getDescription());
+        product.setPrice(productRequestDTO.getPrice() != null ? productRequestDTO.getPrice() : product.getPrice());
+        product.setProductType(productRequestDTO.getProductType() != null ? productRequestDTO.getProductType() : product.getProductType());
         product.setSeller(sellerService.findSellerById(productRequestDTO.getSellerId()));
 
         this.productRepository.save(product);
