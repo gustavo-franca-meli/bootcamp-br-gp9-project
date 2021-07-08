@@ -48,7 +48,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
@@ -73,7 +73,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(inboundOrderDTO.getSection().getCode())).thenReturn(sector);
@@ -98,7 +98,7 @@ public class InboundInboundOrderServiceImplTest {
     public void shouldReturnRepresentativeNotFoundWhenRepresentativeNotExistInWareHouse() {
         var warehouseResponseDTO = TestUtils.getWarehouseResponseDTOValid();
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenThrow(RepresentativeNotFound.class);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenThrow(RepresentativeNotFound.class);
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
         assertThrows(RepresentativeNotFound.class, () -> service.create(inboundOrderDTO, Mockito.anyString()));
     }
@@ -122,7 +122,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(Mockito.anyLong())).thenReturn(sector);
@@ -145,7 +145,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
@@ -171,7 +171,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);

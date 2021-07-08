@@ -24,9 +24,9 @@ public enum RoleType {
         return description;
     }
 
-    public static RoleType toEnum(int code) {
+    public static RoleType toEnum(Integer code) {
         for (RoleType r : RoleType.values()) {
-            if (r.getCode() == code)
+            if (r.getCode().equals(code))
                 return r;
         }
         throw new NotFoundException("Role not found.");
