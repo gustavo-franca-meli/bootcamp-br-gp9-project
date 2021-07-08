@@ -11,6 +11,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private static String BASIC_PATH = "/api/v1";
+    private static String FRESH_PRODUCTS_ROUTE = BASIC_PATH + "/fresh-products";
+
+    private static String[] REPRESENTATIVE = {FRESH_PRODUCTS_ROUTE + "/inboundorder", FRESH_PRODUCTS_ROUTE + "/list"};
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -24,9 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/seller/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/seller").permitAll()
                 .antMatchers(HttpMethod.GET, "/seller/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/fresh-products/inboundorder/").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/v1/fresh-products/inboundorder/").permitAll()
-
+                .antMatchers(REPRESENTATIVE).hasRole("REPRESENTATIVE")
 
                 .anyRequest().authenticated();
     }

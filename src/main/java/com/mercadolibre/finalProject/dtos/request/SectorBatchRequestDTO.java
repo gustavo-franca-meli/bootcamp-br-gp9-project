@@ -6,12 +6,12 @@ import lombok.Data;
 public class SectorBatchRequestDTO {
 
     private final Long productId;
-    private final Long representativeId;
+    private final String username;
     private final String ordered;
 
-    public SectorBatchRequestDTO(Long productId, Long representativeId, String ordered) {
+    public SectorBatchRequestDTO(Long productId, String username, String ordered) {
         this.productId = productId;
-        this.representativeId = representativeId;
+        this.username = username;
         this.ordered = ordered;
     }
 }

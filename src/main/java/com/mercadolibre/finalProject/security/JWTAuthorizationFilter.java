@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.security;
 import io.jsonwebtoken.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,6 +34,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         try {
             if (existsJWTToken(request, response)) {
                 Claims claims = validateToken(request);
+                var username = claims.get("sub");
                 if (claims.get("authorities") != null) {
                     setUpSpringAuthentication(claims);
                 } else {
