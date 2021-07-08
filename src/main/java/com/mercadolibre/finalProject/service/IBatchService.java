@@ -18,7 +18,7 @@ public interface IBatchService {
     void deleteAll(List<Batch> batches);
 
     SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request);
-    void returnQuantity(Batch batch, Integer quantity);
+    void returnQuantityToBatch(Batch batch, Integer quantity);
     BatchDTO findById (Long id);
 
 }

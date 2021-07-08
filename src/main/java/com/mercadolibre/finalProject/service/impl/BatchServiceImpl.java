@@ -116,8 +116,8 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     private Batch findBatchBy(Long batchId) {
-        var batch = this.batchRepository.findById(batchId);
 
+        var batch = this.batchRepository.findById(batchId);
         return batch.orElseThrow(() -> new BatchNotFoundException("The batch doesn't exist. Id: " + batchId));
     }
 
@@ -127,12 +127,10 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public void returnQuantity(Batch batch, Integer quantity) {
+    public void returnQuantityToBatch (Batch batch, Integer quantity) {
         batch.setCurrentQuantity(batch.getCurrentQuantity() + quantity);
         this.batchRepository.save(batch);
     }
-
-
 
     @Override
     public SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request) {

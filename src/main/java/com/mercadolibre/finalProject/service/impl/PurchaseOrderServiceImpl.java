@@ -48,7 +48,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
     }
 
     @Override
-    public PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrderRequest) throws WarehouseNotFoundException, ProductNotFoundException {
+    public PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrderRequest) throws WarehouseNotFoundException, ProductNotFoundException, StockInsufficientException {
 
 //        Account buyer = this.findAccountByToken(token);
 //        if(!this.verifyAccount(buyer,purchaseOrderRequest.getBuyerId())) { throw new BadRequestException("buyer token wronng etcc");}
@@ -111,12 +111,12 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         for(BatchPurchaseOrder batchPurchaseOrder : batches) {
 
             if(batchPurchaseOrder.getQuantity() >= quantityToReturn - returnedQuantity) {
-                this.batchService.returnQuantity(batchPurchaseOrder.getBatch(), quantityToReturn - returnedQuantity);
+                this.batchService.returnQuantityToBatch(batchPurchaseOrder.getBatch(), quantityToReturn - returnedQuantity);
                 batchPurchaseOrder.setQuantity(batchPurchaseOrder.getQuantity() - quantityToReturn + returnedQuantity);
                 break;
             }
             else {
-                this.batchService.returnQuantity(batchPurchaseOrder.getBatch(), batchPurchaseOrder.getQuantity());
+                this.batchService.returnQuantityToBatch(batchPurchaseOrder.getBatch(), batchPurchaseOrder.getQuantity());
                 batchPurchaseOrder.setQuantity(0);
                 returnedQuantity += batchPurchaseOrder.getQuantity();
             }
@@ -127,7 +127,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         List<BatchPurchaseOrder> batches = productBatches.getPurchaseBatches(); // sort by due date in batches
 
         Integer withdrawnQuantity = 0;
-        ProductStockDTO productStock = this.productService.getStockForProductInCountryByData(productBatches.getProduct().getId(), productBatches.getPurchaseOrder().getBuyer().getCountry().getId(), productBatches.getPurchaseOrder().getOrderDate().plusWeeks(3));
+        ProductStockDTO productStock = this.productService.getStockForProductInCountryByDate(productBatches.getProduct().getId(), productBatches.getPurchaseOrder().getBuyer().getCountry().getId(), productBatches.getPurchaseOrder().getOrderDate().plusWeeks(3));
 
         for(BatchDTO batchDTO : productStock.getBatches()) {
             if(withdrawnQuantity >= quantityToIncrease) { break; }
@@ -170,7 +170,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         Long countryId = purchaseOrder.getBuyer().getCountry().getId();
 
         Integer withdrawnQuantity = 0, orderQuantity = productRequest.getQuantity();
-        ProductStockDTO productStock = this.productService.getStockForProductInCountryByData(productRequest.getProductId(), countryId, minimumDueDate);
+        ProductStockDTO productStock = this.productService.getStockForProductInCountryByDate(productRequest.getProductId(), countryId, minimumDueDate);
 
         List<BatchPurchaseOrder> batchesOrder = new ArrayList<>();
         for(BatchDTO batchDTO : productStock.getBatches()) {

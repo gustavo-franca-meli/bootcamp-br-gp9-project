@@ -5,6 +5,4 @@ import com.mercadolibre.finalProject.model.ProductBatchesPurchaseOrder;
 
 public interface IBatchPurchaseOrderService {
     BatchPurchaseOrderResponseDTO findById (Long id);
-    BatchPurchaseOrderResponseDTO updateQuantity (Long id, Integer newQuantity);
-    BatchPurchaseOrderResponseDTO create(Long batchId, Integer quantity, ProductBatchesPurchaseOrder productBatchesPurchaseOrder);
 }

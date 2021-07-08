@@ -24,10 +24,12 @@ public class ProductServiceImpl implements IProductService {
 
     private ProductRepository productRepository;
     private ISellerService sellerService;
+    private BatchRepository batchRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ISellerService sellerService) {
+    public ProductServiceImpl(ProductRepository productRepository, ISellerService sellerService, BatchRepository batchRepository) {
         this.productRepository = productRepository;
         this.sellerService = sellerService;
+        this.batchRepository = batchRepository;
     }
 
     @Override
@@ -97,13 +99,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date) {
-        List<Batch> batchesByProductCountryAndDate = this.productRepository.findByProductCountryAndDate(productId,countryId,date);
+        List<Batch> batchesByProductCountryAndDate = this.batchRepository.findByProductCountryAndDate(productId,countryId,date);
         return BatchMapper.toListDTO(batchesByProductCountryAndDate);
     }
 
     @Override
     public Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date) {
-        return this.productRepository.getProductQuantityByCountryAndDate(productId,countryId,date);
+        return this.batchRepository.getProductQuantityByCountryAndDate(productId,countryId,date);
     }
 
     @Override
