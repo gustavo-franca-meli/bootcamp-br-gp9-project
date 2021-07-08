@@ -138,14 +138,14 @@ public class BatchServiceImpl implements IBatchService {
     @Override
     public List<BatchValidateDateResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction) {
         Sort.Direction sortDirection;
-        if (direction != null && direction.equals("desc")) {
+        if (direction != null && direction.toLowerCase(Locale.ROOT).equals("desc")) {
             sortDirection = Sort.Direction.DESC;
         }
         else {
             sortDirection = Sort.Direction.ASC;
         }
 
-        var productType = PRODUCT_CATEGORY_MAPPER.get(category);
+        var productType = PRODUCT_CATEGORY_MAPPER.get(category == null ? "": category.toUpperCase(Locale.ROOT));
         if (productType == null) throw new BadRequestException("Category cannot be null");
 
         var batches = findBatchesByProductTypeAndOrderAscAndDesc(productType.getCod(), sortDirection, daysQuantity);

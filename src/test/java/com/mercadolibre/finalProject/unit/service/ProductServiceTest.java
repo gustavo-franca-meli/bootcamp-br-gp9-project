@@ -54,12 +54,10 @@ public class ProductServiceTest {
         assertEquals(responseExpected, response);
     }
 
-    @NotNull
     private ProductRequestDTO createProductRequestDTO() {
         return new ProductRequestDTO("Produto1", "", 10.0, 1);
     }
 
-    @NotNull
     private Product createExpectedProduct(Seller sellerExpected) {
         return new Product(
                 1L,
@@ -70,7 +68,6 @@ public class ProductServiceTest {
                 sellerExpected);
     }
 
-    @NotNull
     private ProductResponseDTO createExpectedProductResponseDTO(Seller sellerExpected) {
         return new ProductResponseDTO(
                 1L,
@@ -80,7 +77,6 @@ public class ProductServiceTest {
                 1);
     }
 
-    @NotNull
     private Seller createExpectedSeller() {
         return new Seller(
                 1L,

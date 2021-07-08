@@ -205,38 +205,38 @@ public class BatchServiceImplTest {
         var daysQuantity = 30;
         var category = "FF";
         var direction = "asc";
-        var batchList = TestUtils.getBatchListValid();
+        var listExpected = TestUtils.getBatchListValid();
 
-        when(batchRepository.findBatchesByProductType(anyInt(), any(), any())).thenReturn(batchList);
+        when(batchRepository.findBatchesByProductType(anyInt(), any(), any())).thenReturn(listExpected);
 
-        var listExpected = service.getBatchesByProductType(daysQuantity, category, direction);
+        var responseList = service.getBatchesByProductType(daysQuantity, category, direction);
 
         verify(batchRepository, Mockito.times(1)).findBatchesByProductType(anyInt(), any(), any());
 
-        assertEquals(batchList.get(0).getId(), listExpected.get(0).getBatchNumber());
-        assertEquals(batchList.get(0).getProduct().getId(), listExpected.get(0).getProductId());
-        assertEquals(batchList.get(0).getProduct().getProductType(), listExpected.get(0).getProductTypeId());
-        assertEquals(batchList.get(0).getDueDate(), listExpected.get(0).getDueDate());
-        assertEquals(batchList.get(0).getCurrentQuantity(), listExpected.get(0).getQuantity());
+        assertEquals(listExpected.get(0).getId(), responseList.get(0).getBatchNumber());
+        assertEquals(listExpected.get(0).getProduct().getId(), responseList.get(0).getProductId());
+        assertEquals(listExpected.get(0).getProduct().getProductType(), responseList.get(0).getProductTypeId());
+        assertEquals(listExpected.get(0).getDueDate(), responseList.get(0).getDueDate());
+        assertEquals(listExpected.get(0).getCurrentQuantity(), responseList.get(0).getQuantity());
     }
 
     @Test
     public void shouldGetBatchesByProductTypeWithoutDirection() {
         var daysQuantity = 30;
         var category = "FF";
-        var batchList = TestUtils.getBatchListValid();
+        var listExpected = TestUtils.getBatchListValid();
 
-        when(batchRepository.findBatchesByProductType(anyInt(), any(), any())).thenReturn(batchList);
+        when(batchRepository.findBatchesByProductType(anyInt(), any(), any())).thenReturn(listExpected);
 
-        var listExpected = service.getBatchesByProductType(daysQuantity, category,null);
+        var responseList = service.getBatchesByProductType(daysQuantity, category,null);
 
         verify(batchRepository, Mockito.times(1)).findBatchesByProductType(anyInt(), any(), any());
 
-        assertEquals(batchList.get(0).getId(), listExpected.get(0).getBatchNumber());
-        assertEquals(batchList.get(0).getProduct().getId(), listExpected.get(0).getProductId());
-        assertEquals(batchList.get(0).getProduct().getProductType(), listExpected.get(0).getProductTypeId());
-        assertEquals(batchList.get(0).getDueDate(), listExpected.get(0).getDueDate());
-        assertEquals(batchList.get(0).getCurrentQuantity(), listExpected.get(0).getQuantity());
+        assertEquals(listExpected.get(0).getId(), responseList.get(0).getBatchNumber());
+        assertEquals(listExpected.get(0).getProduct().getId(), responseList.get(0).getProductId());
+        assertEquals(listExpected.get(0).getProduct().getProductType(), responseList.get(0).getProductTypeId());
+        assertEquals(listExpected.get(0).getDueDate(), responseList.get(0).getDueDate());
+        assertEquals(listExpected.get(0).getCurrentQuantity(), responseList.get(0).getQuantity());
     }
 
     @Test
