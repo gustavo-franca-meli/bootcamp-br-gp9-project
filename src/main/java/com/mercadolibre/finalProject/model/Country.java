@@ -34,4 +34,8 @@ public class Country {
         this.name = name;
         this.accounts = accounts;
     }
+
+    public Country(Long id) {
+        this.id = id;
+    }
 }

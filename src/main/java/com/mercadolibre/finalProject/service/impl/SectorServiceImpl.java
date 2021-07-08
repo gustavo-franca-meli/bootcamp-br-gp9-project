@@ -3,12 +3,16 @@ package com.mercadolibre.finalProject.service.impl;
 import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
+import com.mercadolibre.finalProject.model.Sector;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class SectorServiceImpl implements ISectorService {
@@ -28,7 +32,7 @@ public class SectorServiceImpl implements ISectorService {
 
     private Sector findSectorBy(Long sectorId) {
         var sector = this.sectorRepository.findById(sectorId);
-        return sector.orElseThrow();
+        return sector.orElseThrow(() -> new SectorNotFoundException("Sector Not Found"));
     }
 
     @Override
@@ -44,12 +48,13 @@ public class SectorServiceImpl implements ISectorService {
     }
 
     @Override
-    public Boolean isThereSpace(Batch batch, Long sectorId) {
+    public Boolean isThereSpace(Long sectorId) {
+        //TODO: change de method of verify if sector has space!!
         var sector = this.findSectorBy(sectorId);
-        var totalQuantity = sector.getBatches().size() + batch.getInitialQuantity();
+        var totalQuantity = this.sectorRepository.countBatchesIn(sectorId);
 
-        if (totalQuantity > sector.getMaxQuantityBatches()) {
-            throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space for batch " + batch.getId());
+        if (totalQuantity >= sector.getMaxQuantityBatches()) {
+            throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space");
         }
 
         return true;

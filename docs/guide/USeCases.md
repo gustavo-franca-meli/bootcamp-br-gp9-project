@@ -1,4 +1,43 @@
 # US0001 - COMO Representante do armazém, QUERO inserir um lote de produtos PARA registrar a existência do estoque.
+
+### User Story Code: ml-insert-batch-in-fulfillment-warehouse-01
+
+### User Story Name: Insira o lote no armazém de distruibuição
+
+#### Horas estimadas 28h
+
+COMO Representante do armazém, 
+
+QUERO inserir um lote de produtos
+
+PARA registrar a existência do estoque. 
+
+```text
+CENÁRIO 1: produto de um Seller está registrado.
+DADO QUE o produto de um Sellers está registrado
+E que o armazém é válido
+E que o representante pertence ao armazém
+E que o setor é válido
+E que o setor corresponde ao tipo de produto
+E que o setor tenha espaço disponível
+QUANDO o representante entra no lote
+ENTÃO o registro de compra é criado
+E o lote é atribuído a um setor
+E o representante está associado ao registro de compra
+VALIDAÇÃO
+    ▪ Autentique-se como representante e acesse os endpoints.
+    ▪ Cadastrar lote no setor correspondente.
+    ▪ Verifique se o setor do armazém está sendo registrado corretamente.
+```
+
+Routes 
+
+
+| HTTP | URI   |Description |
+| ----------- | ---- | --------- |
+| POST | /api/v1/fresh-products/inboundorder/ |  Cadastre um lote com o estoque de produtos que o compõe. Retorne o novo lote com o código de status “201 CREATED”. |
+| PUT | /api/v1/fresh-products/inboundorder/ |so o lote já exista e deva ser atualizado. Retorne o estoque atualizado com o código de status “201 CREATED”. |
+
 *Mermaid funciona apenas com plugins do github e do fury para ver acesse [meramaid](https://mermaid-js.github.io/mermaid-live-editor/) e cole 
 ````mermaid
 graph TD

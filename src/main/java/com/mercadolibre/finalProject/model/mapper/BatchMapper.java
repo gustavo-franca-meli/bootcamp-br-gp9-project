@@ -1,10 +1,13 @@
 package com.mercadolibre.finalProject.model.mapper;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestCreateDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestUpdateDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchIdentificationResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchStockResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.model.Batch;
+import com.mercadolibre.finalProject.model.InboundOrder;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Sector;
 
@@ -13,11 +16,12 @@ import java.util.stream.Collectors;
 
 public interface BatchMapper {
 
-    static Batch toModel(BatchDTO batchDTO, Long sectorId) {
+    static Batch toModel(BatchDTO batchDTO, Long sectorId, Long orderId) {
         return new Batch(
                 batchDTO.getId(),
                 new Product(batchDTO.getProductId()),
                 new Sector(sectorId),
+                new InboundOrder(orderId),
                 batchDTO.getCurrentTemperature(),
                 batchDTO.getMinimumTemperature(),
                 batchDTO.getInitialQuantity(),
@@ -28,7 +32,7 @@ public interface BatchMapper {
         );
     }
 
-    static BatchDTO toDTO(Batch batch) {
+     static BatchDTO toDTO(Batch batch) {
         return new BatchDTO(
                 batch.getId(),
                 batch.getProduct().getId(),
@@ -42,6 +46,31 @@ public interface BatchMapper {
         );
     }
 
+    static BatchDTO toDTO(BatchRequestCreateDTO batchStock) {
+        return new BatchDTO(
+                batchStock.getProductId(),
+                batchStock.getCurrentTemperature(),
+                batchStock.getMinimumTemperature(),
+                batchStock.getInitialQuantity(),
+                batchStock.getCurrentQuantity(),
+                batchStock.getManufacturingDate(),
+                batchStock.getManufacturingTime(),
+                batchStock.getDueDate()
+        );
+    }
+    static BatchDTO toDTO(BatchRequestUpdateDTO batchStock) {
+        return new BatchDTO(
+                batchStock.getId(),
+                batchStock.getProductId(),
+                batchStock.getCurrentTemperature(),
+                batchStock.getMinimumTemperature(),
+                batchStock.getInitialQuantity(),
+                batchStock.getCurrentQuantity(),
+                batchStock.getManufacturingDate(),
+                batchStock.getManufacturingTime(),
+                batchStock.getDueDate()
+        );
+    }
     static SectorBatchResponseDTO toSectorBatchResponseDTO(List<Batch> batches) {
         var sector = batches.get(0).getSector();
         var batchIdentification = assembleBatchIdentificationResponseDTOOf(sector.getId(), sector.getWareHouseId());

@@ -13,4 +13,5 @@ public class SectorResponseDTO {
     private String sectorType;
     private Integer currentQuantityBatches;
     private Integer maxQuantityBatches;
+    private Long warehouseId;
 }

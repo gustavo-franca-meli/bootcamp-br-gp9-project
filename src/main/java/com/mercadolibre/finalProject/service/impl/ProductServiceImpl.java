@@ -13,7 +13,6 @@ import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.repository.WarehouseRepository;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.ISellerService;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,12 +21,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Data
 public class ProductServiceImpl implements IProductService {
 
     private ProductRepository productRepository;
     private ISellerService sellerService;
     private WarehouseRepository warehouseRepository;
+
 
     public ProductServiceImpl(ProductRepository productRepository, ISellerService sellerService, WarehouseRepository warehouseRepository) {
         this.productRepository = productRepository;

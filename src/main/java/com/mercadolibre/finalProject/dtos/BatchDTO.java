@@ -36,4 +36,15 @@ public class BatchDTO {
         this.manufacturingTime = manufacturingTime;
         this.dueDate = dueDate;
     }
+
+    public BatchDTO(Long productId, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+        this.productId = productId;
+        this.currentTemperature = currentTemperature;
+        this.minimumTemperature = minimumTemperature;
+        this.initialQuantity = initialQuantity;
+        this.currentQuantity = currentQuantity;
+        this.manufacturingDate = manufacturingDate;
+        this.manufacturingTime = manufacturingTime;
+        this.dueDate = dueDate;
+    }
 }

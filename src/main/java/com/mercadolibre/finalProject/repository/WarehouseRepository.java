@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
-
     @Query(value= " SELECT sector.warehouse_id as warehouse_id, SUM(current_quantity) as quantity FROM batch " +
             " INNER JOIN sector ON batch.sector_id = sector.id " +
             " INNER JOIN warehouse ON sector.warehouse_id = warehouse.id " +
@@ -33,5 +32,4 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
         String getWarehouse_id();
         String getQuantity();
     }
-
 }
