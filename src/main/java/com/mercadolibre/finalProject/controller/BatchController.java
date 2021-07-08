@@ -5,6 +5,7 @@ import com.mercadolibre.finalProject.service.IBatchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequestMapping(path = "/api/v1/fresh-products/due-date")
@@ -19,17 +20,19 @@ public class BatchController {
 
     @GetMapping
     public ResponseEntity<List<BatchSectorResponseDTO>> getBatchesBySector(
-            @RequestParam(required = true) Long sectorId) {
-        var batches = batchService.getBatchesBySectorId(sectorId);
+            @RequestParam(required = true) Long sectorId,
+            @RequestParam(required = true) Integer daysQuantity) {
+        var batches = batchService.getBatchesBySectorId(sectorId, daysQuantity);
 
         return ResponseEntity.ok(batches);
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<BatchSectorResponseDTO>> getBatchesByProductType(
+            @RequestParam(required = true) Integer daysQuantity,
             @RequestParam(required = true) String category,
             @RequestParam(required = false) String direction) {
-        var batches = batchService.getBatchesByProductType(category, direction);
+        var batches = batchService.getBatchesByProductType(daysQuantity, category, direction);
 
         return ResponseEntity.ok(batches);
     }

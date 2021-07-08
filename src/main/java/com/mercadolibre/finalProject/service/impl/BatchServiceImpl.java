@@ -125,10 +125,10 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId) {
+    public List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity) {
         if (!this.sectorService.exist(sectorId)) throw new SectorNotFoundException("Sector " + sectorId +" Not Found");
 
-        var batches = this.batchRepository.findBatchesBySectorId(sectorId, MINIMUM_DUE_DATE);
+        var batches = this.batchRepository.findBatchesBySectorId(sectorId, LocalDate.now().plusDays(daysQuantity));
 
         if (batches.isEmpty()) throw new NotFoundException("List is empty");
 
@@ -136,8 +136,8 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<BatchSectorResponseDTO> getBatchesByProductType(String category, String direction) {
-        Sort.Direction sortDirection = null;
+    public List<BatchSectorResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction) {
+        Sort.Direction sortDirection;
         if (direction != null && direction.equals("desc")) {
             sortDirection = Sort.Direction.DESC;
         }
@@ -148,7 +148,7 @@ public class BatchServiceImpl implements IBatchService {
         var productType = PRODUCT_CATEGORY_MAPPER.get(category);
         if (productType == null) throw new BadRequestException("Category cannot be null");
 
-        var batches = findBatchesByProductTypeAndOrderAscAndDesc(productType.getCod(), sortDirection);
+        var batches = findBatchesByProductTypeAndOrderAscAndDesc(productType.getCod(), sortDirection, daysQuantity);
 
         return BatchMapper.toListSectorResponseDTO(batches);
     }
@@ -175,10 +175,10 @@ public class BatchServiceImpl implements IBatchService {
         return batches;
     }
 
-    private List<Batch> findBatchesByProductTypeAndOrderAscAndDesc(Integer productTypeCode, Sort.Direction direction) {
+    private List<Batch> findBatchesByProductTypeAndOrderAscAndDesc(Integer productTypeCode, Sort.Direction direction, Integer daysQuantity) {
         var sort = Sort.by(direction, "dueDate");
 
-        var batches = this.batchRepository.findBatchesByProductType(productTypeCode, MINIMUM_DUE_DATE, sort);
+        var batches = this.batchRepository.findBatchesByProductType(productTypeCode, sort, LocalDate.now().plusDays(daysQuantity));
 
         if (batches.isEmpty()) throw new NotFoundException("List is empty");
 

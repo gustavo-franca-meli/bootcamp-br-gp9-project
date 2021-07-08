@@ -26,12 +26,13 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
 
     @Query(value = "SELECT b.* FROM Batch b"
             + " INNER JOIN Sector s ON b.sector_id = :sectorId"
-            + " WHERE b.due_date >= :minimumDueDate"
+            + " WHERE b.due_date <= :maximumDueDate"
+            + " GROUP BY b.id"
             + " ORDER BY b.due_date ASC", nativeQuery = true)
-    List<Batch> findBatchesBySectorId(Long sectorId, LocalDate minimumDueDate);
+    List<Batch> findBatchesBySectorId(Long sectorId, LocalDate maximumDueDate);
 
     @Query(value = "SELECT b FROM Batch b"
             + " INNER JOIN Product p ON p.id = b.product.id AND p.productType = :productTypeCode"
-            + " WHERE b.dueDate >= :minimumDueDate")
-    List<Batch> findBatchesByProductType(Integer productTypeCode, LocalDate minimumDueDate, Sort sort);
+            + " WHERE b.dueDate <= :maximumDueDate")
+    List<Batch> findBatchesByProductType(Integer productTypeCode, Sort sort, LocalDate maximumDueDate);
 }

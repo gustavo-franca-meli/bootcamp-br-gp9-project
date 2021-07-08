@@ -15,9 +15,9 @@ public interface IBatchService {
 
     SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request);
 
-    List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId);
+    List<BatchSectorResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity);
 
-    List<BatchSectorResponseDTO> getBatchesByProductType(String category, String direction);
+    List<BatchSectorResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction);
 
     List<Batch> save(@NotNull List<BatchDTO> batchStock, Long sectorId, Long OrderId) throws CreateBatchStockException;
 
