@@ -28,8 +28,8 @@ public class BatchController {
     @GetMapping("/list")
     public ResponseEntity<List<BatchSectorResponseDTO>> getBatchesByProductType(
             @RequestParam(required = true) String category,
-            @RequestParam(required = false) String order) {
-        var batches = batchService.getBatchesByProductType(category, order);
+            @RequestParam(required = false) String direction) {
+        var batches = batchService.getBatchesByProductType(category, direction);
 
         return ResponseEntity.ok(batches);
     }

@@ -136,15 +136,19 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<BatchSectorResponseDTO> getBatchesByProductType(String category, String order) {
-        order = ((order == null || order.isBlank()) ? "asc" : order).toUpperCase();
+    public List<BatchSectorResponseDTO> getBatchesByProductType(String category, String direction) {
+        Sort.Direction sortDirection = null;
+        if (direction != null && direction.equals("desc")) {
+            sortDirection = Sort.Direction.DESC;
+        }
+        else {
+            sortDirection = Sort.Direction.ASC;
+        }
 
         var productType = PRODUCT_CATEGORY_MAPPER.get(category);
         if (productType == null) throw new BadRequestException("Category cannot be null");
 
-        var batches = this.batchRepository.findBatchesByProductType(productType.getCod(), MINIMUM_DUE_DATE);
-
-        if (batches.isEmpty()) throw new NotFoundException("List is empty");
+        var batches = findBatchesByProductTypeAndOrderAscAndDesc(productType.getCod(), sortDirection);
 
         return BatchMapper.toListSectorResponseDTO(batches);
     }
@@ -168,6 +172,16 @@ public class BatchServiceImpl implements IBatchService {
         var batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(warehouseId, productId, MINIMUM_DUE_DATE, sort);
 
         this.validateFillBatches(batches, productId);
+        return batches;
+    }
+
+    private List<Batch> findBatchesByProductTypeAndOrderAscAndDesc(Integer productTypeCode, Sort.Direction direction) {
+        var sort = Sort.by(direction, "dueDate");
+
+        var batches = this.batchRepository.findBatchesByProductType(productTypeCode, MINIMUM_DUE_DATE, sort);
+
+        if (batches.isEmpty()) throw new NotFoundException("List is empty");
+
         return batches;
     }
 
