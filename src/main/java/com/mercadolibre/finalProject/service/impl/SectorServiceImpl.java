@@ -32,7 +32,7 @@ public class SectorServiceImpl implements ISectorService {
 
     private Sector findSectorBy(Long sectorId) {
         var sector = this.sectorRepository.findById(sectorId);
-        return sector.orElseThrow();
+        return sector.orElseThrow(() -> new SectorNotFoundException("Sector Not Found"));
     }
 
     @Override

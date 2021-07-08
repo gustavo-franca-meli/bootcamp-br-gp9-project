@@ -75,7 +75,7 @@ public class BatchServiceImpl implements IBatchService {
                 //product seller is registered if not throws
                 var product = productService.findById(batch.getProductId());
                 //product type pertence a sector
-                if(sectorService.hasType(sectorId,product.getProductTypes())){
+                if(sectorService.hasType(sectorId,product.getType())){
                     //verify if has space
                     sectorService.isThereSpace(sectorId);
                     //verify if batch exist and has the same order
@@ -86,7 +86,7 @@ public class BatchServiceImpl implements IBatchService {
                     var batchResponse = batchRepository.save(batchModel);
                     responseBathList.add(batchResponse);
                 }else{
-                    throw new ProductTypeNotSuportedInSectorException(product.getId().toString(),product.getProductTypes(),sectorId.toString());
+                    throw new ProductTypeNotSuportedInSectorException(product.getId(),ProductType.toEnum(product.getType()).getDescription(),sectorId);
                 }
 
 

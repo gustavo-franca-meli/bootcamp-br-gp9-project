@@ -5,6 +5,7 @@ import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.service.IProductService;
+import com.mercadolibre.finalProject.service.IRepresentativeService;
 import com.mercadolibre.finalProject.service.ISectorService;
 import com.mercadolibre.finalProject.service.impl.BatchServiceImpl;
 import com.mercadolibre.finalProject.util.TestUtils;
@@ -24,10 +25,12 @@ public class BatchServiceTest {
     private BatchRepository bathRepository = mock(BatchRepository.class);
     private ISectorService sectorService = mock(ISectorService.class);
     private IProductService productService = mock(IProductService.class);
+    private IRepresentativeService representativeService = mock(IRepresentativeService.class);
+
 
     @BeforeEach
     public void setup() {
-        service = new BatchServiceImpl(bathRepository, sectorService, productService);
+        service = new BatchServiceImpl(bathRepository, sectorService, productService,representativeService);
     }
 
 
@@ -44,7 +47,7 @@ public class BatchServiceTest {
 
         when(productService.findById(any())).thenReturn(product);
         when(bathRepository.findById(any())).thenReturn(Optional.empty());
-        when(sectorService.hasType(dto.getSection().getCode(), product.getProductTypes())).thenReturn(true);
+        when(sectorService.hasType(dto.getSection().getCode(), product.getType())).thenReturn(true);
         when(sectorService.isThereSpace(anyLong())).thenReturn(true);
         when(bathRepository.save(any())).thenReturn(bath);
         var response =  service.save(listBath,dto.getSection().getCode(),1L);

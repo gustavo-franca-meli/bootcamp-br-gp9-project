@@ -51,9 +51,8 @@ public interface TestUtils {
     static Warehouse getWarehouseValid() {
         var country = getCountry();
         var sectors = Arrays.asList(getSectorValid());
-        var representative = getRepresentativeValid();
 
-        return new Warehouse(1L, "São Paulo", country, sectors, representative);
+        return new Warehouse(1L, "São Paulo", country, sectors, null);
     }
 
     static List<Sector> getListSectorsValid() {
@@ -71,7 +70,7 @@ public interface TestUtils {
     }
 
     static Representative getRepresentativeValid() {
-        var representative = new Representative("Leonardo", getWarehouseValid(),getAccountValid());
+        var representative = new Representative("Leonardo", new Warehouse(1L),getAccountValid());
         representative.setId(1l);
         return representative;
     }
@@ -159,15 +158,14 @@ public interface TestUtils {
     static InboundOrderDTO getInboundOrderDTOValid() {
         var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid());
         var sector = getSectorDTOValid();
-        return new InboundOrderDTO(10, LocalDate.now(), sector, batchList);
+        return new InboundOrderDTO(10L, LocalDate.now(), sector, batchList);
     }
 
 
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
         var sectors = Arrays.asList(getSectorDTOResponseValid());
-        var representative = getRepresentativeResponseDTOValid();
-        return new WarehouseResponseDTO(1L, "São Paulo", sectors, representative);
+        return new WarehouseResponseDTO(1L, "São Paulo", sectors);
     }
 
     static List<Batch> getBatchListValid() {
@@ -209,18 +207,18 @@ public interface TestUtils {
     static SectorBatchResponseDTO getSectorBatchResponseDTO() {
         var batchIdentificationResponseDTO = getBatchIdentificationResponseDTO();
         var listBatchStockResponseDTO = Arrays.asList(getBatchStockResponseDTO(), getBatchStockResponseDTOTwo());
-        return new SectorBatchResponseDTO(batchIdentificationResponseDTO, 1l, listBatchStockResponseDTO);
+        return new SectorBatchResponseDTO(batchIdentificationResponseDTO, 2l, listBatchStockResponseDTO);
     }
 
     static BatchIdentificationResponseDTO getBatchIdentificationResponseDTO() {
-        return new BatchIdentificationResponseDTO(1l, 1l);
+        return new BatchIdentificationResponseDTO(4l, 1l);
     }
 
     static BatchStockResponseDTO getBatchStockResponseDTO() {
-        return new BatchStockResponseDTO(1l, 10, LocalDate.of(2021, 8, 8));
+        return new BatchStockResponseDTO(7l, 10, LocalDate.of(2021, 12, 12));
     }
 
     static BatchStockResponseDTO getBatchStockResponseDTOTwo() {
-        return new BatchStockResponseDTO(3l, 40, LocalDate.of(2021, 7, 30));
+        return new BatchStockResponseDTO(9l, 40, LocalDate.of(2021, 11, 11));
     }
 }

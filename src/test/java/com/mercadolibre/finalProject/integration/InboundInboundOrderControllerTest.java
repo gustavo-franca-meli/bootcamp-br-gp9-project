@@ -173,7 +173,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        var invalidProductId = 2L;
+        var invalidProductId = 50L;
         request.getBatchStock().get(0).setProductId(invalidProductId);
         request.getBatchStock().get(1).setProductId(invalidProductId);
 
@@ -193,7 +193,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product Not Found Exception"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: The product doesn't exist. Id: "+ invalidProductId));
     }
 
 
@@ -203,7 +203,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        var productIdIncompatibleWithSectorOne = 3L;
+        var productIdIncompatibleWithSectorOne = 2L;
         request.getBatchStock().get(0).setProductId(productIdIncompatibleWithSectorOne);
         request.getBatchStock().get(1).setProductId(productIdIncompatibleWithSectorOne);
 
@@ -223,14 +223,11 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 3 with  TypeNot Perishable not supported in sector 1"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 2 with type Not Perishable not supported in sector 1"));
     }
     @Test
     void shouldReturnAnErrorListOfCreateBatchWhenSectorNoHasSpaceForBatch() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForCreate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
 
 
         var stockWithLowCapability = 3L;
@@ -290,7 +287,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
     @Test
     void shouldReturnErrorWhenOrderIsNotFound() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForUpdate();
-        request.setOrderNumber(3L);
+        request.setOrderNumber(400L);
 
         var json = mapper.writeValueAsString(request);
 
@@ -423,15 +420,18 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
     void shouldReturnAnErrorListOfCreateBatchWhenProductBatchNotRegisteredInPutMethod() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForUpdate();
 
-        var invalidProductId = 2L;
+        var invalidProductId = 50L;
         request.getBatchStock().get(0).setProductId(invalidProductId);
         request.getBatchStock().get(1).setProductId(invalidProductId);
+        request.getBatchStock().get(2).setProductId(invalidProductId);
+        request.getBatchStock().get(3).setProductId(invalidProductId);
+        request.getBatchStock().get(4).setProductId(invalidProductId);
 
         var json = mapper.writeValueAsString(request);
 
         var representativeId = 1L;
 
-        var expectedMessage = "Error in save 2 bath in sector";
+        var expectedMessage = "Error in save 5 bath in sector";
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("X-Representative-Id",representativeId)
@@ -443,7 +443,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product Not Found Exception"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: The product doesn't exist. Id: "+invalidProductId));
     }
 
     @Test
@@ -452,7 +452,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        var productIdIncompatibleWithSectorOne = 3L;
+        var productIdIncompatibleWithSectorOne = 2L;
         request.getBatchStock().get(0).setProductId(productIdIncompatibleWithSectorOne);
         request.getBatchStock().get(1).setProductId(productIdIncompatibleWithSectorOne);
 
@@ -472,14 +472,11 @@ public class InboundInboundOrderControllerTest extends ControllerTest{
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 3 with  TypeNot Perishable not supported in sector 1"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 2 with type Not Perishable not supported in sector 1"));
     }
     @Test
     void shouldReturnAnErrorListOfCreateBatchWhenSectorNoHasSpaceForBatchInPutMethod() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForUpdate();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
 
 
         var stockWithLowCapability = 3L;
