@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -40,19 +42,21 @@ public class BatchServiceImplTest {
     @SneakyThrows
     @Test
     public void shouldReturnBathStockSizeCorrectly() {
-        var dto = TestUtils.getInboundOrderDTOValid();
-        var listBath = dto.getBatchStock();
+        var dto = TestUtils.getInboundOrderDTOValidForCreate();
 
-        var product = ProductMapper.toResponseDTO(new Product(1L)); //new Product(1L);
-        var bath = BatchMapper.toModel(listBath.get(0),dto.getSection().getCode(),1L);
-
-
+        var product = ProductMapper.toResponseDTO(new Product(1L));
         when(productService.findById(any())).thenReturn(product);
+        when(batchRepository.findById(any())).thenReturn(Optional.empty());
         when(sectorService.hasType(dto.getSection().getCode(), product.getType())).thenReturn(true);
         when(sectorService.isThereSpace(anyLong())).thenReturn(true);
-        when(batchRepository.save(any())).thenReturn(bath);
-        var response =  service.save(listBath,dto.getSection().getCode(),1L);
-        assertEquals(response.size(),listBath.size());
+
+        var expect = TestUtils.getBatchListValid();
+
+        var request = dto.getBatchStock().stream().map(BatchMapper::toDTO).collect(Collectors.toList());
+        when(batchRepository.saveAll(any())).thenReturn(expect);
+        var got = service.save(request, dto.getSection().getCode(), 1L);
+        assertEquals(expect.size(), got.size());
+
     }
 
     @Test

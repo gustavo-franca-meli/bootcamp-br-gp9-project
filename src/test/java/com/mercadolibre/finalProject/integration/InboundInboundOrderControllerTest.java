@@ -241,15 +241,12 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
     void shouldReturnAnErrorListOfCreateBatchWhenSectorNoHasSpaceForBatch() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForCreate();
 
-
         var stockWithLowCapability = 3L;
         request.getSection().setCode(stockWithLowCapability);
 
         var json = mapper.writeValueAsString(request);
 
-        var representativeId = 1L;
-
-        var expectedMessage = "Error in save 1 bath in sector";
+        var expectedMessage = "Sector 3 doesn't have enough space to new quantity. New quantity 2";
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("Authorization", token)
@@ -257,10 +254,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
                 .content(json)
         )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(expectedMessage))
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 1 error: Sector 3 doesn't have enough space"));
+                .andExpect(jsonPath("$.message").value(expectedMessage));
     }
 
     /// PUT METHOD UPDATE INBOUND ORDER
@@ -442,8 +436,6 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
 
         var json = mapper.writeValueAsString(request);
 
-        var representativeId = 1L;
-
         var expectedMessage = "Error in save 5 bath in sector";
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
@@ -500,7 +492,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
 
         var representativeId = 1L;
 
-        var expectedMessage = "Error in save 4 bath in sector";
+        var expectedMessage = "Sector 3 doesn't have enough space to new quantity. New quantity 5";
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("Authorization", token)
@@ -508,10 +500,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
                 .content(json)
         )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(expectedMessage))
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 1 error: Sector 3 doesn't have enough space"));
+                .andExpect(jsonPath("$.message").value(expectedMessage));
     }
 
 
