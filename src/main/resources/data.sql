@@ -9,7 +9,7 @@ INSERT INTO country (`id`, `name`) VALUES ('5', 'Brazil');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('1', 'pass123', '1', 'onias-rocha', '1');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('2', 'pass123', '1', 'nyvieirameli', '2');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('3', 'pass123', '1', 'gustavo-franca-meli', '3');
-INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('4', 'pass123', '1', 'LeonardoBatistaCariasMeli', '4');
+INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('4', 'pass123', '2', 'LeonardoBatistaCariasMeli', '4');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('5', 'pass123', '1', 'cfugita', '5');
 
 INSERT INTO seller (name, account_id) VALUES ('Onias da Rocha Filho', 1);

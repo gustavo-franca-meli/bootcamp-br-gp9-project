@@ -193,15 +193,15 @@ public interface TestUtils {
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTO() {
-        return new SectorBatchRequestDTO(1L, 1L, null);
+        return new SectorBatchRequestDTO(1L, "onias-rocha", null);
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedC() {
-        return new SectorBatchRequestDTO(1L, 1L, "C");
+        return new SectorBatchRequestDTO(1L, "onias-rocha", "C");
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedF() {
-        return new SectorBatchRequestDTO(1L, 1L, "F");
+        return new SectorBatchRequestDTO(1L, "onias-rocha", "F");
     }
 
     static SectorBatchResponseDTO getSectorBatchResponseDTO() {

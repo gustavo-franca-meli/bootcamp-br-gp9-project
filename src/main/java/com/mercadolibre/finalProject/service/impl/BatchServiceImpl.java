@@ -130,7 +130,7 @@ public class BatchServiceImpl implements IBatchService {
     @Override
     public SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request) {
         var productResponseDTO = this.productService.findById(request.getProductId());
-        var representativeDTO = this.representativeService.findById(request.getRepresentativeId());
+        var representativeDTO = this.representativeService.findByAccountUsername(request.getUsername());
 
         List<Batch> batches = null;
         if (request.getOrdered() == null) {
