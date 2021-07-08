@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.service.impl;
 import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ApiException;
 import com.mercadolibre.finalProject.model.Account;
+import com.mercadolibre.finalProject.model.enums.RoleType;
 import com.mercadolibre.finalProject.repository.AccountRepository;
 import com.mercadolibre.finalProject.service.ISessionService;
 import io.jsonwebtoken.Claims;
@@ -40,7 +41,7 @@ public class SessionServiceImpl implements ISessionService {
         Account account = accountRepository.findByUsernameAndPassword(username, password);
 
         if (account != null) {
-            String token = getJWTToken(username);
+            String token = getJWTToken(account.getRol(), username);
             AccountResponseDTO user = new AccountResponseDTO();
             user.setUsername(username);
             user.setToken(token);
@@ -53,13 +54,16 @@ public class SessionServiceImpl implements ISessionService {
 
     /**
      * Genera un token para un usuario específico, válido por 10'
+     *
+     * @param roleCode
      * @param username
      * @return
      */
-    private String getJWTToken(String username) {
+    private String getJWTToken(Integer roleCode, String username) {
+        var role = RoleType.toEnum(roleCode);
         String secretKey = "mySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
+                .commaSeparatedStringToAuthorityList(role.getDescription());
         String token = Jwts
                 .builder()
                 .setId("softtekJWT")
@@ -78,6 +82,7 @@ public class SessionServiceImpl implements ISessionService {
 
     /**
      * Decodifica un token para poder obtener los componentes que contiene el mismo
+     *
      * @param token
      * @return
      */
@@ -89,6 +94,7 @@ public class SessionServiceImpl implements ISessionService {
 
     /**
      * Permite obtener el username según el token indicado
+     *
      * @param token
      * @return
      */

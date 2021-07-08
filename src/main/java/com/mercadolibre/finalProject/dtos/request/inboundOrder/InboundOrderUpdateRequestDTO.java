@@ -19,6 +19,8 @@ public class InboundOrderUpdateRequestDTO {
     @NotNull
     private List<BatchRequestUpdateDTO> batchStock;
 
+    private String username;
+
     public InboundOrderUpdateRequestDTO(@NotNull Long orderNumber, @NotNull LocalDate orderDate, @NotNull SectorRequestDTO section, @NotNull List<BatchRequestUpdateDTO> batchStock) {
         this.orderNumber = orderNumber;
         this.orderDate = orderDate;

@@ -9,7 +9,7 @@ INSERT INTO country (`id`, `name`) VALUES ('5', 'Brazil');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('1', 'pass123', '1', 'onias-rocha', '1');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('2', 'pass123', '1', 'nyvieirameli', '2');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('3', 'pass123', '1', 'gustavo-franca-meli', '3');
-INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('4', 'pass123', '1', 'LeonardoBatistaCariasMeli', '4');
+INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('4', 'pass123', '2', 'LeonardoBatistaCariasMeli', '4');
 INSERT INTO account (`id`, `password`, `rol`, `username`, `id_country_fk`) VALUES ('5', 'pass123', '1', 'cfugita', '5');
 
 INSERT INTO seller (name, account_id) VALUES ('Onias da Rocha Filho', 1);
@@ -23,7 +23,7 @@ VALUES ( 'A bisteca é uma carne suína muito saborosa e que pode ser preparada 
 INSERT INTO product (description, name, price, product_type, seller_id)
 VALUES ( 'A batata é um alimento muito versátil e pode ser preparado de diferentes maneiras como assada, cozida, frita ou até mesmo recheada. Além disso, a batata é repleta de vitamina e também do Complexo B.', 'Batata Lavada 1 Unidade 300g', 0.90, 2, 1);
 INSERT INTO product (description, name, price, product_type, seller_id)
-VALUES ( 'A batata é um alimento muito versátil e pode ser preparado de diferentes maneiras como assada, cozida, frita ou até mesmo recheada. Além disso, a batata é repleta de vitamina e também do Complexo B.', 'Batata Lavada 1 Unidade 300g', 0.90, 2, 1);
+VALUES ( 'A Manga é um alimento muito versátil e pode ser preparado de diferentes maneiras como assada, cozida, frita ou até mesmo recheada. Além disso, a manga é repleta de vitamina e também do Complexo B.', 'Manga Lavada 1 Unidade 300g', 0.90, 2, 1);
 
 INSERT INTO representative (name,account_id,warehouse_id) VALUES ('Gustavo França', 1 , null);
 INSERT INTO representative (name,account_id,warehouse_id) VALUES ('Onias da Rocha', 2 , null);
@@ -34,7 +34,7 @@ INSERT INTO warehouse (name, country_id, representative_id) VALUES ('Centro de T
 UPDATE representative SET warehouse_id = 1 WHERE (`id` = 1);
 UPDATE representative SET warehouse_id = 2 WHERE (`id` = 2);
 
-INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (15, 1, 1);
+INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (50, 1, 1);
 INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (50, 2, 2);
 INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (1, 1, 1);
 INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (50, 1, 2);

@@ -4,6 +4,7 @@ import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.service.IBatchService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +22,9 @@ public class ProductController {
 
     @GetMapping(value = "/list")
     public ResponseEntity<SectorBatchResponseDTO> getSectorBatchesByProductId(@RequestParam Long productId, @RequestParam(required = false) String ordered) {
-        var request = new SectorBatchRequestDTO(productId, 1L, ordered);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var request = new SectorBatchRequestDTO(productId, auth.getName(), ordered);
+
         var response = this.batchService.getSectorBatchesByProductId(request);
         return ResponseEntity.ok().body(response);
     }
