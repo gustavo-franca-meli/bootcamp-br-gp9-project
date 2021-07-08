@@ -87,4 +87,19 @@ public class ApiExceptionControllerAdvice {
         );
 
     }
+
+    @ExceptionHandler(NoSpaceInSectorException.class)
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ApiError noSpaceSectorException (NoSpaceInSectorException ex) {
+
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+
+        return new ApiError(
+                ex.getClass().getName(),
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value()
+        );
+    }
 }
