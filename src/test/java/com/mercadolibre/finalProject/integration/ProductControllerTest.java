@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,7 @@ public class ProductControllerTest extends ControllerTest {
                 .header("X-Representative-Id", "1")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("productId", "1")
+                .param("productId", "2")
         )
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -75,7 +76,7 @@ public class ProductControllerTest extends ControllerTest {
                 .header("X-Representative-Id", "1")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("productId", "1")
+                .param("productId", "2")
                 .param("ordered", "C")
         )
                 .andExpect(status().isOk())
@@ -94,11 +95,12 @@ public class ProductControllerTest extends ControllerTest {
     void shouldGetSectorBatchesByProductIdOrderedByDueDate() throws Exception {
         var expected = TestUtils.getSectorBatchResponseDTO();
         var expectedBatch = expected.getBatchStock().get(1);
+
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
                 .header("X-Representative-Id", "1")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("productId", "1")
+                .param("productId", "2")
                 .param("ordered", "F")
         )
                 .andExpect(status().isOk())
@@ -129,9 +131,10 @@ public class ProductControllerTest extends ControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("productId", "2")
+                .param("productId", "3")
         )
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Doesn't has valid batches with this product. Id product: 3"));
     }
 }

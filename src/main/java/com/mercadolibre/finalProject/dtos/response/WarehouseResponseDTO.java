@@ -9,9 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class WarehouseResponseDTO {
-
     private Long id;
     private String name;
     private List<SectorResponseDTO> sectors;
-    private RepresentativeResponseDTO representative;
 }

@@ -1,6 +1,8 @@
 package com.mercadolibre.finalProject.model.mapper;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestCreateDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestUpdateDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchIdentificationResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchStockResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
@@ -30,7 +32,7 @@ public interface BatchMapper {
         );
     }
 
-    static BatchDTO toDTO(Batch batch) {
+     static BatchDTO toDTO(Batch batch) {
         return new BatchDTO(
                 batch.getId(),
                 batch.getProduct().getId(),
@@ -44,6 +46,31 @@ public interface BatchMapper {
         );
     }
 
+    static BatchDTO toDTO(BatchRequestCreateDTO batchStock) {
+        return new BatchDTO(
+                batchStock.getProductId(),
+                batchStock.getCurrentTemperature(),
+                batchStock.getMinimumTemperature(),
+                batchStock.getInitialQuantity(),
+                batchStock.getCurrentQuantity(),
+                batchStock.getManufacturingDate(),
+                batchStock.getManufacturingTime(),
+                batchStock.getDueDate()
+        );
+    }
+    static BatchDTO toDTO(BatchRequestUpdateDTO batchStock) {
+        return new BatchDTO(
+                batchStock.getId(),
+                batchStock.getProductId(),
+                batchStock.getCurrentTemperature(),
+                batchStock.getMinimumTemperature(),
+                batchStock.getInitialQuantity(),
+                batchStock.getCurrentQuantity(),
+                batchStock.getManufacturingDate(),
+                batchStock.getManufacturingTime(),
+                batchStock.getDueDate()
+        );
+    }
     static SectorBatchResponseDTO toSectorBatchResponseDTO(List<Batch> batches) {
         var sector = batches.get(0).getSector();
         var batchIdentification = assembleBatchIdentificationResponseDTOOf(sector.getId(), sector.getWareHouseId());

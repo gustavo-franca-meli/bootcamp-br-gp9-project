@@ -26,7 +26,7 @@ public class Batch {
     private Sector sector;
 
     @ManyToOne
-    @JoinColumn(name = "inbound_order_id", nullable = false)
+    @JoinColumn(name = "inbound_order_id",nullable = false)
     private InboundOrder inboundOrder;
 
     private Float currentTemperature;
@@ -64,7 +64,7 @@ public class Batch {
         this.dueDate = dueDate;
     }
 
-    public Batch(Long id) {
+    public Batch (Long id) {
         this.id = id;
     }
 

@@ -49,9 +49,9 @@ public class BatchServiceImplTest {
 
         when(productService.findById(any())).thenReturn(product);
         when(sectorService.hasType(dto.getSection().getCode(), product.getType())).thenReturn(true);
-        when(sectorService.isThereSpace(Mockito.any(), anyLong())).thenReturn(true);
+        when(sectorService.isThereSpace(anyLong())).thenReturn(true);
         when(batchRepository.save(any())).thenReturn(bath);
-        var response =  service.create(listBath,dto.getSection().getCode(),1L);
+        var response =  service.save(listBath,dto.getSection().getCode(),1L);
         assertEquals(response.size(),listBath.size());
     }
 

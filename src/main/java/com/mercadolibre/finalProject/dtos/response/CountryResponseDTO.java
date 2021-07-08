@@ -1,9 +1,8 @@
 package com.mercadolibre.finalProject.dtos.response;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.NotNull;
 
 @Validated
 @Data

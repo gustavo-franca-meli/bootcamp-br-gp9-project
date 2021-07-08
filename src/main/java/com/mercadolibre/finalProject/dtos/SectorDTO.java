@@ -30,4 +30,9 @@ public class SectorDTO {
         this.currentQuantityBatches = currentQuantityBatches;
         this.maxQuantityBatches = maxQuantityBatches;
     }
+
+    public SectorDTO(Long code, Long warehouseCode) {
+        this.setCode(code);
+        this.setWarehouseCode(warehouseCode);
+    }
 }

@@ -52,7 +52,7 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class})
+    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class,InboundOrderNotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class})
     protected ResponseEntity<ApiError> handleNotFoundException(Exception e) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.toString(), e.getMessage(), HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(apiError.getStatus())
