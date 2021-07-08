@@ -12,4 +12,8 @@ public class SampleDTO implements Serializable {
 
     private int random;
 
+    public SampleDTO(int random) {
+        this.random = random;
+    }
+
 }

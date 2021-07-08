@@ -32,7 +32,7 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
     }
 
     @Override
-    public InboundOrderResponseDTO create(InboundOrderCreateRequestDTO dto, String username) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
+    public InboundOrderResponseDTO create(InboundOrderCreateRequestDTO dto, String username) throws WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
         var representativeId = validadeSaveRequest(dto.getSection().getWarehouseCode(), username, dto.getSection().getCode());
         //register order and assign representative if fails throws
         var saveOrder = new InboundOrder(dto.getOrderDate(), representativeId);
