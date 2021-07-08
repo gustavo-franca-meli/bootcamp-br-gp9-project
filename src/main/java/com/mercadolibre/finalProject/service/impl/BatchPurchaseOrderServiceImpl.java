@@ -36,33 +36,10 @@ public class BatchPurchaseOrderServiceImpl implements IBatchPurchaseOrderService
     }
 
     @Override
-    public BatchPurchaseOrderResponseDTO create(Long batchId, Integer quantity, ProductBatchesPurchaseOrder productBatchesPurchaseOrder) {
-
-        BatchDTO batchDTO = this.batchService.withdrawQuantity(batchId,quantity);
-        Batch batch = this.batchRepository.findById(batchId).get(); //arrumar isso
-
-        BatchPurchaseOrder batchPurchaseOrder = BatchPurchaseOrderMapper.toModel(batch,quantity,productBatchesPurchaseOrder);
-
-        this.repository.save(batchPurchaseOrder);
-        return BatchPurchaseOrderMapper.toResponseDTO(batchPurchaseOrder);
-    }
-
-    @Override
     public BatchPurchaseOrderResponseDTO findById (Long id) {
 
         BatchPurchaseOrder batchPurchaseOrder = this.getModelById(id);
 
         return BatchPurchaseOrderMapper.toResponseDTO(batchPurchaseOrder);
     }
-
-    @Override
-    public BatchPurchaseOrderResponseDTO updateQuantity (Long id, Integer newQuantity) {
-        BatchPurchaseOrder batchPurchaseOrder = this.getModelById(id);
-
-        batchPurchaseOrder.setQuantity(newQuantity);
-        this.repository.save(batchPurchaseOrder);
-
-        return BatchPurchaseOrderMapper.toResponseDTO(batchPurchaseOrder);
-    }
-
 }

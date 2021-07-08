@@ -11,18 +11,12 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-//    @Query("SELECT A FROM Product A INNER JOIN Sector B ON (A.sector=B.id) " +
-//            "INNER JOIN Warehouse C ON (B.warehouse=C.id) " +
-//            "WHERE C.country=:countryId AND A.product=:productId AND A.dueDate >=:date " +
-//            "ORDER BY A.dueDate ASC")
-//    List<Product> findByCountryAndDate (Long productId, Long countryId, LocalDate date);
-//
-//    @Query("SELECT A.product, sum(A.currentQuantity) AS quantity FROM Batch A " +
-//            "INNER JOIN Sector B ON (A.sector=B.id) " +
-//            "INNER JOIN Warehouse C ON (B.warehouse=C.id) " +
-//            "WHERE C.country=:countryId AND A.product=:productId AND A.dueDate >=:date " +
-//            "ORDER BY A.dueDate ASC" +
-//            "GROUP BY A.product")
-//    List<Product> findByCountryAndDate (Long productId, Long countryId, LocalDate date);
+    @Query(value = "SELECT B.* " +
+            "FROM Batch A " +
+            "INNER JOIN Product B ON (A.product_id=B.id) " +
+            "INNER JOIN Sector C ON (A.sector_id=C.id) " +
+            "INNER JOIN Warehouse D ON (C.warehouse_id=D.id) " +
+            "WHERE D.country_id=:countryId GROUP BY A.product_id", nativeQuery = true)
+    List<Product> findByCountry (Long countryId);
 
 }

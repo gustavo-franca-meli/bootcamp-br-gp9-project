@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Table(name = "batch_purchase_order")
 @Data
 @NoArgsConstructor
-public class BatchPurchaseOrder {
+public class BatchPurchaseOrder{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

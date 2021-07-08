@@ -93,4 +93,10 @@ public class BatchServiceImpl implements IBatchService {
         return BatchMapper.toDTO(batch);
     }
 
+    @Override
+    public void returnQuantity(Batch batch, Integer quantity) {
+        batch.setCurrentQuantity(batch.getCurrentQuantity() + quantity);
+        this.batchRepository.save(batch);
+    }
+
 }

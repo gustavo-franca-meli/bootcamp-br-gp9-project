@@ -19,11 +19,15 @@ public class PurchaseOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "buyer_id")
+    private Account buyer;
+
     private LocalDate orderDate;
 
     private Integer orderStatus;
 
-    @OneToMany(mappedBy = "purchaseOrder")
+    @OneToMany(mappedBy = "purchaseOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductBatchesPurchaseOrder> products = new ArrayList<>();
 
     public PurchaseOrder(LocalDate orderDate, Integer orderStatus, List<ProductBatchesPurchaseOrder> products) {
@@ -32,7 +36,8 @@ public class PurchaseOrder {
         this.products = products;
     }
 
-    public PurchaseOrder(LocalDate orderDate, Integer orderStatus) {
+    public PurchaseOrder(Account buyer, LocalDate orderDate, Integer orderStatus) {
+        this.buyer = buyer;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
     }

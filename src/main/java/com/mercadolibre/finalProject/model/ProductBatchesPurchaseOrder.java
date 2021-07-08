@@ -16,10 +16,14 @@ public class ProductBatchesPurchaseOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long productId;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     private Double currentPricePerUnit;
 
-    @OneToMany(mappedBy = "productBatchPurchaseOrder")
+    @OneToMany(mappedBy = "productBatchPurchaseOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BatchPurchaseOrder> purchaseBatches = new ArrayList<>();
 
     @ManyToOne
@@ -32,10 +36,15 @@ public class ProductBatchesPurchaseOrder {
         this.purchaseOrder = purchaseOrder;
     }
 
-    public ProductBatchesPurchaseOrder(Long productId, Double currentPricePerUnit, PurchaseOrder purchaseOrder) {
-        this.productId = productId;
+    public ProductBatchesPurchaseOrder(Product product, Double currentPricePerUnit, PurchaseOrder purchaseOrder) {
+        this.product = product;
         this.currentPricePerUnit = currentPricePerUnit;
         this.purchaseOrder = purchaseOrder;
+    }
+
+    public ProductBatchesPurchaseOrder(Product product, Double currentPricePerUnit) {
+        this.product = product;
+        this.currentPricePerUnit = currentPricePerUnit;
     }
 
     public Integer getTotalQuantity () {

@@ -21,5 +21,5 @@ public interface IProductService {
     ProductStockDTO getStockForProductInCountryByData (Long productId, Long countryId, LocalDate date) throws ProductNotFoundException;
     List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date);
     Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date);
-    List<ProductResponseDTO> getAllProducts (String token);
+    List<ProductResponseDTO> getProductsByCountry ();
 }

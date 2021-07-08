@@ -18,4 +18,5 @@ public interface IBatchService {
     BatchDTO findById (Long id);
     List<Batch> create(List<BatchDTO> batchStock, Long sectorId) throws CreateBatchStockException;
     BatchDTO withdrawQuantity (Long batchId, Integer withdrawnQuantity);
+    void returnQuantity(Batch batch, Integer quantity);
 }

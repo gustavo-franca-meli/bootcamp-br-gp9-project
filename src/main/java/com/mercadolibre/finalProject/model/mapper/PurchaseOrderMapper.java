@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface PurchaseOrderMapper {
 
-    static PurchaseOrderResponseDTO toResponseDTO (PurchaseOrder purchaseOrder, List<ProductBatchesPurchaseOrderResponseDTO> productBatches) {
+    static PurchaseOrderResponseDTO toResponseDTO (PurchaseOrder purchaseOrder) {
         return new PurchaseOrderResponseDTO(
                 purchaseOrder.getId(),
                 purchaseOrder.getOrderDate(),
                 purchaseOrder.getTotalPrice(),
-                productBatches);
+                ProductBatchesPurchaseOrderMapper.toListResponseDTO(purchaseOrder.getProducts()));
     }
 }

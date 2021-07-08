@@ -112,10 +112,10 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductResponseDTO> getAllProducts(String token) {
+    public List<ProductResponseDTO> getProductsByCountry() {
         // get country id by token ??
-        Long countryId = 1L;
-        return ProductMapper.toListResponseDTO(this.batchRepository.findProductsByCountry(countryId));
+        Long countryId = 5L;
+        return ProductMapper.toListResponseDTO(this.productRepository.findByCountry(countryId));
     }
 
 }

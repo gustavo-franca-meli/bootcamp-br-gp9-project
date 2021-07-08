@@ -11,6 +11,4 @@ import java.time.LocalDate;
 
 public interface IProductBatchesPurchaseOrderService {
     ProductBatchesPurchaseOrderResponseDTO findById (Long id) throws ProductNotFoundException;
-    ProductBatchesPurchaseOrderResponseDTO updateQuantity (Long id, PurchaseOrderUpdateRequestDTO updateRequest);
-    ProductBatchesPurchaseOrderResponseDTO create (ProductPurchaseOrderRequestDTO productRequest, PurchaseOrder purchaseOrder, Long countryId, LocalDate date) throws ProductNotFoundException;
 }

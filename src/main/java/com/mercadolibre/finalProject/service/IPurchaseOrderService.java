@@ -10,7 +10,7 @@ import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
 import java.util.List;
 
 public interface IPurchaseOrderService {
-    PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrder, String representative) throws WarehouseNotFoundException, ProductNotFoundException;
-    PurchaseOrderResponseDTO update (Long id, List<PurchaseOrderUpdateRequestDTO> updates);
-    PurchaseOrderResponseDTO getById(Long id, String token) throws ProductNotFoundException;
+    PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrder) throws WarehouseNotFoundException, ProductNotFoundException;
+    PurchaseOrderResponseDTO update (PurchaseOrderUpdateRequestDTO updateRequest) throws ProductNotFoundException;
+    PurchaseOrderResponseDTO getById (Long id) throws ProductNotFoundException;
 }

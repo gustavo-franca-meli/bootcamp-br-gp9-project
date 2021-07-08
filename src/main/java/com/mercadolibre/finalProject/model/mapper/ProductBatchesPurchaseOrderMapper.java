@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public interface ProductBatchesPurchaseOrderMapper {
-    static ProductBatchesPurchaseOrderResponseDTO toResponseDTO (ProductBatchesPurchaseOrder productBatchesPurchaseOrder, String productName, List<BatchPurchaseOrderResponseDTO> batches) {
+    static ProductBatchesPurchaseOrderResponseDTO toResponseDTO (ProductBatchesPurchaseOrder productBatchesPurchaseOrder) {
         return new ProductBatchesPurchaseOrderResponseDTO(
                 productBatchesPurchaseOrder.getId(),
-                productBatchesPurchaseOrder.getProductId(),
-                productName,
+                productBatchesPurchaseOrder.getProduct().getId(),
+                productBatchesPurchaseOrder.getProduct().getName(),
                 productBatchesPurchaseOrder.getTotalQuantity(),
                 productBatchesPurchaseOrder.getTotalPrice(),
-                batches);
+                BatchPurchaseOrderMapper.toListResponseDTO(productBatchesPurchaseOrder.getPurchaseBatches()));
     }
 
-    static List<ProductBatchesPurchaseOrderResponseDTO> toListResponseDTO (List<ProductBatchesPurchaseOrder> productBatches,String productName, List<BatchPurchaseOrderResponseDTO> batches) {
-        return productBatches.stream().map(p -> ProductBatchesPurchaseOrderMapper.toResponseDTO(p,productName,batches)).collect(Collectors.toList());
+    static List<ProductBatchesPurchaseOrderResponseDTO> toListResponseDTO (List<ProductBatchesPurchaseOrder> productBatches) {
+        return productBatches.stream().map(ProductBatchesPurchaseOrderMapper::toResponseDTO).collect(Collectors.toList());
     }
 }
