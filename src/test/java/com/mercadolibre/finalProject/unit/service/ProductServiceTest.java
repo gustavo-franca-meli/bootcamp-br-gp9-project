@@ -7,21 +7,15 @@ import com.mercadolibre.finalProject.model.Country;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Seller;
 import com.mercadolibre.finalProject.repository.ProductRepository;
-import com.mercadolibre.finalProject.repository.SellerRepository;
+import com.mercadolibre.finalProject.repository.WarehouseRepository;
 import com.mercadolibre.finalProject.service.ISellerService;
 import com.mercadolibre.finalProject.service.impl.ProductServiceImpl;
-import org.assertj.core.util.Lists;
-import org.assertj.core.util.Sets;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -29,11 +23,12 @@ public class ProductServiceTest {
 
     ProductRepository productRepository = Mockito.mock(ProductRepository.class);
     ISellerService sellerService = Mockito.mock(ISellerService.class);
+    WarehouseRepository warehouseRepository = Mockito.mock(WarehouseRepository.class);
     ProductServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        this.service = new ProductServiceImpl(productRepository, sellerService);
+        this.service = new ProductServiceImpl(productRepository, sellerService, warehouseRepository);
     }
 
     @Test

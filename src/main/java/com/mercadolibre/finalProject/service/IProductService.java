@@ -29,5 +29,5 @@ public interface IProductService {
 
     SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId);
 
-    SumOfProductStockDTO getSumOfProductStockInValidWarehouses(Long productId, Long countryId);
+    SumOfProductStockDTO getSumOfProductStockByCountry(Long productId, Long countryId);
 }
