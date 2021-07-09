@@ -8,7 +8,6 @@ import com.mercadolibre.finalProject.repository.*;
 import com.mercadolibre.finalProject.service.*;
 import com.mercadolibre.finalProject.service.impl.*;
 import com.mercadolibre.finalProject.util.TestUtils;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,10 +33,31 @@ public class PurchaseOrderServiceImplTest {
         this.service = new PurchaseOrderServiceImpl(purchaseOrderRepository, productRepository, batchRepository, batchService, productService, accountRepository);
     }
 
-    @Test
-    void shouldCreatePurchaseOrder() {
-        PurchaseOrderRequestDTO purchaseOrderRequest = TestUtils.getPurchaseOrderRequestDTO();
-    }
+//    @Test
+//    void shouldCreatePurchaseOrder() {
+//        PurchaseOrderRequestDTO purchaseOrderRequest = TestUtils.getPurchaseOrderRequestDTO();
+//        String username = "onias-rocha";
+//        var responseExpected = TestUtils.getPurchaseOrderResponseDTO();
+//
+//        Optional<Account> accountOpt = Optional.of(TestUtils.getAccountMocked());
+//        when(accountRepository.findByUsername(username)).thenReturn(accountOpt);
+//
+//        when(productService.findById(1L)).thenReturn(TestUtils.getProductResponseDTO());
+//
+//        Optional<PurchaseOrder> purchaseOrderOpt = Optional.of(TestUtils.getPurchaseOrder());
+//        purchaseOrderOpt.get().setProducts(Lists.newArrayList(TestUtils.getProductBatchesPurchaseOrder()));
+//        when(purchaseOrderRepository.findById(1L)).thenReturn(purchaseOrderOpt);
+//
+//        var response = service.getById(id, username);
+//
+//        verify(purchaseOrderRepository, times(1)).findById(anyLong());
+//        verify(accountRepository, times(1)).findByUsername(any());
+//
+//        assertEquals(responseExpected.getId(), response.getId());
+//        assertEquals(responseExpected.getTotalPrice(), response.getTotalPrice());
+//        assertEquals(responseExpected.getProducts().size(), response.getProducts().size());
+//        assertEquals(responseExpected.getDate(), response.getDate());
+//    }
 
     @Test
     void shouldUpdatePurchaseOrder() {
@@ -63,23 +83,31 @@ public class PurchaseOrderServiceImplTest {
         verify(accountRepository, times(1)).findByUsername(any());
 
         assertEquals(responseExpected.getId(), response.getId());
+        assertEquals(responseExpected.getTotalPrice(), response.getTotalPrice());
+        assertEquals(responseExpected.getProducts().size(), response.getProducts().size());
+        assertEquals(responseExpected.getDate(), response.getDate());
     }
 
     @Test
     void shouldGetAllPurchaseOrder() {
-//        var sellerExpected = createExpectedSeller();
-//        var responseExpected = createExpectedProductResponseDTO(sellerExpected);
-//
-//        when(sellerService.findSellerById(1L)).thenReturn(sellerExpected);
-//
-//        var product1 = createExpectedProduct(sellerExpected);
-//        when(productRepository.save(Mockito.any())).thenReturn(product1);
-//
-//        var request = createProductRequestDTO();
-//        var response = service.create(request);
-//
-//        verify(sellerService, times(1)).findSellerById(any());
-//        verify(productRepository, times(1)).save(any());
-//        assertEquals(responseExpected, response);
+        String username = "onias-rocha";
+        var responseExpected = Lists.newArrayList(TestUtils.getPurchaseOrderResponseDTO());
+
+        Optional<Account> accountOpt = Optional.of(TestUtils.getAccountMocked());
+        when(accountRepository.findByUsername(username)).thenReturn(accountOpt);
+
+        PurchaseOrder purchaseOrder = TestUtils.getPurchaseOrder();
+        purchaseOrder.setProducts(Lists.newArrayList(TestUtils.getProductBatchesPurchaseOrder()));
+        when(purchaseOrderRepository.findByBuyerId(1L)).thenReturn(Lists.newArrayList(purchaseOrder));
+
+        var response = service.getAll(username);
+
+        verify(accountRepository, times(1)).findByUsername(any());
+        verify(purchaseOrderRepository, times(1)).findByBuyerId(anyLong());
+
+        assertEquals(responseExpected.get(0).getId(), response.get(0).getId());
+        assertEquals(responseExpected.get(0).getTotalPrice(), response.get(0).getTotalPrice());
+        assertEquals(responseExpected.get(0).getProducts().size(), response.get(0).getProducts().size());
+        assertEquals(responseExpected.get(0).getDate(), response.get(0).getDate());
     }
 }

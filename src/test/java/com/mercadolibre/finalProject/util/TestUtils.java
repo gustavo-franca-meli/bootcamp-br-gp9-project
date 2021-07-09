@@ -258,7 +258,7 @@ public interface TestUtils {
         return new PurchaseOrderResponseDTO(
                 1L,
                 LocalDate.now(),
-                1.0,
+                0,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         1L,
                         1L,
