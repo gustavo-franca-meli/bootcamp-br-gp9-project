@@ -105,7 +105,10 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date) {
-        return this.batchRepository.getProductQuantityByCountryAndDate(productId,countryId,date);
+        if( this.batchRepository.getProductQuantityByCountryAndDate(productId, countryId, date) == null ){
+            return 0;
+        }
+        return this.batchRepository.getProductQuantityByCountryAndDate(productId, countryId, date);
     }
 
     @Override

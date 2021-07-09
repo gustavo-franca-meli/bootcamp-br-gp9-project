@@ -1,5 +1,6 @@
 package com.mercadolibre.finalProject.service.impl;
 
+import com.google.common.collect.Lists;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
@@ -66,16 +67,17 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
     }
 
     @Override
-    public PurchaseOrderResponseDTO update (PurchaseOrderUpdateRequestDTO updateRequest) throws ProductNotFoundException {
+    public PurchaseOrderResponseDTO update (PurchaseOrderUpdateRequestDTO updateRequest) throws ProductNotFoundException, StockInsufficientException {
         PurchaseOrder purchaseOrder = this.findById(updateRequest.getPurchaseOrderId());
-
         ProductBatchesPurchaseOrder productBatches = this.findProductInPurchaseOrderById(purchaseOrder,updateRequest.getProductId());
+
+        List<ProductPurchaseOrderRequestDTO> productRequests = new ArrayList<>();
+        ProductPurchaseOrderRequestDTO productRequest = new ProductPurchaseOrderRequestDTO(updateRequest.getProductId(), updateRequest.getNewQuantity());
+        productRequests.add(productRequest);
+
         if(productBatches == null) {
 
-            ProductResponseDTO productResponseDTO = this.productService.findById(updateRequest.getProductId());
-
-            ProductPurchaseOrderRequestDTO productRequest = new ProductPurchaseOrderRequestDTO(updateRequest.getProductId(), updateRequest.getNewQuantity());
-            Boolean isStockForProductEnough = this.isStockForProductEnough(productRequest, purchaseOrder.getBuyer().getCountry().getId(), purchaseOrder.getOrderDate().plusWeeks(3));
+            this.isStockEnough(productRequests, purchaseOrder.getBuyer().getCountry().getId(), purchaseOrder.getOrderDate().plusWeeks(3));
 
             ProductBatchesPurchaseOrder newProductBatches = this.createProductBatch(productRequest,purchaseOrder);
             purchaseOrder.getProducts().add(newProductBatches);
@@ -86,9 +88,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         }
 
         else if (productBatches.getTotalQuantity() < updateRequest.getNewQuantity()) {
-            ProductPurchaseOrderRequestDTO productRequest = new ProductPurchaseOrderRequestDTO(updateRequest.getProductId(),updateRequest.getNewQuantity() - productBatches.getTotalQuantity());
-            Boolean isStockForProductEnough = this.isStockForProductEnough(productRequest, purchaseOrder.getBuyer().getCountry().getId(), purchaseOrder.getOrderDate().plusWeeks(3));
-
+            this.isStockEnough(productRequests, purchaseOrder.getBuyer().getCountry().getId(), purchaseOrder.getOrderDate().plusWeeks(3));
             this.upsizeOrder(productBatches,updateRequest.getNewQuantity() - productBatches.getTotalQuantity());
         }
 
@@ -104,10 +104,11 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
     }
 
-    private void downsizeOrder(ProductBatchesPurchaseOrder productBatches, Integer quantityToReturn) {
-        List<BatchPurchaseOrder> batches = productBatches.getPurchaseBatches(); // sort by due date in batches
+    private void downsizeOrder (ProductBatchesPurchaseOrder productBatches, Integer quantityToReturn) {
+        List<BatchPurchaseOrder> batches = Lists.reverse(productBatches.getPurchaseBatches());
 
         Integer returnedQuantity = 0;
+
         for(BatchPurchaseOrder batchPurchaseOrder : batches) {
 
             if(batchPurchaseOrder.getQuantity() >= quantityToReturn - returnedQuantity) {
@@ -117,14 +118,14 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
             }
             else {
                 this.batchService.returnQuantityToBatch(batchPurchaseOrder.getBatch(), batchPurchaseOrder.getQuantity());
-                batchPurchaseOrder.setQuantity(0);
                 returnedQuantity += batchPurchaseOrder.getQuantity();
+                batchPurchaseOrder.setQuantity(0);
             }
         }
     }
 
-    private void upsizeOrder(ProductBatchesPurchaseOrder productBatches, Integer quantityToIncrease) throws ProductNotFoundException {
-        List<BatchPurchaseOrder> batches = productBatches.getPurchaseBatches(); // sort by due date in batches
+    private void upsizeOrder (ProductBatchesPurchaseOrder productBatches, Integer quantityToIncrease) throws ProductNotFoundException {
+        List<BatchPurchaseOrder> batches = productBatches.getPurchaseBatches();
 
         Integer withdrawnQuantity = 0;
         ProductStockDTO productStock = this.productService.getStockForProductInCountryByDate(productBatches.getProduct().getId(), productBatches.getPurchaseOrder().getBuyer().getCountry().getId(), productBatches.getPurchaseOrder().getOrderDate().plusWeeks(3));
@@ -192,7 +193,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
 
     private BatchPurchaseOrder createBatch (Long batchId, Integer quantity,ProductBatchesPurchaseOrder productBatchesPurchaseOrder) {
         BatchDTO batchDTO = this.batchService.withdrawQuantity(batchId,quantity);
-        Batch batch = this.batchRepository.findById(batchId).get(); //arrumar isso
+        Batch batch = this.batchRepository.findById(batchId).get();
 
         return BatchPurchaseOrderMapper.toModel(batch,quantity,productBatchesPurchaseOrder);
     }
@@ -209,21 +210,15 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
             ProductResponseDTO product = this.productService.findById(productRequestDTO.getProductId());
 
             Integer quantityProduct = this.productService.getQuantityOfProductByCountryAndDate(productRequestDTO.getProductId(), countryId, date);
-            if (quantityProduct < productRequestDTO.getQuantity()) {
+            if (quantityProduct == 0) {
                 exceptions.add(new ProductStockInsufficientException(
-                        "Stock for product " + productRequestDTO.getProductId() + " is insufficient for order: " + quantityProduct)); }
+                        "No stock of product " + productRequestDTO.getProductId() + " in country " + countryId)); }
+            else if (quantityProduct < productRequestDTO.getQuantity()) {
+                exceptions.add(new ProductStockInsufficientException(
+                        "Stock for product " + productRequestDTO.getProductId() + " is insufficient for order. Stock available: " + quantityProduct + " items.")); }
         }
 
         if(!exceptions.isEmpty()) { throw new StockInsufficientException("Stock insufficient for order ", exceptions); }
-        return true;
-    }
-
-    public Boolean isStockForProductEnough (ProductPurchaseOrderRequestDTO productRequest, Long countryId, LocalDate date) {
-        Integer quantityProduct = this.productService.getQuantityOfProductByCountryAndDate(productRequest.getProductId(), countryId, date);
-
-        if (quantityProduct < productRequest.getQuantity()) {
-            throw new ProductStockInsufficientException(
-                    "Stock for product " + productRequest.getProductId() + " is insufficient for order: " + quantityProduct); }
         return true;
     }
 

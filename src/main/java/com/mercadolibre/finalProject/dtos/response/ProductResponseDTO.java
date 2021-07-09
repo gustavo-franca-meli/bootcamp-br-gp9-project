@@ -1,12 +1,6 @@
 package com.mercadolibre.finalProject.dtos.response;
 
-import com.mercadolibre.finalProject.model.Seller;
-import com.mercadolibre.finalProject.model.enums.ProductType;
 import lombok.Data;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 public class ProductResponseDTO {
