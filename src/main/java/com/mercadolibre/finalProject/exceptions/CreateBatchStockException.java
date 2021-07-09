@@ -3,12 +3,8 @@ package com.mercadolibre.finalProject.exceptions;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateBatchStockException extends Exception {
+public class CreateBatchStockException extends ListException {
     private List<BatchCreateException> batchExceptions;
-    public CreateBatchStockException(String message, List<BatchCreateException> batchExceptions) {
-        super(message);
-        this.batchExceptions = batchExceptions;
-    }
 
     public List<BatchCreateException> getBatchExceptions() {
         return batchExceptions;
@@ -23,4 +19,7 @@ public class CreateBatchStockException extends Exception {
         this.batchExceptions = batchExceptions;
     }
 
+    public CreateBatchStockException (String message, List<BatchCreateException> subErrors) {
+        super(message, subErrors.stream().map((e) -> (SubError) e).collect(Collectors.toList()));
+    }
 }

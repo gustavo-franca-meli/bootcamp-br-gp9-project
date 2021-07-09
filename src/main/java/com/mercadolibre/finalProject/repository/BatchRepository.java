@@ -35,4 +35,18 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
             + " INNER JOIN Product p ON p.id = b.product.id AND p.productType = :productTypeCode"
             + " WHERE b.dueDate <= :maximumDueDate")
     List<Batch> findBatchesByProductType(Integer productTypeCode, Sort sort, LocalDate maximumDueDate);
+
+    @Query(value = "SELECT A.* FROM Batch A INNER JOIN Sector B ON (A.sector_id=B.id) " +
+            "INNER JOIN Warehouse C ON (B.warehouse_id=C.id) " +
+            "WHERE C.country_id=:countryId AND A.product_id=:productId AND A.due_date >=:date " +
+            "ORDER BY A.due_date ASC", nativeQuery = true)
+    List<Batch> findByProductCountryAndDate (Long productId, Long countryId, LocalDate date);
+
+    @Query(value = "SELECT sum(A.current_quantity) AS quantity " +
+            "FROM Batch A " +
+            "INNER JOIN Sector B ON (A.sector_id=B.id) " +
+            "INNER JOIN Warehouse C ON (B.warehouse_id=C.id) " +
+            "WHERE C.country_id=:countryId AND A.due_date >=:date AND A.product_id=:productId " +
+            "GROUP BY A.product_id", nativeQuery = true)
+    Integer getProductQuantityByCountryAndDate (Long productId, Long countryId, LocalDate date);
 }

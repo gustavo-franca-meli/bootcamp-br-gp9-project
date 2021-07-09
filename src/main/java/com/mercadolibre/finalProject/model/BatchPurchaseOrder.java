@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Table(name = "batch_purchase_order")
 @Data
 @NoArgsConstructor
+
 public class BatchPurchaseOrder {
 
     @Id

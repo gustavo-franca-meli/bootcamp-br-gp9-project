@@ -15,6 +15,23 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    @Query(value = "SELECT B.* " +
+            "FROM Batch A " +
+            "INNER JOIN Product B ON (A.product_id=B.id) " +
+            "INNER JOIN Sector C ON (A.sector_id=C.id) " +
+            "INNER JOIN Warehouse D ON (C.warehouse_id=D.id) " +
+            "WHERE D.country_id=:countryId GROUP BY A.product_id", nativeQuery = true)
+    List<Product> findByCountry (Long countryId);
+
+    @Query(value = "SELECT B.* " +
+            "FROM Batch A " +
+            "INNER JOIN Product B ON (A.product_id=B.id) " +
+            "INNER JOIN Sector C ON (A.sector_id=C.id) " +
+            "INNER JOIN Warehouse D ON (C.warehouse_id=D.id) " +
+            "WHERE D.country_id=:countryId AND B.product_type=:productType " +
+            "GROUP BY A.product_id", nativeQuery = true)
+    List<Product> findByCountryAndType (Long countryId, Integer productType);
+
     @Query(value = " SELECT sector.warehouse_id as warehouse_id, SUM(current_quantity) as quantity FROM batch, sector " +
             " WHERE batch.sector_id = sector.id AND product_id = :productId " +
             " GROUP BY warehouse_id ", nativeQuery = true)

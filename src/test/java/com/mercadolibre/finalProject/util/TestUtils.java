@@ -176,7 +176,7 @@ public interface TestUtils {
     }
 
     static ProductResponseDTO getProductResponseDTO() {
-        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0, 1);
+        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0,1, "Perishable");
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTO() {

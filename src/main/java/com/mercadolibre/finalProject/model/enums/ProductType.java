@@ -1,5 +1,7 @@
 package com.mercadolibre.finalProject.model.enums;
 
+import com.mercadolibre.finalProject.exceptions.InvalidProductTypeCodeException;
+
 public enum ProductType {
 
     FRESH(1, "Fresh"),
@@ -31,6 +33,6 @@ public enum ProductType {
                 return x;
         }
 
-        throw new RuntimeException("Invalid sector type code: " + cod);
+        throw new InvalidProductTypeCodeException("Invalid sector type code: " + cod);
     }
 }
