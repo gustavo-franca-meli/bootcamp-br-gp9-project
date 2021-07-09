@@ -86,7 +86,7 @@ public interface TestUtils {
         return new Product(1L,
                 "Produto1",
                 "",
-                10.0,
+                13.89,
                 1,
                 new Seller());
     }
@@ -238,7 +238,7 @@ public interface TestUtils {
 
     static BatchPurchaseOrder getBatchPurchaseOrder() {
         var batch = getBatchValid();
-        return new BatchPurchaseOrder(10, batch);
+        return new BatchPurchaseOrder(1, batch);
     }
 
     static BatchDTO getBatchDTO() {
@@ -269,7 +269,10 @@ public interface TestUtils {
 
     static PurchaseOrder getPurchaseOrder() {
         var account = getAccountMocked();
-        return new PurchaseOrder(1L, account, LocalDate.now(), 1, null);
+        var purchaseProduct = new ProductBatchesPurchaseOrder(getProductMocked(), 13.89, null);
+        purchaseProduct.setPurchaseBatches(List.of(getBatchPurchaseOrder()));
+        var purchaseOrder =  new PurchaseOrder(1L, account, LocalDate.now(), 1,List.of(purchaseProduct));
+        return purchaseOrder;
     }
 
     static PurchaseOrderResponseDTO getPurchaseOrderResponseDTO() {
@@ -290,7 +293,7 @@ public interface TestUtils {
     static ProductBatchesPurchaseOrder getProductBatchesPurchaseOrder() {
         var product = TestUtils.getProductValid();
         var purchaseOrder = TestUtils.getPurchaseOrder();
-        return new ProductBatchesPurchaseOrder(product, 10.0, purchaseOrder);
+        return new ProductBatchesPurchaseOrder(product, 13.89, purchaseOrder);
     }
 
     static ProductResponseDTO createExpectedProductResponseDTO(Seller sellerExpected) {
@@ -328,7 +331,7 @@ public interface TestUtils {
     }
 
     static ProductStockDTO getProductStockDTO() {
-        return new ProductStockDTO(1L, "Produto1", 10.0, new ArrayList<>());
+        return new ProductStockDTO(1L, "Produto1", 13.89, new ArrayList<>());
     }
 
     static SumOfProductStockDTO getSumOfProductStockDTO() {

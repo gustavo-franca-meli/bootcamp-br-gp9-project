@@ -44,7 +44,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
 
         List<ProductBatchesPurchaseOrder> productBatches = this.createProductBatches(purchaseOrderRequest,purchaseOrder);
         purchaseOrder.setProducts(productBatches);
-        this.repository.save(purchaseOrder);
+        purchaseOrder = this.repository.save(purchaseOrder);
         return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
     }
 
@@ -74,7 +74,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
             this.upsizeOrder(productBatches,updateRequest.getNewQuantity() - productBatches.getTotalQuantity());
         }
 
-        this.repository.save(purchaseOrder);
+        purchaseOrder = this.repository.save(purchaseOrder);
         return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
     }
 

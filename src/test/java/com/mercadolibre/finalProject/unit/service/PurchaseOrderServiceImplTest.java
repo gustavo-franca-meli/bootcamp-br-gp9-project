@@ -11,6 +11,7 @@ import com.mercadolibre.finalProject.repository.*;
 import com.mercadolibre.finalProject.service.*;
 import com.mercadolibre.finalProject.service.impl.*;
 import com.mercadolibre.finalProject.util.TestUtils;
+import lombok.SneakyThrows;
 import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +38,9 @@ public class PurchaseOrderServiceImplTest {
         this.service = new PurchaseOrderServiceImpl(purchaseOrderRepository, productRepository, batchRepository, batchService, productService, accountRepository);
     }
 
+    @SneakyThrows
     @Test
-    void shouldCreatePurchaseOrder() throws Exception {
+    void shouldCreatePurchaseOrder()  {
         PurchaseOrderRequestDTO purchaseOrderRequest = TestUtils.getPurchaseOrderRequestDTO();
         String username = "onias-rocha";
         var responseExpected = TestUtils.getPurchaseOrderResponseDTO();
@@ -60,11 +62,9 @@ public class PurchaseOrderServiceImplTest {
         when(purchaseOrderRepository.save(any())).thenReturn(TestUtils.getPurchaseOrder());
 
         PurchaseOrderResponseDTO response = null;
-        try {
-            response = service.create(purchaseOrderRequest, username);
-        } catch (Exception ex) {
-            throw new Exception(ex.getMessage());
-        }
+
+        response = service.create(purchaseOrderRequest, username);
+
 
         verify(accountRepository, times(1)).findByUsername(any());
         verify(productService, times(1)).findById(anyLong());
@@ -120,7 +120,6 @@ public class PurchaseOrderServiceImplTest {
         var responseExpected = TestUtils.getPurchaseOrderResponseDTO();
 
         Optional<PurchaseOrder> purchaseOrderOpt = Optional.of(TestUtils.getPurchaseOrder());
-        purchaseOrderOpt.get().setProducts(Lists.newArrayList(TestUtils.getProductBatchesPurchaseOrder()));
         when(purchaseOrderRepository.findById(1L)).thenReturn(purchaseOrderOpt);
 
         Optional<Account> accountOpt = Optional.of(TestUtils.getAccountMocked());
@@ -146,8 +145,7 @@ public class PurchaseOrderServiceImplTest {
         when(accountRepository.findByUsername(username)).thenReturn(accountOpt);
 
         PurchaseOrder purchaseOrder = TestUtils.getPurchaseOrder();
-        purchaseOrder.setProducts(Lists.newArrayList(TestUtils.getProductBatchesPurchaseOrder()));
-        when(purchaseOrderRepository.findByBuyerId(1L)).thenReturn(Lists.newArrayList(purchaseOrder));
+        when(purchaseOrderRepository.findByBuyerId(anyLong())).thenReturn(Lists.newArrayList(purchaseOrder));
 
         var response = service.getAll(username);
 
