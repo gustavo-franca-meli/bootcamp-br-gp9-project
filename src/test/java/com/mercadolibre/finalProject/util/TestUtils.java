@@ -253,7 +253,7 @@ public interface TestUtils {
     }
 
     static BatchPurchaseOrderResponseDTO getBatchPurchaseOrderResponseDTO() {
-        return new BatchPurchaseOrderResponseDTO(1L, 1L, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(3));
+        return new BatchPurchaseOrderResponseDTO(1L, 3L, 1, LocalDate.of(2021,04,10), LocalDateTime.of(2021,04,10,0,0), LocalDate.of(2021,04,10));
     }
 
     static PurchaseOrderRequestDTO getPurchaseOrderRequestDTO() {
@@ -274,13 +274,13 @@ public interface TestUtils {
         return new PurchaseOrderResponseDTO(
                 1L,
                 LocalDate.now(),
-                0,
+                13.89,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         1L,
                         1L,
-                        "",
+                        "Bisteca Suína",
                         1,
-                        10.0,
+                        13.89,
                         Lists.newArrayList(getBatchPurchaseOrderResponseDTO())))
         );
     }
