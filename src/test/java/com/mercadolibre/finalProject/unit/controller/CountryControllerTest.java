@@ -32,7 +32,7 @@ public class CountryControllerTest {
         var response = TestUtils.getCountryResponseDTO();
         when(service.create(requestDTO)).thenReturn(response);
 
-        var got = controller.create(Mockito.anyString(), requestDTO);
+        var got = controller.create(requestDTO);
 
         assertEquals(requestDTO.getName(), got.getBody().getName());
     }

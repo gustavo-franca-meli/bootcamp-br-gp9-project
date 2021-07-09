@@ -1,24 +1,17 @@
 package com.mercadolibre.finalProject.util;
 
-import com.mercadolibre.finalProject.dtos.BatchDTO;
-import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
-import com.mercadolibre.finalProject.dtos.SectorDTO;
-import com.mercadolibre.finalProject.dtos.request.CountryRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.google.common.collect.Lists;
+import com.mercadolibre.finalProject.dtos.*;
+import com.mercadolibre.finalProject.dtos.request.*;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
 import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
-import com.mercadolibre.finalProject.model.enums.ProductType;
-import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
-import com.mercadolibre.finalProject.model.mapper.SectorMapper;
+import com.mercadolibre.finalProject.model.enums.*;
+import com.mercadolibre.finalProject.model.mapper.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.time.*;
+import java.util.*;
+import java.util.stream.*;
 
 public interface TestUtils {
 
@@ -29,10 +22,6 @@ public interface TestUtils {
 
     static Optional<Warehouse> getOptionalWarehouseInvalid() {
         return Optional.ofNullable(null);
-    }
-
-    static Country getCountryValid() {
-        return new Country(1L);
     }
 
     static Country getCountry() {
@@ -67,23 +56,39 @@ public interface TestUtils {
     }
 
     static Account getAccountValid() {
-        return new Account();
+        var acc = new Account();
+        acc.setId(1L);
+        acc.setUsername("A Name Interesting");
+        acc.setPassword("A Strong Password");
+        acc.setRol(RoleType.REPRESENTATIVE.getCode());
+        var country = getCountry();
+        country.setId(1L);
+        acc.setCountry(country);
+        return acc;
+    }
+
+    static Account getAccountMocked() {
+        var country = new Country("Argentina");
+        country.setId(1L);
+        return new Account(1L, "onias-rocha", "pass123", 1, country);
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
         return RepresentativeMapper.toResponseDTO(getRepresentativeValid());
     }
 
-    static Seller getSellerValid() {
-        var products = Arrays.asList(getProductValid());
-        var seller = new Seller("Leonardo", products);
-        seller.setId(1L);
-        return seller;
-    }
 
     static Product getProductValid() {
-        //return new Product("Pizza", null);
         return new Product(1L);
+    }
+
+    static Product getProductMocked() {
+        return new Product(1L,
+                "Produto1",
+                "",
+                13.89,
+                1,
+                new Seller());
     }
 
     static InboundOrder getOrderValid() {
@@ -176,7 +181,7 @@ public interface TestUtils {
     }
 
     static ProductResponseDTO getProductResponseDTO() {
-        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0,1, "Perishable");
+        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0, 1, "Perishable");
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTO() {
@@ -217,4 +222,125 @@ public interface TestUtils {
         return new CountryResponseDTO(1L, "Brasil");
     }
 
+    static ProductRequestDTO createProductRequestDTO() {
+        return new ProductRequestDTO("Produto1", "", 10.0, 1);
+    }
+
+    static Product createExpectedProduct(Seller sellerExpected) {
+        return new Product(
+                1L,
+                "Produto1",
+                "",
+                10.0,
+                1,
+                sellerExpected);
+    }
+
+    static BatchPurchaseOrder getBatchPurchaseOrder() {
+        var batch = getBatchValid();
+        return new BatchPurchaseOrder(1, batch);
+    }
+
+    static BatchDTO getBatchDTO() {
+        return new BatchDTO(1L, 1L, 10.0f, 10.0f, 1, 1, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(3));
+    }
+
+    static BatchPurchaseOrderDTO getBatchPurchaseOrderDTO() {
+        var batchDTO = getBatchDTO();
+        return new BatchPurchaseOrderDTO(1L, 10, batchDTO);
+    }
+
+    static BatchPurchaseOrderResponseDTO getBatchPurchaseOrderResponseDTO() {
+        return new BatchPurchaseOrderResponseDTO(1L, 3L, 1, LocalDate.of(2021,04,10), LocalDateTime.of(2021,04,10,0,0), LocalDate.of(2021,04,10));
+    }
+
+    static PurchaseOrderRequestDTO getPurchaseOrderRequestDTO() {
+        return new PurchaseOrderRequestDTO(
+                LocalDate.now(),
+                1L,
+                1,
+                Lists.newArrayList(new ProductPurchaseOrderRequestDTO(1L, 1))
+        );
+    }
+
+    static PurchaseOrderUpdateRequestDTO getPurchaseOrderUpdateRequestDTO() {
+        return new PurchaseOrderUpdateRequestDTO(1L, 1L, 1);
+    }
+
+    static PurchaseOrder getPurchaseOrder() {
+        var account = getAccountMocked();
+        var purchaseProduct = new ProductBatchesPurchaseOrder(getProductMocked(), 13.89, null);
+        purchaseProduct.setPurchaseBatches(List.of(getBatchPurchaseOrder()));
+        var purchaseOrder =  new PurchaseOrder(1L, account, LocalDate.now(), 1,List.of(purchaseProduct));
+        return purchaseOrder;
+    }
+
+    static PurchaseOrderResponseDTO getPurchaseOrderResponseDTO() {
+        return new PurchaseOrderResponseDTO(
+                1L,
+                LocalDate.now(),
+                13.89,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        1L,
+                        1L,
+                        "Bisteca Suína",
+                        1,
+                        13.89,
+                        Lists.newArrayList(getBatchPurchaseOrderResponseDTO())))
+        );
+    }
+
+    static ProductBatchesPurchaseOrder getProductBatchesPurchaseOrder() {
+        var product = TestUtils.getProductValid();
+        var purchaseOrder = TestUtils.getPurchaseOrder();
+        return new ProductBatchesPurchaseOrder(product, 13.89, purchaseOrder);
+    }
+
+    static ProductResponseDTO createExpectedProductResponseDTO(Seller sellerExpected) {
+        return new ProductResponseDTO(
+                1L,
+                "Produto1",
+                "",
+                10.0,
+                1,
+                "Fresh");
+    }
+
+    static Seller createExpectedSeller() {
+        return new Seller(
+                1L,
+                "Seller1",
+                new Account(
+                        "seller1",
+                        "123",
+                        1,
+                        new Country("Brasil")));
+    }
+
+    static List<ProductResponseDTO> getListProductResponse() {
+        var listOfProduct = getListOfProducts();
+        return ProductMapper.toListResponseDTO(listOfProduct);
+    }
+
+    static List<Product> getListOfProducts() {
+        return Arrays.asList(createExpectedProduct(createExpectedSeller()), createExpectedProduct(createExpectedSeller()), createExpectedProduct(createExpectedSeller()), createExpectedProduct(createExpectedSeller()));
+    }
+
+    static WarehouseProductSumDTO getWarehouseProductSumDTO() {
+        return new WarehouseProductSumDTO(1L, 1);
+    }
+
+    static ProductStockDTO getProductStockDTO() {
+        return new ProductStockDTO(1L, "Produto1", 13.89, new ArrayList<>());
+    }
+
+    static SumOfProductStockDTO getSumOfProductStockDTO() {
+        var listWareHouseProductSumDTO = Arrays.asList(getWarehouseProductSumDTO());
+        return new SumOfProductStockDTO(1L, listWareHouseProductSumDTO);
+    }
+
+    static Seller getSeller() {
+        var account = getAccountValid();
+        return new Seller(1L, "seller", account);
+    }
 }

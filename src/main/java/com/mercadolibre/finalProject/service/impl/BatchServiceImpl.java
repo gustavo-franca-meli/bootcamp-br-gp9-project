@@ -1,14 +1,18 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.request.*;
-import com.mercadolibre.finalProject.dtos.response.*;
-import com.mercadolibre.finalProject.exceptions.*;
-import com.mercadolibre.finalProject.service.*;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchValidateDateResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
+import com.mercadolibre.finalProject.exceptions.*;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
+import com.mercadolibre.finalProject.service.IBatchService;
+import com.mercadolibre.finalProject.service.IProductService;
+import com.mercadolibre.finalProject.service.IRepresentativeService;
+import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -96,18 +100,17 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     private Batch findBatchBy(Long batchId) {
-
         var batch = this.batchRepository.findById(batchId);
         return batch.orElseThrow(() -> new BatchNotFoundException("The batch doesn't exist. Id: " + batchId));
     }
 
     @Override
-    public BatchDTO findById (Long id) {
+    public BatchDTO findById(Long id) {
         return BatchMapper.toDTO(this.findBatchBy(id));
     }
 
     @Override
-    public void returnQuantityToBatch (Batch batch, Integer quantity) {
+    public void saveNewQuantityBatch(Batch batch, Integer quantity) {
         batch.setCurrentQuantity(batch.getCurrentQuantity() + quantity);
         this.batchRepository.save(batch);
     }
@@ -131,7 +134,7 @@ public class BatchServiceImpl implements IBatchService {
 
     @Override
     public List<BatchValidateDateResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity) {
-        if (!this.sectorService.exist(sectorId)) throw new SectorNotFoundException("Sector " + sectorId +" Not Found");
+        if (!this.sectorService.exist(sectorId)) throw new SectorNotFoundException("Sector " + sectorId + " Not Found");
 
         var batches = this.batchRepository.findBatchesBySectorId(sectorId, LocalDate.now().plusDays(daysQuantity));
 
@@ -145,12 +148,11 @@ public class BatchServiceImpl implements IBatchService {
         Sort.Direction sortDirection;
         if (direction != null && direction.toLowerCase(Locale.ROOT).equals("desc")) {
             sortDirection = Sort.Direction.DESC;
-        }
-        else {
+        } else {
             sortDirection = Sort.Direction.ASC;
         }
 
-        var productType = PRODUCT_CATEGORY_MAPPER.get(category == null ? "": category.toUpperCase(Locale.ROOT));
+        var productType = PRODUCT_CATEGORY_MAPPER.get(category == null ? "" : category.toUpperCase(Locale.ROOT));
         if (productType == null) throw new BadRequestException("Category cannot be null");
 
         var batches = findBatchesByProductTypeAndOrderAscAndDesc(productType.getCod(), sortDirection, daysQuantity);
@@ -194,7 +196,5 @@ public class BatchServiceImpl implements IBatchService {
         if (batches.isEmpty())
             throw new BatchNotFoundException("Doesn't has valid batches with this product. Id product: " + productId);
     }
-
-
 
 }

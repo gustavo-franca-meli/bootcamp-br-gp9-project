@@ -27,7 +27,7 @@ public class Account {
     @JoinColumn(name = "id_country_fk", nullable = false)
     private Country country;
 
-    public Account(String username, String password, Integer rol, Country country) {
+        public Account(String username, String password, Integer rol, Country country) {
         this.username = username;
         this.password = password;
         this.rol = rol;

@@ -1,29 +1,18 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.google.common.collect.Lists;
-import com.mercadolibre.finalProject.dtos.BatchDTO;
-import com.mercadolibre.finalProject.dtos.ProductStockDTO;
-import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
+import com.mercadolibre.finalProject.dtos.*;
+import com.mercadolibre.finalProject.dtos.request.*;
+import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.exceptions.*;
 import com.mercadolibre.finalProject.model.*;
-import com.mercadolibre.finalProject.model.mapper.BatchPurchaseOrderMapper;
-import com.mercadolibre.finalProject.model.mapper.PurchaseOrderMapper;
-import com.mercadolibre.finalProject.repository.AccountRepository;
-import com.mercadolibre.finalProject.repository.BatchRepository;
-import com.mercadolibre.finalProject.repository.ProductRepository;
-import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
+import com.mercadolibre.finalProject.model.mapper.*;
+import com.mercadolibre.finalProject.repository.*;
 import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
@@ -55,7 +44,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
 
         List<ProductBatchesPurchaseOrder> productBatches = this.createProductBatches(purchaseOrderRequest,purchaseOrder);
         purchaseOrder.setProducts(productBatches);
-        this.repository.save(purchaseOrder);
+        purchaseOrder = this.repository.save(purchaseOrder);
         return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
     }
 
@@ -85,7 +74,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
             this.upsizeOrder(productBatches,updateRequest.getNewQuantity() - productBatches.getTotalQuantity());
         }
 
-        this.repository.save(purchaseOrder);
+        purchaseOrder = this.repository.save(purchaseOrder);
         return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
     }
 
@@ -115,12 +104,12 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         for(BatchPurchaseOrder batchPurchaseOrder : batches) {
 
             if(batchPurchaseOrder.getQuantity() >= quantityToReturn - returnedQuantity) {
-                this.batchService.returnQuantityToBatch(batchPurchaseOrder.getBatch(), quantityToReturn - returnedQuantity);
+                this.batchService.saveNewQuantityBatch(batchPurchaseOrder.getBatch(), quantityToReturn - returnedQuantity);
                 batchPurchaseOrder.setQuantity(batchPurchaseOrder.getQuantity() - quantityToReturn + returnedQuantity);
                 break;
             }
             else {
-                this.batchService.returnQuantityToBatch(batchPurchaseOrder.getBatch(), batchPurchaseOrder.getQuantity());
+                this.batchService.saveNewQuantityBatch(batchPurchaseOrder.getBatch(), batchPurchaseOrder.getQuantity());
                 returnedQuantity += batchPurchaseOrder.getQuantity();
                 batchPurchaseOrder.setQuantity(0);
             }
@@ -225,7 +214,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         return true;
     }
 
-    private Boolean isBuyerIdValid (Account account, Long buyerId) {
+    private Boolean isBuyerIdValid  (Account account, Long buyerId) {
         return account.getId().equals(buyerId);
     }
 

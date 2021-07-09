@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="country")
+@Table(name = "country")
 @Data
 @NoArgsConstructor
 public class Country {
@@ -28,14 +28,5 @@ public class Country {
     public Country(@Unique String name) {
         this.name = name;
         this.accounts = new ArrayList<>();
-    }
-
-    public Country(@Unique String name, List<Account> accounts) {
-        this.name = name;
-        this.accounts = accounts;
-    }
-
-    public Country(Long id) {
-        this.id = id;
     }
 }

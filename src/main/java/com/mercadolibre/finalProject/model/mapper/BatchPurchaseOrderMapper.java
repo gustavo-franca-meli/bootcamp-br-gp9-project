@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public interface BatchPurchaseOrderMapper {
 
-    static BatchPurchaseOrderResponseDTO toResponseDTO (BatchPurchaseOrder batchPurchaseOrder) {
+    static BatchPurchaseOrderResponseDTO toResponseDTO(BatchPurchaseOrder batchPurchaseOrder) {
         return new BatchPurchaseOrderResponseDTO(
                 batchPurchaseOrder.getId(),
                 batchPurchaseOrder.getBatch().getId(),
@@ -23,7 +23,7 @@ public interface BatchPurchaseOrderMapper {
         );
     }
 
-    static BatchPurchaseOrderResponseDTO toResponseDTO (Batch batch, Integer quantity) {
+    static BatchPurchaseOrderResponseDTO toResponseDTO(Batch batch, Integer quantity) {
         return new BatchPurchaseOrderResponseDTO(
                 null,
                 batch.getId(),
@@ -34,7 +34,7 @@ public interface BatchPurchaseOrderMapper {
         );
     }
 
-    static BatchPurchaseOrderDTO toDTO (BatchDTO batchDTO, Integer quantity) {
+    static BatchPurchaseOrderDTO toDTO(BatchDTO batchDTO, Integer quantity) {
         return new BatchPurchaseOrderDTO(
                 null,
                 quantity,
@@ -42,15 +42,15 @@ public interface BatchPurchaseOrderMapper {
         );
     }
 
-    static BatchPurchaseOrder toModel (Batch batch, Integer quantity) {
-        return new BatchPurchaseOrder(quantity,batch);
+    static BatchPurchaseOrder toModel(Batch batch, Integer quantity) {
+        return new BatchPurchaseOrder(quantity, batch);
     }
 
-    static BatchPurchaseOrder toModel (Batch batch, Integer quantity, ProductBatchesPurchaseOrder productBatchesPurchaseOrder) {
-        return new BatchPurchaseOrder(quantity,batch,productBatchesPurchaseOrder);
+    static BatchPurchaseOrder toModel(Batch batch, Integer quantity, ProductBatchesPurchaseOrder productBatchesPurchaseOrder) {
+        return new BatchPurchaseOrder(quantity, batch, productBatchesPurchaseOrder);
     }
 
-    static List<BatchPurchaseOrderResponseDTO> toListResponseDTO (List<BatchPurchaseOrder> batches) {
+    static List<BatchPurchaseOrderResponseDTO> toListResponseDTO(List<BatchPurchaseOrder> batches) {
         return batches.stream().map(BatchPurchaseOrderMapper::toResponseDTO).filter(b -> b.getQuantity() > 0).collect(Collectors.toList());
     }
 }
