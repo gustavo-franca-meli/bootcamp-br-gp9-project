@@ -331,4 +331,9 @@ public interface TestUtils {
         var listWareHouseProductSumDTO = Arrays.asList(getWarehouseProductSumDTO());
         return new SumOfProductStockDTO(1L, listWareHouseProductSumDTO);
     }
+
+    static Seller getSeller() {
+        var account = getAccountValid();
+        return new Seller(1L, "seller", account);
+    }
 }

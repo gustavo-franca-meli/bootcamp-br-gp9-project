@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="country")
+@Table(name = "country")
 @Data
 @NoArgsConstructor
 public class Country {

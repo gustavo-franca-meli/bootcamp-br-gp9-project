@@ -2,7 +2,6 @@ package com.mercadolibre.finalProject.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -57,13 +56,4 @@ public class ApiError {
         return errors;
     }
 
-    public void setErrors(List<SubError> errors) {
-        this.errors = errors;
-    }
-
-    public void addError(SubError e) {
-        if (errors == null)
-            errors = new ArrayList<>();
-        errors.add(e);
-    }
 }

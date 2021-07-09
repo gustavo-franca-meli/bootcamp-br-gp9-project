@@ -11,15 +11,14 @@ public class CreateBatchStockException extends ListException {
     }
 
     public List<SubError> getSubErrors() {
-        return batchExceptions.stream().map((a)-> (SubError)a).collect(Collectors.toList());
+        return batchExceptions.stream().map((a) -> (SubError) a).collect(Collectors.toList());
     }
-
 
     public void setBatchExceptions(List<BatchCreateException> batchExceptions) {
         this.batchExceptions = batchExceptions;
     }
 
-    public CreateBatchStockException (String message, List<BatchCreateException> subErrors) {
+    public CreateBatchStockException(String message, List<BatchCreateException> subErrors) {
         super(message, subErrors.stream().map((e) -> (SubError) e).collect(Collectors.toList()));
     }
 }
