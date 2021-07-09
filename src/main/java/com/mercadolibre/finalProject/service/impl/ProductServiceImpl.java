@@ -14,12 +14,14 @@ import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
+import com.mercadolibre.finalProject.repository.WarehouseRepository;
 import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -28,12 +30,14 @@ public class ProductServiceImpl implements IProductService {
     private IAccountService accountService;
     private ISellerService sellerService;
     private BatchRepository batchRepository;
+    private WarehouseRepository warehouseRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, IAccountService accountService, ISellerService sellerService, BatchRepository batchRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, IAccountService accountService, ISellerService sellerService, BatchRepository batchRepository, WarehouseRepository warehouseRepository) {
         this.productRepository = productRepository;
         this.accountService = accountService;
         this.sellerService = sellerService;
         this.batchRepository = batchRepository;
+        this.warehouseRepository = warehouseRepository;
     }
 
     @Override
@@ -129,15 +133,23 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId) {
-        List<ProductRepository.ISumOfProductStockDTO> query = productRepository.getSumOfProductStockInAllWarehouses(productId);
+        List<WarehouseRepository.ISumOfProductStockDTO> query = warehouseRepository.getSumOfProductStockInAllWarehouses(productId);
 
-        List<WarehouseProductSumDTO> dto = new ArrayList<>();
+        List<WarehouseProductSumDTO> dto = new ArrayList<WarehouseProductSumDTO>();
 
         query.forEach(c -> dto.add(new WarehouseProductSumDTO(Long.valueOf(c.getWarehouse_id()), Integer.valueOf(c.getQuantity()))));
 
-//        if (dto.isEmpty()){
-//            throw new RuntimeException("Não existe produto com o id: " + productId);
-//        }
         return new SumOfProductStockDTO(productId, dto);
+    }
+
+
+    @Override
+    public SumOfProductStockDTO getSumOfProductStockByCountry(Long productId, Long countryId) {
+        SumOfProductStockDTO dto = new SumOfProductStockDTO();
+        dto.setProductId(productId);
+        List<WarehouseProductSumDTO> warehouses = warehouseRepository.getSumOfProductsByCountry(productId, countryId).stream()
+                .map(x -> new WarehouseProductSumDTO(Long.valueOf(x.getWarehouse_id()), Integer.valueOf(x.getQuantity()))).collect(Collectors.toList());
+
+        return new SumOfProductStockDTO(productId, warehouses);
     }
 }
