@@ -7,6 +7,7 @@ public interface AccountMapper {
 
     static AccountResponseDTO toResponseDTO (Account account) {
         return new AccountResponseDTO(
+                account.getId(),
                 account.getUsername(),
                 account.getPassword(),
                 CountryMapper.toResponseDTO(account.getCountry()));

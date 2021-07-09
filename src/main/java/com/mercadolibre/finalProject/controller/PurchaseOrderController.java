@@ -9,6 +9,7 @@ import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,7 +26,10 @@ public class PurchaseOrderController {
 
     @PostMapping
     public ResponseEntity<PurchaseOrderResponseDTO> create(@RequestBody PurchaseOrderRequestDTO dto) throws Exception {
-        PurchaseOrderResponseDTO response = purchaseOrderService.create(dto);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        PurchaseOrderResponseDTO response = purchaseOrderService.create(dto, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

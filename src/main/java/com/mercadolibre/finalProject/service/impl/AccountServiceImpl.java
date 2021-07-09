@@ -5,13 +5,13 @@ import com.mercadolibre.finalProject.model.Account;
 import com.mercadolibre.finalProject.model.mapper.AccountMapper;
 import com.mercadolibre.finalProject.repository.AccountRepository;
 import com.mercadolibre.finalProject.service.IAccountService;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-public class IAccountServiceImpl implements IAccountService {
+@Service
+public class AccountServiceImpl implements IAccountService {
     AccountRepository repository;
 
-    public IAccountServiceImpl(AccountRepository repository) {
+    public AccountServiceImpl(AccountRepository repository) {
         this.repository = repository;
     }
 

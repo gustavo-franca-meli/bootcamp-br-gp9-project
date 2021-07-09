@@ -6,6 +6,7 @@ import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.*;
@@ -16,10 +17,7 @@ import com.mercadolibre.finalProject.repository.AccountRepository;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
-import com.mercadolibre.finalProject.service.IBatchService;
-import com.mercadolibre.finalProject.service.IProductService;
-import com.mercadolibre.finalProject.service.IPurchaseOrderService;
-import com.mercadolibre.finalProject.service.ISessionService;
+import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,30 +29,25 @@ import java.util.Optional;
 public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
 
     private PurchaseOrderRepository repository;
-    private AccountRepository accountRepository;
     private ProductRepository productRepository;
     private BatchRepository batchRepository;
     private IBatchService batchService;
-    private ISessionService sessionService;
     private IProductService productService;
+    private AccountRepository accountRepository;
 
-    public PurchaseOrderServiceImpl(PurchaseOrderRepository repository, AccountRepository accountRepository, ProductRepository productRepository, BatchRepository batchRepository, IBatchService batchService, ISessionService sessionService, IProductService productService) {
+    public PurchaseOrderServiceImpl(PurchaseOrderRepository repository, ProductRepository productRepository, BatchRepository batchRepository, IBatchService batchService, IProductService productService, AccountRepository accountRepository) {
         this.repository = repository;
-        this.accountRepository = accountRepository;
         this.productRepository = productRepository;
         this.batchRepository = batchRepository;
         this.batchService = batchService;
-        this.sessionService = sessionService;
         this.productService = productService;
+        this.accountRepository = accountRepository;
     }
 
     @Override
-    public PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrderRequest) throws WarehouseNotFoundException, ProductNotFoundException, StockInsufficientException {
+    public PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrderRequest, String username) throws WarehouseNotFoundException, ProductNotFoundException, StockInsufficientException {
 
-//        Account buyer = this.findAccountByToken(token);
-//        if(!this.verifyAccount(buyer,purchaseOrderRequest.getBuyerId())) { throw new BadRequestException("buyer token wronng etcc");}
-
-        Account buyer = this.findAccountById(purchaseOrderRequest.getBuyerId());
+        Account buyer = this.findValidAccountByUsername(username,purchaseOrderRequest.getBuyerId());
 
         this.isStockEnough(purchaseOrderRequest.getProducts(), buyer.getCountry().getId(), purchaseOrderRequest.getDate().plusWeeks(3));
 
@@ -222,21 +215,17 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         return true;
     }
 
-    private Account findAccountByToken (String token) {
-        String username = SessionServiceImpl.getUsername(token);
-        Optional<Account> buyerOpt = this.accountRepository.findByUsername(username);
-        if(buyerOpt.isEmpty()) { throw new NotFoundException("buyer not found"); }
-        return buyerOpt.get();
+    private Boolean isBuyerIdValid (Account account, Long buyerId) {
+        if(!account.getId().equals(buyerId)) {
+            throw new BuyerIdInvalidForRequest ("Buyer Id " + buyerId + " isn't logged in.");
+        }
+        return true;
     }
 
-    private Account findAccountById (Long id) {
-        Optional<Account> buyerOpt = this.accountRepository.findById(id);
-        if(buyerOpt.isEmpty()) { throw new NotFoundException("buyer not found"); }
-        return buyerOpt.get();
-    }
-
-    private Boolean verifyAccount (Account buyer, Long buyerId) {
-        return buyer.getId().equals(buyerId);
+    private Account findValidAccountByUsername (String username, Long buyerId) {
+        Account account = this.accountRepository.findByUsername(username).get();
+        this.isBuyerIdValid(account,buyerId);
+        return account;
     }
 
     private ProductBatchesPurchaseOrder findProductInPurchaseOrderById (PurchaseOrder purchaseOrder, Long productId) {
