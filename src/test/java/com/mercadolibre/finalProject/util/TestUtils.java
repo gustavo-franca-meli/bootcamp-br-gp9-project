@@ -1,10 +1,13 @@
 package com.mercadolibre.finalProject.util;
 
+import com.google.common.collect.Lists;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.BatchPurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.request.CountryRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
 import com.mercadolibre.finalProject.dtos.response.*;
@@ -15,10 +18,7 @@ import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public interface TestUtils {
@@ -69,6 +69,10 @@ public interface TestUtils {
 
     static Account getAccountValid() {
         return new Account();
+    }
+
+    static Account getAccountMocked() {
+    return new Account(1L, "onias-rocha", "pass123", 1, new Country(1L, "Argentina"));
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
@@ -236,9 +240,33 @@ public interface TestUtils {
         return new BatchPurchaseOrderResponseDTO(1L, 1L, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(3));
     }
 
+    static PurchaseOrderRequestDTO getPurchaseOrderRequestDTO() {
+        return new PurchaseOrderRequestDTO(
+                LocalDate.now(),
+                1L,
+                1,
+                Lists.newArrayList(new ProductPurchaseOrderRequestDTO(1L, 1))
+        );
+    }
+
     static PurchaseOrder getPurchaseOrder() {
-        var account = getAccountValid();
-        return new PurchaseOrder(account, LocalDate.now(), 1);
+        var account = getAccountMocked();
+        return new PurchaseOrder(1L, account, LocalDate.now(), 1, null);
+    }
+
+    static PurchaseOrderResponseDTO getPurchaseOrderResponseDTO() {
+        return new PurchaseOrderResponseDTO(
+                1L,
+                LocalDate.now(),
+                1.0,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        1L,
+                        1L,
+                        "",
+                        1,
+                        10.0,
+                        Lists.newArrayList(getBatchPurchaseOrderResponseDTO())))
+        );
     }
 
     static ProductBatchesPurchaseOrder getProductBatchesPurchaseOrder() {

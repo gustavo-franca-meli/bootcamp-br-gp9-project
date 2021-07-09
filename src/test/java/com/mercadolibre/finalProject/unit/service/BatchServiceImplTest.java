@@ -40,7 +40,6 @@ public class BatchServiceImplTest {
         service = new BatchServiceImpl(batchRepository, sectorService, productService, representativeService);
     }
 
-
     @SneakyThrows
     @Test
     public void shouldReturnBathStockSizeCorrectly() {

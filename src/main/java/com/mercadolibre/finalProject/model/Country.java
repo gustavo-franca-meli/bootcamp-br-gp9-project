@@ -30,6 +30,12 @@ public class Country {
         this.accounts = new ArrayList<>();
     }
 
+    public Country(Long id, @Unique String name) {
+        this.id = id;
+        this.name = name;
+        this.accounts = new ArrayList<>();
+    }
+
     public Country(@Unique String name, List<Account> accounts) {
         this.name = name;
         this.accounts = accounts;

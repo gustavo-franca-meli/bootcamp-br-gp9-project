@@ -225,7 +225,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         return true;
     }
 
-    private Boolean isBuyerIdValid (Account account, Long buyerId) {
+    private Boolean isBuyerIdValid  (Account account, Long buyerId) {
         return account.getId().equals(buyerId);
     }
 

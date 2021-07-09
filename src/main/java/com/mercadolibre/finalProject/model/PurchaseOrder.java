@@ -1,6 +1,7 @@
 package com.mercadolibre.finalProject.model;
 
 import com.mercadolibre.finalProject.model.enums.OrderStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "purchase_order")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class PurchaseOrder {
 
     @Id
