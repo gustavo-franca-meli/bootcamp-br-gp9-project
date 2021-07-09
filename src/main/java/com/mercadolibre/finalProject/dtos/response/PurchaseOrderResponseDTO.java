@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class PurchaseOrderResponseDTO {
+    private Long id;
     private LocalDate date;
     private double totalPrice;
     private List<ProductBatchesPurchaseOrderResponseDTO> products;
@@ -19,7 +20,9 @@ public class PurchaseOrderResponseDTO {
         this.products = products;
     }
 
-    public PurchaseOrderResponseDTO(double totalPrice, List<ProductBatchesPurchaseOrderResponseDTO> products) {
+    public PurchaseOrderResponseDTO(Long id, LocalDate date, double totalPrice, List<ProductBatchesPurchaseOrderResponseDTO> products) {
+        this.id = id;
+        this.date = date;
         this.totalPrice = totalPrice;
         this.products = products;
     }

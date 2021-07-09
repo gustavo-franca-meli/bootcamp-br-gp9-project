@@ -1,17 +1,14 @@
 package com.mercadolibre.finalProject.dtos.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Data
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductPurchaseOrderRequestDTO {
 
     private Long productId;
     private Integer quantity;
-
-    public ProductPurchaseOrderRequestDTO(Long productId, Integer quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
-    }
 }

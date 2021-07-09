@@ -52,25 +52,25 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class, InboundOrderNotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class})
+    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class, InboundOrderNotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class, PurchaseOrderNotFoundException.class})
     protected ResponseEntity<ApiError> handleNotFoundException(Exception e) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.toString(), e.getMessage(), HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
     }
 
-    @ExceptionHandler(NoSpaceInSectorException.class)
+    @ExceptionHandler(value = {NoSpaceInSectorException.class, BuyerIdInvalidForRequest.class, InvalidProductTypeCodeException.class})
     protected ResponseEntity<ApiError> handleBadRequestException(Exception e) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
     }
 
-    @ExceptionHandler(CreateBatchStockException.class)
-    protected ResponseEntity<ApiError> handleCreateBatchStockException(CreateBatchStockException e) {
-
+    @ExceptionHandler(value = {CreateBatchStockException.class, StockInsufficientException.class})
+    protected ResponseEntity<ApiError> handleListBadRequestException(ListException e) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(), e.getSubErros());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
+
     }
 }

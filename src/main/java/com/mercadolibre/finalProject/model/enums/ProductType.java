@@ -1,10 +1,13 @@
 package com.mercadolibre.finalProject.model.enums;
 
+import com.mercadolibre.finalProject.exceptions.InvalidProductTypeCodeException;
+
 public enum ProductType {
 
-    PERISHABLE(1, "Perishable"),
-    NOT_PERISHABLE(2, "Not Perishable"),
-    FRAGILE(3, "Fragile");
+    PERISHABLE (1, "Perishable"),
+    NOT_PERISHABLE (2, "Not Perishable"),
+    FRAGILE (3, "Fragile"),
+    REFRIGERATED (4, "Refrigerated");
 
     private int cod;
     private String description;
@@ -31,6 +34,6 @@ public enum ProductType {
                 return x;
         }
 
-        throw new RuntimeException("Invalid sector type code: " + cod);
+        throw new InvalidProductTypeCodeException("Invalid sector type code: " + cod);
     }
 }

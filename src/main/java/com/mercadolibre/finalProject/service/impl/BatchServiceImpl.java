@@ -84,13 +84,14 @@ public class BatchServiceImpl implements IBatchService {
                     //save batch
                     batchList.add(batchModel);
                 } else {
-                    throw new ProductTypeNotSuportedInSectorException(product.getId(), ProductType.toEnum(product.getType()).getDescription(), sectorId);
+                    throw new ProductTypeNotSuportedInSectorException(product.getId(), product.getTypeDescription(), sectorId);
                 }
 
             } catch (Exception e) {
                 errorList.add(new BatchCreateException(i, e.getMessage()));
             }
             i++;
+
         }
         if (errorList.isEmpty()) {
             var responseBatchList = batchRepository.saveAll(batchList);
@@ -98,6 +99,7 @@ public class BatchServiceImpl implements IBatchService {
         } else {
             throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector", errorList);
         }
+        //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }
 
     @Override
@@ -114,9 +116,20 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     private Batch findBatchBy(Long batchId) {
-        var batch = this.batchRepository.findById(batchId);
 
+        var batch = this.batchRepository.findById(batchId);
         return batch.orElseThrow(() -> new BatchNotFoundException("The batch doesn't exist. Id: " + batchId));
+    }
+
+    @Override
+    public BatchDTO findById (Long id) {
+        return BatchMapper.toDTO(this.findBatchBy(id));
+    }
+
+    @Override
+    public void returnQuantityToBatch (Batch batch, Integer quantity) {
+        batch.setCurrentQuantity(batch.getCurrentQuantity() + quantity);
+        this.batchRepository.save(batch);
     }
 
     @Override
@@ -162,4 +175,7 @@ public class BatchServiceImpl implements IBatchService {
         if (batches.isEmpty())
             throw new BatchNotFoundException("Doesn't has valid batches with this product. Id product: " + productId);
     }
+
+
+
 }
