@@ -13,5 +13,5 @@ import java.util.List;
 public interface IPurchaseOrderService {
     PurchaseOrderResponseDTO create (PurchaseOrderRequestDTO purchaseOrder, String username) throws WarehouseNotFoundException, ProductNotFoundException, StockInsufficientException;
     PurchaseOrderResponseDTO update (PurchaseOrderUpdateRequestDTO updateRequest) throws ProductNotFoundException, StockInsufficientException;
-    PurchaseOrderResponseDTO getById (Long id) throws ProductNotFoundException;
-}
+    PurchaseOrderResponseDTO getById (Long id, String username) throws ProductNotFoundException;
+    List<PurchaseOrderResponseDTO> getAll(String username);
