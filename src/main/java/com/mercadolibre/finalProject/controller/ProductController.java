@@ -38,7 +38,10 @@ public class ProductController {
 
     @GetMapping
     ResponseEntity<List<ProductResponseDTO>> getProductsByCountry () {
-        List<ProductResponseDTO> response = productService.getProductsByCountry();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        List<ProductResponseDTO> response = productService.getProductsByCountry(username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

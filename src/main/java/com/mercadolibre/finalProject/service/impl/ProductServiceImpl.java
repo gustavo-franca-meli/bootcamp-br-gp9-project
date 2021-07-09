@@ -23,11 +23,13 @@ import java.util.Set;
 public class ProductServiceImpl implements IProductService {
 
     private ProductRepository productRepository;
+    private IAccountService accountService;
     private ISellerService sellerService;
     private BatchRepository batchRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ISellerService sellerService, BatchRepository batchRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, IAccountService accountService, ISellerService sellerService, BatchRepository batchRepository) {
         this.productRepository = productRepository;
+        this.accountService = accountService;
         this.sellerService = sellerService;
         this.batchRepository = batchRepository;
     }
@@ -112,9 +114,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductResponseDTO> getProductsByCountry() {
-        // get country id by token ??
-        Long countryId = 5L;
+    public List<ProductResponseDTO> getProductsByCountry(String username) {
+        Long countryId = this.accountService.getAccountByUsername(username).getCountry().getId();
+
         return ProductMapper.toListResponseDTO(this.productRepository.findByCountry(countryId));
     }
 }

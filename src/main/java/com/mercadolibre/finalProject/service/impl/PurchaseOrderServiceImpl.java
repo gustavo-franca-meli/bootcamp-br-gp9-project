@@ -247,7 +247,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
 
     private PurchaseOrder findById (Long id) {
         Optional<PurchaseOrder> purchaseOrderOpt = this.repository.findById(id);
-        if(purchaseOrderOpt.isEmpty()) { throw new NotFoundException("Purchase Order ID " + id + " invalid"); }
+        if(purchaseOrderOpt.isEmpty()) { throw new PurchaseOrderNotFoundException("Purchase Order ID " + id + " invalid"); }
         return purchaseOrderOpt.get();
     }
 }
