@@ -26,7 +26,7 @@ VALUES ( 'A Manga é um alimento muito versátil e pode ser preparado de diferen
 INSERT INTO representative (name,account_id,warehouse_id) VALUES ('Onias da Rocha', 1 , null);
 INSERT INTO representative (name,account_id,warehouse_id) VALUES ('Gustavo França', 3 , null);
 
-INSERT INTO warehouse (name, country_id, representative_id) VALUES ('Centro de Tratamento - Cuiabá', 5, 1);
+INSERT INTO warehouse (name, country_id, representative_id) VALUES ('Centro de Tratamento - Buenos Aires', 1, 1);
 INSERT INTO warehouse (name, country_id, representative_id) VALUES ('Centro de Tratamento - Medelin', 4, 2);
 
 UPDATE representative SET warehouse_id = 1 WHERE (`id` = 1);
