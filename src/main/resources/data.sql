@@ -17,7 +17,7 @@ INSERT INTO seller (name, account_id) VALUES ('Leonardo Carias', 4);
 INSERT INTO seller (name, account_id) VALUES ('Carol Fugita', 5);
 
 INSERT INTO product (description, name, price, product_type, seller_id)
-VALUES ( 'A bisteca é uma carne suína muito saborosa e que pode ser preparada na panela de pressão, assada e muito mais. Alguns ingredientes proporcionam um sabor ainda mais especial a essa carne como o mel, maçã e sucos de frutas cítricas.', 'Bisteca Suína', 13.89, 3, 1);
+VALUES ( 'A bisteca é uma carne suína muito saborosa e que pode ser preparada na panela de pressão, assada e muito mais. Alguns ingredientes proporcionam um sabor ainda mais especial a essa carne como o mel, maçã e sucos de frutas cítricas.', 'Bisteca Suína', 13.89, 1, 1);
 INSERT INTO product (description, name, price, product_type, seller_id)
 VALUES ( 'A batata é um alimento muito versátil e pode ser preparado de diferentes maneiras como assada, cozida, frita ou até mesmo recheada. Além disso, a batata é repleta de vitamina e também do Complexo B.', 'Batata Lavada 1 Unidade 300g', 0.90, 2, 1);
 INSERT INTO product (description, name, price, product_type, seller_id)

@@ -77,7 +77,7 @@ public class BatchServiceImpl implements IBatchService {
             var responseBatchList = batchRepository.saveAll(batchList);
             return responseBatchList;
         } else {
-            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector", errorList);
+            throw new CreateBatchStockException("Error in save " + errorList.size() + " batch in sector", errorList);
         }
         //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }
