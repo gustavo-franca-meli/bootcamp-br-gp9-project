@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/fresh-products/purchase-order")
@@ -35,9 +36,22 @@ public class PurchaseOrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PurchaseOrderResponseDTO> getById (@PathVariable Long id) throws Exception {
-        PurchaseOrderResponseDTO response = purchaseOrderService.getById(id);
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        PurchaseOrderResponseDTO response = purchaseOrderService.getById(id, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping
+    public ResponseEntity<List<PurchaseOrderResponseDTO>> getAll () throws Exception {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        List<PurchaseOrderResponseDTO> response = purchaseOrderService.getAll(username);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
     @PostMapping("/update")
     public ResponseEntity<PurchaseOrderResponseDTO> update(@RequestBody PurchaseOrderUpdateRequestDTO dto) throws Exception {

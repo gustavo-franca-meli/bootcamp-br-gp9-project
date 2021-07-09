@@ -90,11 +90,22 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
     }
 
     @Override
-    public PurchaseOrderResponseDTO getById (Long id) {
-        //token verification
-
+    public PurchaseOrderResponseDTO getById (Long id, String username) {
         PurchaseOrder purchaseOrder = this.findById(id);
+
+        Account account = this.findAccountByUsername(username);
+        if(!this.isBuyerIdValid(account,purchaseOrder.getBuyer().getId())) {
+            throw new BuyerIdInvalidForRequest("Buyer owner of purchase order id " + purchaseOrder.getId() + " isn't logged in.");
+        }
+
         return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
+    }
+
+    @Override
+    public List<PurchaseOrderResponseDTO> getAll(String username) {
+        Account account = this.findAccountByUsername(username);
+
+        return PurchaseOrderMapper.toListResponseDTO(this.repository.findByBuyerId(account.getId()));
     }
 
     private void downsizeOrder (ProductBatchesPurchaseOrder productBatches, Integer quantityToReturn) {
@@ -216,16 +227,20 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
     }
 
     private Boolean isBuyerIdValid (Account account, Long buyerId) {
-        if(!account.getId().equals(buyerId)) {
-            throw new BuyerIdInvalidForRequest ("Buyer Id " + buyerId + " isn't logged in.");
-        }
-        return true;
+        return account.getId().equals(buyerId);
     }
 
     private Account findValidAccountByUsername (String username, Long buyerId) {
-        Account account = this.accountRepository.findByUsername(username).get();
-        this.isBuyerIdValid(account,buyerId);
+        Account account = this.findAccountByUsername(username);
+
+        if(!this.isBuyerIdValid(account,buyerId)) {
+            throw new BuyerIdInvalidForRequest ("Buyer Id " + buyerId + " isn't logged in.");}
+
         return account;
+    }
+
+    private Account findAccountByUsername (String username) {
+        return this.accountRepository.findByUsername(username).get();
     }
 
     private ProductBatchesPurchaseOrder findProductInPurchaseOrderById (PurchaseOrder purchaseOrder, Long productId) {
