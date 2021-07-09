@@ -29,6 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/seller/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/seller").permitAll()
                 .antMatchers(HttpMethod.GET, "/seller/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/fresh-products/inboundorder/").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/fresh-products/warehouse/**").permitAll()
                 .antMatchers(REPRESENTATIVE).hasRole("REPRESENTATIVE")
 
                 .anyRequest().authenticated();

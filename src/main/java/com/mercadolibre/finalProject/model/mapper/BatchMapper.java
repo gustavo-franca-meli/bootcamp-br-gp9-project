@@ -4,6 +4,7 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestCreateDTO;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestUpdateDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchIdentificationResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchValidateDateResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchStockResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.model.Batch;
@@ -32,7 +33,21 @@ public interface BatchMapper {
         );
     }
 
-     static BatchDTO toDTO(Batch batch) {
+    static BatchValidateDateResponseDTO toBatchValidateDateResponseDTO(Batch batch) {
+        return new BatchValidateDateResponseDTO(
+                batch.getId(),
+                batch.getProduct().getId(),
+                batch.getProduct().getProductType(),
+                batch.getDueDate(),
+                batch.getCurrentQuantity()
+        );
+    }
+
+    static List<BatchValidateDateResponseDTO> toListBatchValidateDateResponseDTO(List<Batch> batches) {
+        return batches.stream().map(BatchMapper::toBatchValidateDateResponseDTO).collect(Collectors.toList());
+    }
+
+    static BatchDTO toDTO(Batch batch) {
         return new BatchDTO(
                 batch.getId(),
                 batch.getProduct().getId(),

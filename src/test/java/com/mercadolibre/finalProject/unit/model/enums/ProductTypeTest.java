@@ -9,7 +9,7 @@ public class ProductTypeTest {
 
     @Test
     public void shoudlGetProductTypeEnumWithCode() {
-        var expected = ProductType.PERISHABLE;
+        var expected = ProductType.FRESH;
         var got = ProductType.toEnum(expected.getCod());
 
         assertEquals(expected, got);

@@ -17,13 +17,18 @@ public interface ProductMapper {
     }
 
     static ProductResponseDTO toResponseDTO(Product product) {
+        String productType = null;
+        if (product.getProductType() != null) {
+            productType = ProductType.toEnum(product.getProductType()).getDescription();
+        }
+
         return new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
                 product.getProductType(),
-                ProductType.toEnum(product.getProductType()).getDescription()
+                productType
         );
     }
 }

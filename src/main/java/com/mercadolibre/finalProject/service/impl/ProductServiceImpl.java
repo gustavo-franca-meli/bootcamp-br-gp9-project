@@ -4,6 +4,8 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
+import com.mercadolibre.finalProject.dtos.response.WarehouseProductSumDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
@@ -16,6 +18,7 @@ import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,10 +54,10 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
         var product = this.findProductBy(id);
-        product.setName(productRequestDTO.getName() == null ? productRequestDTO.getName() : product.getName());
-        product.setDescription(productRequestDTO.getDescription() == null ? productRequestDTO.getDescription() : product.getDescription());
-        product.setPrice(productRequestDTO.getPrice() == null ? productRequestDTO.getPrice() : product.getPrice());
-        product.setProductType(productRequestDTO.getProductType() == null ? productRequestDTO.getProductType() : product.getProductType());
+        product.setName(productRequestDTO.getName() != null ? productRequestDTO.getName() : product.getName());
+        product.setDescription(productRequestDTO.getDescription() != null ? productRequestDTO.getDescription() : product.getDescription());
+        product.setPrice(productRequestDTO.getPrice() != null ? productRequestDTO.getPrice() : product.getPrice());
+        product.setProductType(productRequestDTO.getProductType() != null ? productRequestDTO.getProductType() : product.getProductType());
         product.setSeller(sellerService.findSellerById(productRequestDTO.getSellerId()));
 
         this.productRepository.save(product);
@@ -122,5 +125,19 @@ public class ProductServiceImpl implements IProductService {
 
         ProductType productTypeEnum = ProductType.toEnum(productType); // checks if product type is valid
         return ProductMapper.toListResponseDTO(this.productRepository.findByCountryAndType(countryId,productType));
+    }
+
+    @Override
+    public SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId) {
+        List<ProductRepository.ISumOfProductStockDTO> query = productRepository.getSumOfProductStockInAllWarehouses(productId);
+
+        List<WarehouseProductSumDTO> dto = new ArrayList<>();
+
+        query.forEach(c -> dto.add(new WarehouseProductSumDTO(Long.valueOf(c.getWarehouse_id()), Integer.valueOf(c.getQuantity()))));
+
+//        if (dto.isEmpty()){
+//            throw new RuntimeException("Não existe produto com o id: " + productId);
+//        }
+        return new SumOfProductStockDTO(productId, dto);
     }
 }

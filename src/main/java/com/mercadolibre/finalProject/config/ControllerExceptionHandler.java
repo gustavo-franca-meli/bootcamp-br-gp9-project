@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.util.List;
-
 @ControllerAdvice
 public class ControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
@@ -66,11 +64,17 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<ApiError> handleBadRequestException(BadRequestException e) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(apiError.getStatus())
+                .body(apiError);
+    }
+
     @ExceptionHandler(value = {CreateBatchStockException.class, StockInsufficientException.class})
     protected ResponseEntity<ApiError> handleListBadRequestException(ListException e) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(), e.getSubErros());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
-
     }
 }

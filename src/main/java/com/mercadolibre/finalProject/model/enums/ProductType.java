@@ -4,10 +4,9 @@ import com.mercadolibre.finalProject.exceptions.InvalidProductTypeCodeException;
 
 public enum ProductType {
 
-    PERISHABLE (1, "Perishable"),
-    NOT_PERISHABLE (2, "Not Perishable"),
-    FRAGILE (3, "Fragile"),
-    REFRIGERATED (4, "Refrigerated");
+    FRESH(1, "Fresh"),
+    REFRIGERATED(2, "Refrigerated"),
+    FROZEN(3, "Frozen");
 
     private int cod;
     private String description;

@@ -1,48 +1,25 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.BatchDTO;
-import com.mercadolibre.finalProject.dtos.BatchPurchaseOrderDTO;
-import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.BatchPurchaseOrderResponseDTO;
-import com.mercadolibre.finalProject.exceptions.BatchCreateException;
-import com.mercadolibre.finalProject.exceptions.CreateBatchStockException;
-import com.mercadolibre.finalProject.exceptions.ProductTypeNotSuportedInSectorException;
-import com.mercadolibre.finalProject.model.Batch;
-import com.mercadolibre.finalProject.model.Sector;
-import com.mercadolibre.finalProject.model.mapper.BatchMapper;
-import com.mercadolibre.finalProject.model.mapper.BatchPurchaseOrderMapper;
-import com.mercadolibre.finalProject.repository.BatchRepository;
-import com.mercadolibre.finalProject.service.IBatchService;
-import com.mercadolibre.finalProject.service.IProductService;
-import com.mercadolibre.finalProject.service.ISectorService;
-import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
+import com.mercadolibre.finalProject.dtos.request.*;
+import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.exceptions.*;
+import com.mercadolibre.finalProject.service.*;
+import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
-import com.mercadolibre.finalProject.service.IBatchService;
-import com.mercadolibre.finalProject.service.IProductService;
-import com.mercadolibre.finalProject.service.IRepresentativeService;
-import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
-    private static final LocalDate MINIMUM_DUE_DATE = LocalDate.now().plusWeeks(3l);
+    private static final LocalDate MINIMUM_DUE_DATE = LocalDate.now().plusWeeks(3L);
     private static final Map<String, String> ORDER_BY_FIELDS = new HashMap<>();
+    private static final Map<String, ProductType> PRODUCT_CATEGORY_MAPPER = new HashMap<>();
 
     private final BatchRepository batchRepository;
     private final ISectorService sectorService;
@@ -56,9 +33,12 @@ public class BatchServiceImpl implements IBatchService {
         this.representativeService = representativeService;
 
         this.ORDER_BY_FIELDS.put("C", "currentQuantity");
-        this.ORDER_BY_FIELDS.put("F", "dueDate");
-    }
+        ORDER_BY_FIELDS.put("F", "dueDate");
 
+        this.PRODUCT_CATEGORY_MAPPER.put("FS", ProductType.FRESH);
+        this.PRODUCT_CATEGORY_MAPPER.put("RF", ProductType.REFRIGERATED);
+        this.PRODUCT_CATEGORY_MAPPER.put("FF", ProductType.FROZEN);
+    }
 
     @Override
     public List<Batch> save(List<BatchDTO> batchStock, Long sectorId, Long orderId) throws CreateBatchStockException {
@@ -97,7 +77,7 @@ public class BatchServiceImpl implements IBatchService {
             var responseBatchList = batchRepository.saveAll(batchList);
             return responseBatchList;
         } else {
-            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector", errorList);
+            throw new CreateBatchStockException("Error in save " + errorList.size() + " batch in sector", errorList);
         }
         //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }
@@ -149,6 +129,35 @@ public class BatchServiceImpl implements IBatchService {
         return BatchMapper.toSectorBatchResponseDTO(batches);
     }
 
+    @Override
+    public List<BatchValidateDateResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity) {
+        if (!this.sectorService.exist(sectorId)) throw new SectorNotFoundException("Sector " + sectorId +" Not Found");
+
+        var batches = this.batchRepository.findBatchesBySectorId(sectorId, LocalDate.now().plusDays(daysQuantity));
+
+        if (batches.isEmpty()) throw new NotFoundException("List is empty");
+
+        return BatchMapper.toListBatchValidateDateResponseDTO(batches);
+    }
+
+    @Override
+    public List<BatchValidateDateResponseDTO> getBatchesByProductType(Integer daysQuantity, String category, String direction) {
+        Sort.Direction sortDirection;
+        if (direction != null && direction.toLowerCase(Locale.ROOT).equals("desc")) {
+            sortDirection = Sort.Direction.DESC;
+        }
+        else {
+            sortDirection = Sort.Direction.ASC;
+        }
+
+        var productType = PRODUCT_CATEGORY_MAPPER.get(category == null ? "": category.toUpperCase(Locale.ROOT));
+        if (productType == null) throw new BadRequestException("Category cannot be null");
+
+        var batches = findBatchesByProductTypeAndOrderAscAndDesc(productType.getCod(), sortDirection, daysQuantity);
+
+        return BatchMapper.toListBatchValidateDateResponseDTO(batches);
+    }
+
     private List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Long warehouseId, Long productId) {
         var batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDate(warehouseId, productId, MINIMUM_DUE_DATE);
 
@@ -168,6 +177,16 @@ public class BatchServiceImpl implements IBatchService {
         var batches = this.batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(warehouseId, productId, MINIMUM_DUE_DATE, sort);
 
         this.validateFillBatches(batches, productId);
+        return batches;
+    }
+
+    private List<Batch> findBatchesByProductTypeAndOrderAscAndDesc(Integer productTypeCode, Sort.Direction direction, Integer daysQuantity) {
+        var sort = Sort.by(direction, "dueDate");
+
+        var batches = this.batchRepository.findBatchesByProductType(productTypeCode, sort, LocalDate.now().plusDays(daysQuantity));
+
+        if (batches.isEmpty()) throw new NotFoundException("List is empty");
+
         return batches;
     }
 

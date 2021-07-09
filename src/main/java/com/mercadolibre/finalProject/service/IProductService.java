@@ -4,6 +4,7 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 
 import java.time.LocalDate;
@@ -25,7 +26,9 @@ public interface IProductService {
 
     ProductStockDTO getStockForProductInCountryByDate (Long productId, Long countryId, LocalDate date) throws ProductNotFoundException;
 
-    List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date);
+    List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date);
+
+    SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId);
 
     Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date);
 

@@ -22,7 +22,19 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
             "INNER JOIN Sector s ON b.sector.id = s.id " +
             "INNER JOIN Warehouse w ON s.warehouse.id = w.id " +
             "WHERE s.warehouse.id = :warehouseId AND b.product.id = :productId AND b.dueDate >= :minimumDueDate")
-    List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Long warehouseId, Long productId, LocalDate minimumDueDate, Sort sort);
+    public List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Long warehouseId, Long productId, LocalDate minimumDueDate, Sort sort);
+
+    @Query(value = "SELECT b.* FROM Batch b"
+            + " INNER JOIN Sector s ON b.sector_id = :sectorId"
+            + " WHERE b.due_date <= :maximumDueDate"
+            + " GROUP BY b.id"
+            + " ORDER BY b.due_date ASC", nativeQuery = true)
+    List<Batch> findBatchesBySectorId(Long sectorId, LocalDate maximumDueDate);
+
+    @Query(value = "SELECT b FROM Batch b"
+            + " INNER JOIN Product p ON p.id = b.product.id AND p.productType = :productTypeCode"
+            + " WHERE b.dueDate <= :maximumDueDate")
+    List<Batch> findBatchesByProductType(Integer productTypeCode, Sort sort, LocalDate maximumDueDate);
 
     @Query(value = "SELECT A.* FROM Batch A INNER JOIN Sector B ON (A.sector_id=B.id) " +
             "INNER JOIN Warehouse C ON (B.warehouse_id=C.id) " +

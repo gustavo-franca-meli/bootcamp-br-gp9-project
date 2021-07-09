@@ -1,6 +1,7 @@
 package com.mercadolibre.finalProject.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.model.enums.RoleType;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.TimeZone;
@@ -87,6 +89,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         var json = mapper.writeValueAsString(request);
+        System.out.println(json);
 
         var expectedBatch = request.getBatchStock().get(0);
 
@@ -108,10 +111,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.batch_stock[0].manufacturing_time").exists())
                 .andExpect(jsonPath("$.batch_stock[0].due_date").value(expectedBatch.getDueDate().toString()))
                 .andExpect(jsonPath("$.batch_stock[0].batchNumber").exists());
-
-
     }
-
 
     @Test
     void shouldReturnNotFoundWhenRepresentativeNotWorkInWarehouse() throws Exception {
@@ -192,11 +192,12 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
 
         var representativeId = 1L;
 
-        var expectedMessage = "Error in save 2 bath in sector";
+        var expectedMessage = "Error in save 2 batch in sector";
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", token)
                 .content(json)
         )
                 .andExpect(status().isBadRequest())
@@ -222,7 +223,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
 
         var representativeId = 1L;
 
-        var expectedMessage = "Error in save 2 bath in sector";
+        var expectedMessage = "Error in save 2 batch in sector";
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("Authorization", token)
@@ -234,7 +235,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 2 with type Not Perishable not supported in sector 1"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 2 with type Refrigerated not supported in sector 1"));
     }
 
     @Test
@@ -311,7 +312,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
     }
 
     @Test
-    void shouldReturnErrorWhenBatchIdExistInOterOrder() throws Exception {
+    void shouldReturnErrorWhenBatchIdExistInOtherOrder() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForUpdate();
         var batch = TestUtils.getBatchDTOValidNoId();
         var batches = new ArrayList<>(request.getBatchStock());
@@ -331,7 +332,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
                 .andExpect(status().isBadRequest())
                 .andDo(print())
                 .andExpect(jsonPath("$.error").exists())
-                .andExpect(jsonPath("$.message").value("Error in save 1 bath in sector"))
+                .andExpect(jsonPath("$.message").value("Error in save 1 batch in sector"))
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 5 error: this batch id already in use in other order"));
 
@@ -436,7 +437,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
 
         var json = mapper.writeValueAsString(request);
 
-        var expectedMessage = "Error in save 5 bath in sector";
+        var expectedMessage = "Error in save 5 batch in sector";
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("Authorization", token)
@@ -465,7 +466,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
 
         var representativeId = 1L;
 
-        var expectedMessage = "Error in save 2 bath in sector";
+        var expectedMessage = "Error in save 2 batch in sector";
 
         this.mockMvc.perform(MockMvcRequestBuilders.put(PATH)
                 .header("Authorization", token)
@@ -477,7 +478,7 @@ public class InboundInboundOrderControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 2 with type Not Perishable not supported in sector 1"));
+                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] create batch position 0 error: Product 2 with type Refrigerated not supported in sector 1"));
     }
 
     @Test
