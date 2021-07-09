@@ -263,6 +263,10 @@ public interface TestUtils {
         );
     }
 
+    static PurchaseOrderUpdateRequestDTO getPurchaseOrderUpdateRequestDTO() {
+        return new PurchaseOrderUpdateRequestDTO(1L, 1L, 1);
+    }
+
     static PurchaseOrder getPurchaseOrder() {
         var account = getAccountMocked();
         return new PurchaseOrder(1L, account, LocalDate.now(), 1, null);
