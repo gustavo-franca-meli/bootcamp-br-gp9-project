@@ -81,7 +81,8 @@ public class ProductServiceTest {
                 "Produto1",
                 "",
                 10.0,
-                1);
+                1,
+                "Perishable");
     }
 
     @NotNull

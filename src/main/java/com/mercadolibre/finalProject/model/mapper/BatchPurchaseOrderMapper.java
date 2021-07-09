@@ -51,6 +51,6 @@ public interface BatchPurchaseOrderMapper {
     }
 
     static List<BatchPurchaseOrderResponseDTO> toListResponseDTO (List<BatchPurchaseOrder> batches) {
-        return batches.stream().map(BatchPurchaseOrderMapper::toResponseDTO).collect(Collectors.toList());
+        return batches.stream().map(BatchPurchaseOrderMapper::toResponseDTO).filter(b -> b.getQuantity() > 0).collect(Collectors.toList());
     }
 }

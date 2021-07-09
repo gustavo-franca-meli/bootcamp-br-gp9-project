@@ -29,5 +29,5 @@ public interface IProductService {
 
     Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date);
 
-    List<ProductResponseDTO> getProductsByCountry(String username);
+    List<ProductResponseDTO> getProductsByCountry(String username, Integer productType);
 }

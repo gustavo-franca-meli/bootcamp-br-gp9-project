@@ -84,7 +84,7 @@ public class BatchServiceImpl implements IBatchService {
                     //save batch
                     batchList.add(batchModel);
                 } else {
-                    throw new ProductTypeNotSuportedInSectorException(product.getId(), ProductType.toEnum(product.getType()).getDescription(), sectorId);
+                    throw new ProductTypeNotSuportedInSectorException(product.getId(), product.getTypeDescription(), sectorId);
                 }
 
             } catch (Exception e) {

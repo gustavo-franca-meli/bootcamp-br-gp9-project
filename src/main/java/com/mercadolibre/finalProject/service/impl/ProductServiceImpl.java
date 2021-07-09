@@ -7,6 +7,7 @@ import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
@@ -15,9 +16,7 @@ import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -114,9 +113,14 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductResponseDTO> getProductsByCountry(String username) {
+    public List<ProductResponseDTO> getProductsByCountry(String username, Integer productType) {
         Long countryId = this.accountService.getAccountByUsername(username).getCountry().getId();
 
-        return ProductMapper.toListResponseDTO(this.productRepository.findByCountry(countryId));
+        if(productType == null) {
+            return ProductMapper.toListResponseDTO(this.productRepository.findByCountry(countryId));
+        }
+
+        ProductType productTypeEnum = ProductType.toEnum(productType); // checks if product type is valid
+        return ProductMapper.toListResponseDTO(this.productRepository.findByCountryAndType(countryId,productType));
     }
 }

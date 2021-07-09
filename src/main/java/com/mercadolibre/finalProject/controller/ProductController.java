@@ -1,5 +1,6 @@
 package com.mercadolibre.finalProject.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
@@ -37,11 +38,11 @@ public class ProductController {
     }
 
     @GetMapping
-    ResponseEntity<List<ProductResponseDTO>> getProductsByCountry () {
+    ResponseEntity<List<ProductResponseDTO>> getProductsByCountry (@RequestParam(required = false) Integer productType) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
-        List<ProductResponseDTO> response = productService.getProductsByCountry(username);
+        List<ProductResponseDTO> response = productService.getProductsByCountry(username, productType);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

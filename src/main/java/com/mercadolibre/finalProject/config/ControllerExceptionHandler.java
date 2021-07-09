@@ -59,7 +59,7 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {NoSpaceInSectorException.class, BuyerIdInvalidForRequest.class})
+    @ExceptionHandler(value = {NoSpaceInSectorException.class, BuyerIdInvalidForRequest.class, InvalidProductTypeCodeException.class})
     protected ResponseEntity<ApiError> handleBadRequestException(Exception e) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(apiError.getStatus())
