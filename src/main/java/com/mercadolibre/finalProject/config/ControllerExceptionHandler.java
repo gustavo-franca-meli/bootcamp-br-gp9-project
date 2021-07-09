@@ -9,9 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -77,4 +82,19 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
     }
-}
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ApiError> handleListBadRequestException(MethodArgumentNotValidException e) {
+        var patternField = new FieldError(e.getObjectName(),"No Field","Error");
+
+        var subErros = e.getBindingResult().getAllErrors().stream().map((error)-> (SubError) new FieldNotValidException(error.getDefaultMessage(),
+                ((FieldError)error).getField()
+                , error.getObjectName())).collect(Collectors.toList());
+
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), "Found Errors In Request Fields", HttpStatus.BAD_REQUEST.value(), subErros);
+        return ResponseEntity.status(apiError.getStatus())
+                .body(apiError);
+    }
+
+
+    }
