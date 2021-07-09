@@ -7,6 +7,4 @@ import com.mercadolibre.finalProject.model.PurchaseOrder;
 
 public interface IProductBatchesPurchaseOrderService {
     ProductBatchesPurchaseOrderResponseDTO findById (Long id);
-    ProductBatchesPurchaseOrderResponseDTO updateQuantity (Long id, PurchaseOrderUpdateRequestDTO updateRequest);
-    ProductBatchesPurchaseOrderResponseDTO create (Integer orderQuantity, ProductStockDTO productStock, PurchaseOrder purchaseOrder);
 }

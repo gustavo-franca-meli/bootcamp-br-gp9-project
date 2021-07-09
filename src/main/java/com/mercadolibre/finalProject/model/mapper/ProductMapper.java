@@ -2,6 +2,7 @@ package com.mercadolibre.finalProject.model.mapper;
 
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.model.Product;
+import com.mercadolibre.finalProject.model.enums.ProductType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,18 @@ public interface ProductMapper {
     }
 
     static ProductResponseDTO toResponseDTO(Product product) {
+        String productType = null;
+        if (product.getProductType() != null) {
+            productType = ProductType.toEnum(product.getProductType()).getDescription();
+        }
+
         return new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getProductType()
+                product.getProductType(),
+                productType
         );
     }
 }

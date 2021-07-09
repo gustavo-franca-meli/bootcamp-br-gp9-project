@@ -3,19 +3,9 @@ package com.mercadolibre.finalProject.util;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
-import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
-import com.mercadolibre.finalProject.dtos.response.RepresentativeResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
-import com.mercadolibre.finalProject.model.*;
-import com.mercadolibre.finalProject.model.enums.ProductType;
-import com.mercadolibre.finalProject.model.mapper.BatchMapper;
-import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
-import com.mercadolibre.finalProject.model.mapper.SectorMapper;
-import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
+import com.mercadolibre.finalProject.dtos.request.CountryRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
 import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
@@ -44,6 +34,7 @@ public interface TestUtils {
     static Country getCountryValid() {
         return new Country(1L);
     }
+
     static Country getCountry() {
         return new Country("Brasil");
     }
@@ -70,7 +61,7 @@ public interface TestUtils {
     }
 
     static Representative getRepresentativeValid() {
-        var representative = new Representative("Leonardo", new Warehouse(1L),getAccountValid());
+        var representative = new Representative("Leonardo", new Warehouse(1L), getAccountValid());
         representative.setId(1l);
         return representative;
     }
@@ -97,9 +88,8 @@ public interface TestUtils {
 
     static InboundOrder getOrderValid() {
         var representative = getRepresentativeValid();
-        return new InboundOrder(1L, representative.getId(),LocalDate.now());
+        return new InboundOrder(1L, representative.getId(), LocalDate.now());
     }
-
 
 
     static InboundOrderCreateRequestDTO getInboundOrderDTOValidForCreate() {
@@ -109,46 +99,44 @@ public interface TestUtils {
     }
 
 
-
     static InboundOrderDTO getInboundOrderDTOValidForUpdate() {
-        var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid(),getBatchDTOValid(),getBatchDTOValid(),getBatchDTOValid());
+        var batchList = Arrays.asList(getBatchDTOValid(), getBatchDTOValid(), getBatchDTOValid(), getBatchDTOValid(), getBatchDTOValid());
         Long i = 1L;
-        for(var batch : batchList){
+        for (var batch : batchList) {
             batch.setId(i);
             i++;
         }
         var sector = getSectorDTOValid();
-        return new InboundOrderDTO(1L, LocalDate.now(),sector, batchList);
+        return new InboundOrderDTO(1L, LocalDate.now(), sector, batchList);
     }
+
     static InboundOrderUpdateRequestDTO getInboundOrderUpdateDTOValidForUpdate() {
-        var batchList = Arrays.asList( getBatchRequestUpdateDTOValidNoId(),getBatchRequestUpdateDTOValidNoId());
+        var batchList = Arrays.asList(getBatchRequestUpdateDTOValidNoId(), getBatchRequestUpdateDTOValidNoId());
         Long i = 1L;
-        for(var batch : batchList){
+        for (var batch : batchList) {
             batch.setId(i);
             i++;
         }
         var sector = getSectorDTOValid();
-        return new InboundOrderUpdateRequestDTO(1L, LocalDate.now(),new SectorRequestDTO(sector.getCode(),sector.getWarehouseCode()), batchList);
+        return new InboundOrderUpdateRequestDTO(1L, LocalDate.now(), new SectorRequestDTO(sector.getCode(), sector.getWarehouseCode()), batchList);
     }
+
     static BatchDTO getBatchDTOValid() {
         return new BatchDTO(1L, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
+
     static BatchDTO getBatchDTOValidNoId() {
         return new BatchDTO(1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
     }
-    static BatchRequestUpdateDTO getBatchRequestUpdateDTOValidNoId() {
-        return new BatchRequestUpdateDTO(1L, 1L,10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
-    }
 
+    static BatchRequestUpdateDTO getBatchRequestUpdateDTOValidNoId() {
+        return new BatchRequestUpdateDTO(1L, 1L, 10f, 10f, 25, 25, LocalDate.now(), LocalDateTime.now(), LocalDate.now());
+    }
 
 
     static SectorResponseDTO getSectorDTOResponseValid() {
         return SectorMapper.toResponseDTO(getSectorValid());
     }
-
-
-    
-
 
 
     static SectorDTO getSectorDTOValid() {
@@ -160,7 +148,6 @@ public interface TestUtils {
         var sector = getSectorDTOValid();
         return new InboundOrderDTO(10L, LocalDate.now(), sector, batchList);
     }
-
 
 
     static WarehouseResponseDTO getWarehouseResponseDTOValid() {
@@ -189,19 +176,19 @@ public interface TestUtils {
     }
 
     static ProductResponseDTO getProductResponseDTO() {
-        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0, 1);
+        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0,1, "Perishable");
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTO() {
-        return new SectorBatchRequestDTO(1L, 1L, null);
+        return new SectorBatchRequestDTO(1L, "onias-rocha", null);
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedC() {
-        return new SectorBatchRequestDTO(1L, 1L, "C");
+        return new SectorBatchRequestDTO(1L, "onias-rocha", "C");
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTOWithOrderedF() {
-        return new SectorBatchRequestDTO(1L, 1L, "F");
+        return new SectorBatchRequestDTO(1L, "onias-rocha", "F");
     }
 
     static SectorBatchResponseDTO getSectorBatchResponseDTO() {
@@ -221,4 +208,13 @@ public interface TestUtils {
     static BatchStockResponseDTO getBatchStockResponseDTOTwo() {
         return new BatchStockResponseDTO(9l, 40, LocalDate.of(2021, 11, 11));
     }
+
+    static CountryRequestDTO getCountryRequestDTO() {
+        return new CountryRequestDTO("Brasil");
+    }
+
+    static CountryResponseDTO getCountryResponseDTO() {
+        return new CountryResponseDTO(1L, "Brasil");
+    }
+
 }

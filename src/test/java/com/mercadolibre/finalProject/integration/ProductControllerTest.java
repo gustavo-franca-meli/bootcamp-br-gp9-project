@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
+import com.mercadolibre.finalProject.model.enums.RoleType;
+import com.mercadolibre.finalProject.util.CreateFakeLogin;
 import com.mercadolibre.finalProject.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,15 +37,7 @@ public class ProductControllerTest extends ControllerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        var result = this.mockMvc.perform(MockMvcRequestBuilders.post(BASIC_PATH + "/sign-in")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("username", "onias-rocha")
-                .param("password", "pass123"))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        var account = mapper.readValue(result, AccountResponseDTO.class);
-        token = account.getToken();
+        token = CreateFakeLogin.loginValid("onias-rocha", RoleType.REPRESENTATIVE);
     }
 
     @Test
@@ -51,7 +45,6 @@ public class ProductControllerTest extends ControllerTest {
         var expected = TestUtils.getSectorBatchResponseDTO();
         var expectedBatch = expected.getBatchStock().get(0);
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
-                .header("X-Representative-Id", "1")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("productId", "2")
@@ -73,7 +66,6 @@ public class ProductControllerTest extends ControllerTest {
         var expected = TestUtils.getSectorBatchResponseDTO();
         var expectedBatch = expected.getBatchStock().get(0);
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
-                .header("X-Representative-Id", "1")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("productId", "2")
@@ -97,7 +89,6 @@ public class ProductControllerTest extends ControllerTest {
         var expectedBatch = expected.getBatchStock().get(1);
 
         this.mockMvc.perform(MockMvcRequestBuilders.get(PATH)
-                .header("X-Representative-Id", "1")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("productId", "2")

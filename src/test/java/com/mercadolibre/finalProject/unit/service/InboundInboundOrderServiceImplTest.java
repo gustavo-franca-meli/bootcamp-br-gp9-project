@@ -48,7 +48,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
@@ -60,7 +60,7 @@ public class InboundInboundOrderServiceImplTest {
         when(bathService.save(dto.getBatchStock().stream().map(BatchMapper::toDTO).collect(Collectors.toList()), sector.getId(), order.getId())).thenReturn(batchList);
 
         var expected = dto.getBatchStock().size();
-        var got = service.create(dto, Mockito.anyLong());
+        var got = service.create(dto, Mockito.anyString());
         assertEquals(expected, got.getBatchStock().size());
     }
 
@@ -73,7 +73,7 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(inboundOrderDTO.getSection().getCode())).thenReturn(sector);
@@ -81,7 +81,7 @@ public class InboundInboundOrderServiceImplTest {
         var order = TestUtils.getOrderValid();
         when(inboundOrderRepository.save(any())).thenReturn(order);
 
-        service.create(inboundOrderDTO, Mockito.anyLong());
+        service.create(inboundOrderDTO, Mockito.anyString());
         verify(inboundOrderRepository, times(1)).save(any());
     }
 
@@ -90,7 +90,7 @@ public class InboundInboundOrderServiceImplTest {
     public void shouldReturnWarehouseNotFoundWhenWarehouseNotExist() {
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
         when(warehouseService.findById(Mockito.anyLong())).thenThrow(WarehouseNotFoundException.class);
-        assertThrows(WarehouseNotFoundException.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
+        assertThrows(WarehouseNotFoundException.class, () -> service.create(inboundOrderDTO, Mockito.anyString()));
     }
 
     @SneakyThrows
@@ -98,9 +98,9 @@ public class InboundInboundOrderServiceImplTest {
     public void shouldReturnRepresentativeNotFoundWhenRepresentativeNotExistInWareHouse() {
         var warehouseResponseDTO = TestUtils.getWarehouseResponseDTOValid();
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenThrow(RepresentativeNotFound.class);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenThrow(RepresentativeNotFound.class);
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
-        assertThrows(RepresentativeNotFound.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
+        assertThrows(RepresentativeNotFound.class, () -> service.create(inboundOrderDTO, Mockito.anyString()));
     }
 
     @SneakyThrows
@@ -112,7 +112,7 @@ public class InboundInboundOrderServiceImplTest {
         when(sectorService.findById(Mockito.anyLong())).thenThrow(SectorNotFoundException.class);
 
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
-        assertThrows(SectorNotFoundException.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
+        assertThrows(SectorNotFoundException.class, () -> service.create(inboundOrderDTO, Mockito.anyString()));
     }
 
     @SneakyThrows
@@ -122,15 +122,15 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDTO);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(Mockito.anyLong())).thenReturn(sector);
-        when(bathService.save(Mockito.any(), Mockito.any(),any())).thenThrow(CreateBatchStockException.class);
+        when(bathService.save(Mockito.any(), Mockito.any(), any())).thenThrow(CreateBatchStockException.class);
         var order = TestUtils.getOrderValid();
         when(inboundOrderRepository.save(any())).thenReturn(order);
         var inboundOrderDTO = TestUtils.getInboundOrderDTOValidForCreate();
-        assertThrows(CreateBatchStockException.class, () -> service.create(inboundOrderDTO, Mockito.anyLong()));
+        assertThrows(CreateBatchStockException.class, () -> service.create(inboundOrderDTO, Mockito.anyString()));
     }
 
 
@@ -145,22 +145,23 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
 
         var order = TestUtils.getOrderValid();
-        order.setBatches(dto.getBatchStock().stream().map(BatchMapper::toDTO).map((a)->BatchMapper.toModel(a,dto.getSection().getCode(),dto.getOrderNumber())).collect(Collectors.toList()));
+        order.setBatches(dto.getBatchStock().stream().map(BatchMapper::toDTO).map((a) -> BatchMapper.toModel(a, dto.getSection().getCode(), dto.getOrderNumber())).collect(Collectors.toList()));
         when(inboundOrderRepository.findById(dto.getOrderNumber())).thenReturn(Optional.of(order));
 
         var batchList = TestUtils.getBatchListValid();
         when(bathService.save(dto.getBatchStock().stream().map(BatchMapper::toDTO).collect(Collectors.toList()), sector.getId(), order.getId())).thenReturn(batchList);
 
         var expected = dto.getBatchStock().size();
-        var got = service.update(dto, Mockito.anyLong());
+        var got = service.update(dto, Mockito.anyString());
         assertEquals(expected, got.getBatchStock().size());
     }
+
     @SneakyThrows
     @Test
     public void shouldReturnOrderNotFoundInUpdateWhenOrderNotExist() {
@@ -170,20 +171,20 @@ public class InboundInboundOrderServiceImplTest {
         when(warehouseService.findById(Mockito.anyLong())).thenReturn(warehouseResponseDto);
 
         var representativeResponseDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findByIdAndWarehouseId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representativeResponseDTO);
 
         var sector = TestUtils.getSectorDTOResponseValid();
         when(sectorService.findById(dto.getSection().getCode())).thenReturn(sector);
 
         var order = TestUtils.getOrderValid();
-        order.setBatches(dto.getBatchStock().stream().map(BatchMapper::toDTO).map((a)->BatchMapper.toModel(a,dto.getSection().getCode(),dto.getOrderNumber())).collect(Collectors.toList()));
+        order.setBatches(dto.getBatchStock().stream().map(BatchMapper::toDTO).map((a) -> BatchMapper.toModel(a, dto.getSection().getCode(), dto.getOrderNumber())).collect(Collectors.toList()));
         when(inboundOrderRepository.findById(dto.getOrderNumber())).thenReturn(Optional.empty());
 
         var batchList = TestUtils.getBatchListValid();
         when(bathService.save(dto.getBatchStock().stream().map(BatchMapper::toDTO).collect(Collectors.toList()), sector.getId(), order.getId())).thenReturn(batchList);
 
         var expected = dto.getBatchStock().size();
-        assertThrows(InboundOrderNotFoundException.class,() -> service.update(dto, Mockito.anyLong()));
+        assertThrows(InboundOrderNotFoundException.class, () -> service.update(dto, Mockito.anyString()));
 
     }
 }

@@ -18,6 +18,7 @@ public class InboundOrderCreateRequestDTO {
     @NotNull
     private List<BatchRequestCreateDTO> batchStock;
 
+    private String username;
     public InboundOrderCreateRequestDTO(@NotNull LocalDate orderDate, @NotNull SectorRequestDTO section, @NotNull List<BatchRequestCreateDTO> batchStock) {
         this.orderDate = orderDate;
         this.section = section;

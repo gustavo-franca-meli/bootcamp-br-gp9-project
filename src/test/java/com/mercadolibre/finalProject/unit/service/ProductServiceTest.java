@@ -6,9 +6,11 @@ import com.mercadolibre.finalProject.model.Account;
 import com.mercadolibre.finalProject.model.Country;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.Seller;
+import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.repository.SellerRepository;
 import com.mercadolibre.finalProject.repository.WarehouseRepository;
+import com.mercadolibre.finalProject.service.IAccountService;
 import com.mercadolibre.finalProject.service.ISellerService;
 import com.mercadolibre.finalProject.service.impl.ProductServiceImpl;
 import org.assertj.core.util.Lists;
@@ -30,12 +32,14 @@ public class ProductServiceTest {
 
     ProductRepository productRepository = Mockito.mock(ProductRepository.class);
     ISellerService sellerService = Mockito.mock(ISellerService.class);
+    IAccountService accountService = Mockito.mock(IAccountService.class);
+    BatchRepository batchRepository = Mockito.mock(BatchRepository.class);
+    WarehouseRepository warehouseRepository = Mockito.mock(WarehouseRepository.class);
     ProductServiceImpl service;
-    WarehouseRepository warehouseRepository;
 
     @BeforeEach
     void setUp() {
-        this.service = new ProductServiceImpl(productRepository, sellerService, warehouseRepository);
+        this.service = new ProductServiceImpl(productRepository,accountService ,sellerService,batchRepository, warehouseRepository);
     }
 
     @Test
@@ -56,12 +60,10 @@ public class ProductServiceTest {
         assertEquals(responseExpected, response);
     }
 
-    @NotNull
     private ProductRequestDTO createProductRequestDTO() {
         return new ProductRequestDTO("Produto1", "", 10.0, 1);
     }
 
-    @NotNull
     private Product createExpectedProduct(Seller sellerExpected) {
         return new Product(
                 1L,
@@ -72,17 +74,16 @@ public class ProductServiceTest {
                 sellerExpected);
     }
 
-    @NotNull
     private ProductResponseDTO createExpectedProductResponseDTO(Seller sellerExpected) {
         return new ProductResponseDTO(
                 1L,
                 "Produto1",
                 "",
                 10.0,
-                1);
+                1,
+                "Fresh");
     }
 
-    @NotNull
     private Seller createExpectedSeller() {
         return new Seller(
                 1L,

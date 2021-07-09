@@ -1,18 +1,14 @@
 package com.mercadolibre.finalProject.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class WarehouseProductSumDTO {
-    @JsonProperty("warehouseCode")
+
     private Long warehouseCode;
-    @JsonProperty("totalQuantity")
+
     private Integer totalQuantity;
-
-
 }

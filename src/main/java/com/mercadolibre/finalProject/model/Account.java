@@ -8,7 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="account")
+@Table(name = "account", indexes = {@Index(name = "username_index", columnList = "username")})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,7 +18,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username, password;
+    private String username;
+    private String password;
 
     private Integer rol;
 

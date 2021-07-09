@@ -1,12 +1,8 @@
 package com.mercadolibre.finalProject.dtos.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.util.List;
-
-@Getter
-@Setter
+@Data
 public class ProductRequestDTO {
 
     private String name;
