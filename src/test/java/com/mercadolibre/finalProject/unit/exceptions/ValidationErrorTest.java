@@ -13,4 +13,12 @@ public class ValidationErrorTest {
 
         assertNotNull(ex);
     }
+
+    @Test
+    void shoudlAndGetValidationError() {
+        var ex = new ValidationError("field", "message");
+
+        assertNotNull(ex.getMessage());
+        assertNotNull(ex.getField());
+    }
 }

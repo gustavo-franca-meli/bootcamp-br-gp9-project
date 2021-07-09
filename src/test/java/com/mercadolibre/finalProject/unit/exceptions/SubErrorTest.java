@@ -14,4 +14,11 @@ public class SubErrorTest {
         assertNotNull(error);
     }
 
+    @Test
+    public void shouldGetAndSetSubError() {
+        SubError error = new BatchCreateException(1L, "Error");
+        error.setMessage("New error");
+        assertNotNull(error.getMessage());
+    }
+
 }

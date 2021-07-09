@@ -14,7 +14,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static String BASIC_PATH = "/api/v1";
     private static String FRESH_PRODUCTS_ROUTE = BASIC_PATH + "/fresh-products";
 
-    private static String[] REPRESENTATIVE = {FRESH_PRODUCTS_ROUTE + "/inboundorder", FRESH_PRODUCTS_ROUTE + "/list"};
+    private static String[] REPRESENTATIVE = {FRESH_PRODUCTS_ROUTE + "/inboundorder", FRESH_PRODUCTS_ROUTE + "/list", FRESH_PRODUCTS_ROUTE + "/warehouse", "/seller/**"};
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -25,12 +25,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/ping").permitAll()
                 .antMatchers(HttpMethod.GET, "/v3/api-docs").permitAll()
                 .antMatchers(HttpMethod.GET, "/fake").permitAll()
-                .antMatchers(HttpMethod.POST, "/seller").permitAll()
-                .antMatchers(HttpMethod.POST, "/seller/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/seller").permitAll()
-                .antMatchers(HttpMethod.GET, "/seller/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/fresh-products/inboundorder/").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/fresh-products/warehouse/**").permitAll()
                 .antMatchers(REPRESENTATIVE).hasRole("REPRESENTATIVE")
 
                 .anyRequest().authenticated();
