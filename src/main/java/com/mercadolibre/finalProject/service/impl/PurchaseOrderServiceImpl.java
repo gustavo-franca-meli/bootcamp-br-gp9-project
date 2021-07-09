@@ -6,7 +6,6 @@ import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.*;
@@ -115,12 +114,12 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         for(BatchPurchaseOrder batchPurchaseOrder : batches) {
 
             if(batchPurchaseOrder.getQuantity() >= quantityToReturn - returnedQuantity) {
-                this.batchService.returnQuantityToBatch(batchPurchaseOrder.getBatch(), quantityToReturn - returnedQuantity);
+                this.batchService.saveNewQuantityBatch(batchPurchaseOrder.getBatch(), quantityToReturn - returnedQuantity);
                 batchPurchaseOrder.setQuantity(batchPurchaseOrder.getQuantity() - quantityToReturn + returnedQuantity);
                 break;
             }
             else {
-                this.batchService.returnQuantityToBatch(batchPurchaseOrder.getBatch(), batchPurchaseOrder.getQuantity());
+                this.batchService.saveNewQuantityBatch(batchPurchaseOrder.getBatch(), batchPurchaseOrder.getQuantity());
                 returnedQuantity += batchPurchaseOrder.getQuantity();
                 batchPurchaseOrder.setQuantity(0);
             }

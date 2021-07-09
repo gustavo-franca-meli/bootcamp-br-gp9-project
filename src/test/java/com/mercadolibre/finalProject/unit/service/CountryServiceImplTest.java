@@ -12,8 +12,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CountryServiceImplTest {
 
@@ -50,6 +49,16 @@ public class CountryServiceImplTest {
         var got = service.update(1L, request);
 
         assertEquals(expected.getName(), got.getName());
+    }
+
+    @Test
+    public void shouldDeleteCountry() {
+        var expected = TestUtils.getCountry();
+        expected.setId(1L);
+        when(repository.findById(Mockito.anyLong())).thenReturn(Optional.of(expected));
+
+        service.delete(expected.getId());
+        verify(repository, times(1)).deleteById(Mockito.anyLong());
     }
 
     @Test

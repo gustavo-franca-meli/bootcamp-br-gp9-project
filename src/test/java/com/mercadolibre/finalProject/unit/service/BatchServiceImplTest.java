@@ -1,6 +1,9 @@
 package com.mercadolibre.finalProject.unit.service;
 
-import com.mercadolibre.finalProject.exceptions.*;
+import com.mercadolibre.finalProject.exceptions.BadRequestException;
+import com.mercadolibre.finalProject.exceptions.BatchNotFoundException;
+import com.mercadolibre.finalProject.exceptions.NotFoundException;
+import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
@@ -231,7 +234,7 @@ public class BatchServiceImplTest {
 
         when(batchRepository.findBatchesByProductType(anyInt(), any(), any())).thenReturn(listExpected);
 
-        var responseList = service.getBatchesByProductType(daysQuantity, category,null);
+        var responseList = service.getBatchesByProductType(daysQuantity, category, null);
 
         verify(batchRepository, Mockito.times(1)).findBatchesByProductType(anyInt(), any(), any());
 
@@ -262,4 +265,42 @@ public class BatchServiceImplTest {
 
         verify(batchRepository, Mockito.times(1)).findBatchesByProductType(anyInt(), any(), any());
     }
+
+    @Test
+    public void shouldSaveNewQuantityBatch() {
+        var expected = TestUtils.getBatchValid();
+        when(batchRepository.save(Mockito.any())).thenReturn(expected);
+
+        service.saveNewQuantityBatch(expected, 10);
+        verify(batchRepository, times(1)).save(expected);
+    }
+
+    @Test
+    public void shouldWithdrawQuantity() {
+        var batch = TestUtils.getBatchValid();
+        when(batchRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(batch));
+        when(batchRepository.save(Mockito.any())).thenReturn(batch);
+
+        var got = service.withdrawQuantity(1L, 10);
+
+        assertEquals(batch.getId(), got.getId());
+    }
+
+    @Test
+    public void shouldDeleteAll() {
+        service.deleteAll(Mockito.anyList());
+
+        verify(batchRepository, times(1)).deleteAll(Mockito.anyList());
+    }
+
+    @Test
+    public void shouldFindById() {
+        var batch = TestUtils.getBatchValid();
+        when(batchRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(batch));
+
+        var got = service.findById(Mockito.anyLong());
+
+        assertEquals(batch.getId(), got.getId());
+    }
+
 }

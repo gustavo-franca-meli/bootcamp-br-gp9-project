@@ -28,9 +28,14 @@ public interface IProductService {
 
     List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date);
 
-    SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId);
-
     Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date);
 
     List<ProductResponseDTO> getProductsByCountry(String username, Integer productType);
+
+    SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId);
+
+    SumOfProductStockDTO getSumOfProductStockByCountry(Long productId, Long countryId);
+
+
+
 }

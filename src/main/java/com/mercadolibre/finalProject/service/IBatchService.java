@@ -14,8 +14,10 @@ public interface IBatchService {
     BatchDTO withdrawQuantity(Long batchId, Integer withdrawnQuantity);
 
     SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request);
-    void returnQuantityToBatch(Batch batch, Integer quantity);
-    BatchDTO findById (Long id);
+
+    void saveNewQuantityBatch(Batch batch, Integer quantity);
+
+    BatchDTO findById(Long id);
 
     List<BatchValidateDateResponseDTO> getBatchesBySectorId(Long sectorId, Integer daysQuantity);
 
