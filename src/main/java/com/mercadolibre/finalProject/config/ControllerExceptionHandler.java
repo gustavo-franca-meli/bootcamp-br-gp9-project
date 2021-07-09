@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.util.List;
-
 @ControllerAdvice
 public class ControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
@@ -52,16 +50,23 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class,InboundOrderNotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class})
+    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class, InboundOrderNotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class})
     protected ResponseEntity<ApiError> handleNotFoundException(Exception e) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.toString(), e.getMessage(), HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
     }
 
+    @ExceptionHandler(NoSpaceInSectorException.class)
+    protected ResponseEntity<ApiError> handleBadRequestException(Exception e) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(apiError.getStatus())
+                .body(apiError);
+    }
+
     @ExceptionHandler(CreateBatchStockException.class)
     protected ResponseEntity<ApiError> handleCreateBatchStockException(CreateBatchStockException e) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(), e.getSubErros());
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(), e.getSubErrors());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
 
@@ -72,6 +77,5 @@ public class ControllerExceptionHandler {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
-
     }
 }

@@ -4,15 +4,10 @@ import com.mercadolibre.finalProject.dtos.response.SectorResponseDTO;
 import com.mercadolibre.finalProject.exceptions.NoSpaceInSectorException;
 import com.mercadolibre.finalProject.exceptions.SectorNotFoundException;
 import com.mercadolibre.finalProject.model.Sector;
-import com.mercadolibre.finalProject.model.enums.ProductType;
-import com.mercadolibre.finalProject.model.Batch;
-import com.mercadolibre.finalProject.model.Sector;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 import com.mercadolibre.finalProject.repository.SectorRepository;
 import com.mercadolibre.finalProject.service.ISectorService;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 public class SectorServiceImpl implements ISectorService {
@@ -50,14 +45,28 @@ public class SectorServiceImpl implements ISectorService {
 
     @Override
     public Boolean isThereSpace(Long sectorId) {
-        //TODO: change de method of verify if sector has space!!
         var sector = this.findSectorById(sectorId);
-        var totalQuantity = this.sectorRepository.countBatchesIn(sectorId);
+        var totalQuantity = this.getQuantityBatchesValidInSector(sector.getId());
 
-        if (totalQuantity >= sector.getMaxQuantityBatches()) {
+        if (totalQuantity >= sector.getMaxQuantityBatches())
             throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space");
-        }
-
         return true;
+    }
+
+    private Integer getQuantityBatchesValidInSector(Long sectorId) {
+        var quantity = this.sectorRepository.countBatchesIn(sectorId);
+        if (quantity == null)
+            return 0;
+        return quantity;
+    }
+
+    @Override
+    public void isThereSpaceFor(Integer quantityBatches, Long sectorId) {
+        var sector = this.findSectorById(sectorId);
+        var quantityInStock = this.getQuantityBatchesValidInSector(sector.getId());
+        var totalStock = quantityInStock + quantityBatches;
+
+        if (totalStock >= sector.getMaxQuantityBatches())
+            throw new NoSpaceInSectorException("Sector " + sectorId + " doesn't have enough space to new quantity. New quantity " + quantityBatches);
     }
 }

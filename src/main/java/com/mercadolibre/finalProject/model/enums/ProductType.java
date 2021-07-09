@@ -23,27 +23,14 @@ public enum ProductType {
     }
 
     public static ProductType toEnum(Integer cod) {
-        if(cod == null)
+        if (cod == null)
             return null;
 
-        for(ProductType x : ProductType.values()) {
-            if(cod.equals(x.getCod()))
+        for (ProductType x : ProductType.values()) {
+            if (cod.equals(x.getCod()))
                 return x;
         }
 
-        throw new RuntimeException("Invalid sector type code: "+ cod);
+        throw new RuntimeException("Invalid sector type code: " + cod);
     }
-
-    public static ProductType toCod (String description) {
-        if(description == null)
-            return null;
-
-        for(ProductType x : ProductType.values()) {
-            if(description.equals(x.getDescription()))
-                return x;
-        }
-
-        throw new RuntimeException("Invalid sector type: " + description);
-    }
-
 }

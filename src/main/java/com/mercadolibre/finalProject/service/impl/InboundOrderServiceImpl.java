@@ -12,7 +12,6 @@ import com.mercadolibre.finalProject.repository.OrderRepository;
 import com.mercadolibre.finalProject.service.*;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,59 +32,59 @@ public class InboundOrderServiceImpl implements IInboundOrderService {
     }
 
     @Override
-    public InboundOrderResponseDTO create(InboundOrderCreateRequestDTO dto, Long representativeId) throws InboundOrderAlreadyExistException, WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
-        validadeSaveRequest(dto.getSection().getWarehouseCode(),representativeId,dto.getSection().getCode());
+    public InboundOrderResponseDTO create(InboundOrderCreateRequestDTO dto, String username) throws WarehouseNotFoundException, RepresentativeNotFound, SectorNotFoundException, InternalServerErrorException, CreateBatchStockException {
+        var representativeId = validadeSaveRequest(dto.getSection().getWarehouseCode(), username, dto.getSection().getCode());
         //register order and assign representative if fails throws
-        var saveOrder =  new InboundOrder(dto.getOrderDate(), representativeId);
-        var order  = repository.save(saveOrder);
+        var saveOrder = new InboundOrder(dto.getOrderDate(), representativeId);
+        var order = repository.save(saveOrder);
 
-        return save( new InboundOrderDTO(dto),representativeId,order.getId());
+        return save(new InboundOrderDTO(dto), representativeId, order.getId());
     }
 
     @Override
-    public InboundOrderResponseDTO update(InboundOrderUpdateRequestDTO dto, Long representativeId) throws CreateBatchStockException, InboundOrderNotFoundException {
-        validadeSaveRequest(dto.getSection().getWarehouseCode(),representativeId,dto.getSection().getCode());
+    public InboundOrderResponseDTO update(InboundOrderUpdateRequestDTO dto, String username) throws CreateBatchStockException, InboundOrderNotFoundException {
+        var representativeId = validadeSaveRequest(dto.getSection().getWarehouseCode(), username, dto.getSection().getCode());
         var order = repository.findById(dto.getOrderNumber());
-        if(order.isPresent()){
+        if (order.isPresent()) {
             var batches = order.get().getBatches();
-            try{
-                var response =  save( new InboundOrderDTO(dto),representativeId,order.get().getId());
+            try {
+                var response = save(new InboundOrderDTO(dto), representativeId, order.get().getId());
 
-                var toDelete  = batches.stream().filter((b)-> response.getBatchStock().stream().noneMatch((r)-> r.getId().equals(b.getId()))).collect(Collectors.toList());
+                var toDelete = batches.stream().filter((b) -> response.getBatchStock().stream().noneMatch((r) -> r.getId().equals(b.getId()))).collect(Collectors.toList());
 
                 batchService.deleteAll(toDelete);
-            return  response;
-            }catch (Exception e){
-                if(!batches.isEmpty())
-                    batchService.save(batches.stream().map(BatchMapper::toDTO).collect(Collectors.toList()), batches.get(0).getSector().getId(),order.get().getId());
+                return response;
+            } catch (Exception e) {
+                if (!batches.isEmpty())
+                    batchService.save(batches.stream().map(BatchMapper::toDTO).collect(Collectors.toList()), batches.get(0).getSector().getId(), order.get().getId());
                 throw e;
             }
 
-
         }
 
-        throw  new InboundOrderNotFoundException();
+        throw new InboundOrderNotFoundException();
     }
 
-    private Boolean validadeSaveRequest(Long warehouseId, Long representativeId,Long sectorId){
+    private Long validadeSaveRequest(Long warehouseId, String username, Long sectorId) {
         //warehouse exist if not throws
         var warehouse = warehouseService.findById(warehouseId);
         //representative works in warehouse if not throws?
-        var representative = representativeService.findByIdAndWarehouseId(representativeId, warehouse.getId());
+        var representative = representativeService.findByAccountUsernameAndWarehouseId(username, warehouse.getId());
         //sector is valid if not throws
         var sector = sectorService.findById(sectorId);
-        if(!sector.getWarehouseId().equals(warehouse.getId()))throw new SectorNotFoundException("Sector id " + sector.getId() + " not found in warehouse Id " + warehouse.getId());
-        return  true;
+        if (!sector.getWarehouseId().equals(warehouse.getId()))
+            throw new SectorNotFoundException("Sector id " + sector.getId() + " not found in warehouse Id " + warehouse.getId());
+        return representative.getId();
     }
 
     private InboundOrderResponseDTO save(InboundOrderDTO dto, Long representativeId, Long orderId) throws CreateBatchStockException {
         // save all batchStock if fails throws
         var batchDTOList = dto.getBatchStock();
-        var batchStock = batchService.save(batchDTOList, dto.getSection().getCode(),orderId);
+        var batchStock = batchService.save(batchDTOList, dto.getSection().getCode(), orderId);
 
 
         List<BatchDTO> batchStockResponse = batchStock.stream().map(BatchMapper::toDTO).collect(Collectors.toList());
-        return new InboundOrderResponseDTO(orderId,batchStockResponse);
+        return new InboundOrderResponseDTO(orderId, batchStockResponse);
 
     }
 }

@@ -41,51 +41,43 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public List<Batch> save(List<BatchDTO> batchStock, Long sectorId,Long orderId) throws CreateBatchStockException {
-        //sector has space for batchStock length else throws
-        var size = batchStock.size();
-
+    public List<Batch> save(List<BatchDTO> batchStock, Long sectorId, Long orderId) throws CreateBatchStockException {
         var errorList = new ArrayList<BatchCreateException>();
-        var responseBathList = new ArrayList<Batch>();
+        var batchList = new ArrayList<Batch>();
+
+        //sector has space for batchStock length else throws
+        this.sectorService.isThereSpaceFor(batchStock.size(), sectorId);
+
         //iterate all product if find a error throws all
         Long i = 0L;
-        for (var batch: batchStock){
-            try{
-                var batchModel = BatchMapper.toModel(batch,sectorId,orderId);
+        for (var batch : batchStock) {
+            try {
+                var batchModel = BatchMapper.toModel(batch, sectorId, orderId);
                 //product seller is registered if not throws
                 var product = productService.findById(batch.getProductId());
-                //product type pertence a sector
-                if(sectorService.hasType(sectorId,product.getType())){
-                    //verify if has space
-                    sectorService.isThereSpace(sectorId);
+                //product type has a sector
+                if (sectorService.hasType(sectorId, product.getType())) {
                     //verify if batch exist and has the same order
-
-                    Optional<Batch> findBatch = batchModel.getId() != null?batchRepository.findById(batchModel.getId()): Optional.empty();
-                    if(findBatch.isPresent() && !findBatch.get().getInboundOrder().getId().equals(orderId))throw new Exception("this batch id already in use in other order");
+                    Optional<Batch> findBatch = batchModel.getId() != null ? batchRepository.findById(batchModel.getId()) : Optional.empty();
+                    if (findBatch.isPresent() && !findBatch.get().getInboundOrder().getId().equals(orderId))
+                        throw new Exception("this batch id already in use in other order");
                     //save batch
-                    var batchResponse = batchRepository.save(batchModel);
-                    responseBathList.add(batchResponse);
-                }else{
-                    throw new ProductTypeNotSuportedInSectorException(product.getId(),ProductType.toEnum(product.getType()).getDescription(),sectorId);
+                    batchList.add(batchModel);
+                } else {
+                    throw new ProductTypeNotSuportedInSectorException(product.getId(), ProductType.toEnum(product.getType()).getDescription(), sectorId);
                 }
 
-
-            }catch (Exception e){
-                errorList.add(new BatchCreateException(i,e.getMessage()));
+            } catch (Exception e) {
+                errorList.add(new BatchCreateException(i, e.getMessage()));
             }
             i++;
-
         }
-        if(errorList.isEmpty()){
-            return responseBathList;
-        }else{
-            //rollback all
-            responseBathList.forEach((batch -> {
-                batchRepository.deleteById(batch.getId());
-            }));
-            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector",errorList);
+        if (errorList.isEmpty()) {
+            var responseBatchList = batchRepository.saveAll(batchList);
+            return responseBatchList;
+        } else {
+            throw new CreateBatchStockException("Error in save " + errorList.size() + " bath in sector", errorList);
         }
-        //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }
 
     @Override
@@ -100,7 +92,7 @@ public class BatchServiceImpl implements IBatchService {
     public void deleteAll(List<Batch> batches) {
         batchRepository.deleteAll(batches);
     }
-    
+
     private Batch findBatchBy(Long batchId) {
         var batch = this.batchRepository.findById(batchId);
 
@@ -110,7 +102,7 @@ public class BatchServiceImpl implements IBatchService {
     @Override
     public SectorBatchResponseDTO getSectorBatchesByProductId(SectorBatchRequestDTO request) {
         var productResponseDTO = this.productService.findById(request.getProductId());
-        var representativeDTO = this.representativeService.findById(request.getRepresentativeId());
+        var representativeDTO = this.representativeService.findByAccountUsername(request.getUsername());
 
         List<Batch> batches = null;
         if (request.getOrdered() == null) {
@@ -189,5 +181,4 @@ public class BatchServiceImpl implements IBatchService {
         if (batches.isEmpty())
             throw new BatchNotFoundException("Doesn't has valid batches with this product. Id product: " + productId);
     }
-
 }

@@ -18,6 +18,8 @@ import org.mockito.Mockito;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,19 +44,21 @@ public class BatchServiceImplTest {
     @SneakyThrows
     @Test
     public void shouldReturnBathStockSizeCorrectly() {
-        var dto = TestUtils.getInboundOrderDTOValid();
-        var listBath = dto.getBatchStock();
+        var dto = TestUtils.getInboundOrderDTOValidForCreate();
 
-        var product = ProductMapper.toResponseDTO(new Product(1L)); //new Product(1L);
-        var bath = BatchMapper.toModel(listBath.get(0),dto.getSection().getCode(),1L);
-
-
+        var product = ProductMapper.toResponseDTO(new Product(1L));
         when(productService.findById(any())).thenReturn(product);
+        when(batchRepository.findById(any())).thenReturn(Optional.empty());
         when(sectorService.hasType(dto.getSection().getCode(), product.getType())).thenReturn(true);
         when(sectorService.isThereSpace(anyLong())).thenReturn(true);
-        when(batchRepository.save(any())).thenReturn(bath);
-        var response =  service.save(listBath,dto.getSection().getCode(),1L);
-        assertEquals(response.size(),listBath.size());
+
+        var expect = TestUtils.getBatchListValid();
+
+        var request = dto.getBatchStock().stream().map(BatchMapper::toDTO).collect(Collectors.toList());
+        when(batchRepository.saveAll(any())).thenReturn(expect);
+        var got = service.save(request, dto.getSection().getCode(), 1L);
+        assertEquals(expect.size(), got.size());
+
     }
 
     @Test
@@ -63,7 +67,7 @@ public class BatchServiceImplTest {
         when(productService.findById(Mockito.anyLong())).thenReturn(productResponseDTO);
 
         var representativeDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
+        when(representativeService.findByAccountUsername(Mockito.anyString())).thenReturn(representativeDTO);
 
         var expected = TestUtils.getBatchListValid();
         when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);
@@ -81,7 +85,7 @@ public class BatchServiceImplTest {
         when(productService.findById(Mockito.anyLong())).thenReturn(productResponseDTO);
 
         var representativeDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
+        when(representativeService.findByAccountUsername(Mockito.anyString())).thenReturn(representativeDTO);
 
         var expected = TestUtils.getBatchListValid();
         when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any())).thenReturn(expected);
@@ -100,7 +104,7 @@ public class BatchServiceImplTest {
         when(productService.findById(Mockito.anyLong())).thenReturn(productResponseDTO);
 
         var representativeDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
+        when(representativeService.findByAccountUsername(Mockito.anyString())).thenReturn(representativeDTO);
 
         var expected = TestUtils.getBatchListValid();
         when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Mockito.anyLong(), Mockito.anyLong(), Mockito.any(), Mockito.any())).thenReturn(expected);
@@ -119,7 +123,7 @@ public class BatchServiceImplTest {
         when(productService.findById(Mockito.anyLong())).thenReturn(productResponseDTO);
 
         var representativeDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
+        when(representativeService.findByAccountUsername(Mockito.anyString())).thenReturn(representativeDTO);
 
         var expected = new ArrayList<Batch>();
         when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);
@@ -139,7 +143,7 @@ public class BatchServiceImplTest {
         when(productService.findById(Mockito.anyLong())).thenReturn(productResponseDTO);
 
         var representativeDTO = TestUtils.getRepresentativeResponseDTOValid();
-        when(representativeService.findById(Mockito.anyLong())).thenReturn(representativeDTO);
+        when(representativeService.findByAccountUsername(Mockito.anyString())).thenReturn(representativeDTO);
 
         var expected = new ArrayList<Batch>();
         when(batchRepository.findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Mockito.anyLong(), Mockito.anyLong(), Mockito.any())).thenReturn(expected);

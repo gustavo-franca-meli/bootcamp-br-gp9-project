@@ -4,24 +4,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateBatchStockException extends Exception {
-    private List<BatchCreateException> bathExceptions;
-    public CreateBatchStockException(String message, List<BatchCreateException> bathExceptions) {
+    private List<BatchCreateException> batchExceptions;
+    public CreateBatchStockException(String message, List<BatchCreateException> batchExceptions) {
         super(message);
-        this.bathExceptions = bathExceptions;
+        this.batchExceptions = batchExceptions;
     }
 
-    public List<BatchCreateException> getBathExceptions() {
-        return bathExceptions;
+    public List<BatchCreateException> getBatchExceptions() {
+        return batchExceptions;
     }
 
-    public List<SubError> getSubErros() {
-        return bathExceptions.stream().map((a)-> (SubError)a).collect(Collectors.toList());
+    public List<SubError> getSubErrors() {
+        return batchExceptions.stream().map((a)-> (SubError)a).collect(Collectors.toList());
     }
 
 
-    public void setBathExceptions(List<BatchCreateException> bathExceptions) {
-        this.bathExceptions = bathExceptions;
+    public void setBatchExceptions(List<BatchCreateException> batchExceptions) {
+        this.batchExceptions = batchExceptions;
     }
-
 
 }
