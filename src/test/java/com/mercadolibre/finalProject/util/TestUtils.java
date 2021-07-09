@@ -1,6 +1,7 @@
 package com.mercadolibre.finalProject.util;
 
 import com.mercadolibre.finalProject.dtos.BatchDTO;
+import com.mercadolibre.finalProject.dtos.BatchPurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
 import com.mercadolibre.finalProject.dtos.request.CountryRequestDTO;
@@ -176,7 +177,7 @@ public interface TestUtils {
     }
 
     static ProductResponseDTO getProductResponseDTO() {
-        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0,1, "Perishable");
+        return new ProductResponseDTO(1L, "Product Name", "Product Description", 10.0, 1, "Perishable");
     }
 
     static SectorBatchRequestDTO getSectorBatchRequestDTO() {
@@ -215,6 +216,35 @@ public interface TestUtils {
 
     static CountryResponseDTO getCountryResponseDTO() {
         return new CountryResponseDTO(1L, "Brasil");
+    }
+
+    static BatchPurchaseOrder getBatchPurchaseOrder() {
+        var batch = getBatchValid();
+        return new BatchPurchaseOrder(10, batch);
+    }
+
+    static BatchDTO getBatchDTO() {
+        return new BatchDTO(1L, 1L, 10.0f, 10.0f, 1, 1, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(3));
+    }
+
+    static BatchPurchaseOrderDTO getBatchPurchaseOrderDTO() {
+        var batchDTO = getBatchDTO();
+        return new BatchPurchaseOrderDTO(1L, 10, batchDTO);
+    }
+
+    static BatchPurchaseOrderResponseDTO getBatchPurchaseOrderResponseDTO() {
+        return new BatchPurchaseOrderResponseDTO(1L, 1L, 100, LocalDate.now(), LocalDateTime.now(), LocalDate.now().plusWeeks(3));
+    }
+
+    static PurchaseOrder getPurchaseOrder() {
+        var account = getAccountValid();
+        return new PurchaseOrder(account, LocalDate.now(), 1);
+    }
+
+    static ProductBatchesPurchaseOrder getProductBatchesPurchaseOrder() {
+        var product = TestUtils.getProductValid();
+        var purchaseOrder = TestUtils.getPurchaseOrder();
+        return new ProductBatchesPurchaseOrder(product, 10.0, purchaseOrder);
     }
 
 }

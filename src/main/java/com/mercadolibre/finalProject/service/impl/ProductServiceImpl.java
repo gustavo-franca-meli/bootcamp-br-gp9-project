@@ -14,7 +14,9 @@ import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
-import com.mercadolibre.finalProject.service.*;
+import com.mercadolibre.finalProject.service.IAccountService;
+import com.mercadolibre.finalProject.service.IProductService;
+import com.mercadolibre.finalProject.service.ISellerService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
