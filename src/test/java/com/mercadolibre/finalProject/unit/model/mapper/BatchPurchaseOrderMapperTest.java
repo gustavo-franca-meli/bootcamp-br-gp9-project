@@ -19,6 +19,15 @@ public class BatchPurchaseOrderMapperTest {
     }
 
     @Test
+    public void assembleBatchPurchaseOrderResponseDTOWithBatch() {
+        var expected = TestUtils.getBatchValid();
+        expected.setId(1L);
+        var got = BatchPurchaseOrderMapper.toResponseDTO(expected, 10);
+
+        assertEquals(expected.getDueDate(), got.getDueDate());
+    }
+
+    @Test
     public void assembleBatchPurchaseOrderDTO() {
         var expected = TestUtils.getBatchDTO();
         var got = BatchPurchaseOrderMapper.toDTO(expected, 10);
