@@ -9,6 +9,7 @@ import com.mercadolibre.finalProject.model.Seller;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.repository.SellerRepository;
+import com.mercadolibre.finalProject.repository.WarehouseRepository;
 import com.mercadolibre.finalProject.service.IAccountService;
 import com.mercadolibre.finalProject.service.ISellerService;
 import com.mercadolibre.finalProject.service.impl.ProductServiceImpl;
@@ -33,11 +34,12 @@ public class ProductServiceTest {
     ISellerService sellerService = Mockito.mock(ISellerService.class);
     IAccountService accountService = Mockito.mock(IAccountService.class);
     BatchRepository batchRepository = Mockito.mock(BatchRepository.class);
+    WarehouseRepository warehouseRepository = Mockito.mock(WarehouseRepository.class);
     ProductServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        this.service = new ProductServiceImpl(productRepository,accountService ,sellerService,batchRepository);
+        this.service = new ProductServiceImpl(productRepository,accountService ,sellerService,batchRepository, warehouseRepository);
     }
 
     @Test

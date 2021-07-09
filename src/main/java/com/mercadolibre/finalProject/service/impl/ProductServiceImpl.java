@@ -14,6 +14,7 @@ import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
+import com.mercadolibre.finalProject.repository.WarehouseRepository;
 import com.mercadolibre.finalProject.service.IAccountService;
 import com.mercadolibre.finalProject.service.IProductService;
 import com.mercadolibre.finalProject.service.ISellerService;
@@ -22,20 +23,23 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
 
-    private ProductRepository productRepository;
-    private IAccountService accountService;
-    private ISellerService sellerService;
-    private BatchRepository batchRepository;
+    private final ProductRepository productRepository;
+    private final IAccountService accountService;
+    private final ISellerService sellerService;
+    private final BatchRepository batchRepository;
+    private final WarehouseRepository warehouseRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, IAccountService accountService, ISellerService sellerService, BatchRepository batchRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, IAccountService accountService, ISellerService sellerService, BatchRepository batchRepository, WarehouseRepository warehouseRepository) {
         this.productRepository = productRepository;
         this.accountService = accountService;
         this.sellerService = sellerService;
         this.batchRepository = batchRepository;
+        this.warehouseRepository = warehouseRepository;
     }
 
     @Override
@@ -97,21 +101,21 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductStockDTO getStockForProductInCountryByDate (Long productId, Long countryId, LocalDate date) throws ProductNotFoundException {
+    public ProductStockDTO getStockForProductInCountryByDate(Long productId, Long countryId, LocalDate date) throws ProductNotFoundException {
         Product product = this.findProductBy(productId);
         return new ProductStockDTO(
-                productId, product.getName(),product.getPrice(),this.getBatchesOfProductInCountry(productId,countryId,date));
+                productId, product.getName(), product.getPrice(), this.getBatchesOfProductInCountry(productId, countryId, date));
     }
 
     @Override
-    public List<BatchDTO> getBatchesOfProductInCountry (Long productId, Long countryId, LocalDate date) {
-        List<Batch> batchesByProductCountryAndDate = this.batchRepository.findByProductCountryAndDate(productId,countryId,date);
+    public List<BatchDTO> getBatchesOfProductInCountry(Long productId, Long countryId, LocalDate date) {
+        List<Batch> batchesByProductCountryAndDate = this.batchRepository.findByProductCountryAndDate(productId, countryId, date);
         return BatchMapper.toListDTO(batchesByProductCountryAndDate);
     }
 
     @Override
-    public Integer getQuantityOfProductByCountryAndDate (Long productId, Long countryId, LocalDate date) {
-        if( this.batchRepository.getProductQuantityByCountryAndDate(productId, countryId, date) == null ){
+    public Integer getQuantityOfProductByCountryAndDate(Long productId, Long countryId, LocalDate date) {
+        if (this.batchRepository.getProductQuantityByCountryAndDate(productId, countryId, date) == null) {
             return 0;
         }
         return this.batchRepository.getProductQuantityByCountryAndDate(productId, countryId, date);
@@ -121,25 +125,33 @@ public class ProductServiceImpl implements IProductService {
     public List<ProductResponseDTO> getProductsByCountry(String username, Integer productType) {
         Long countryId = this.accountService.getAccountByUsername(username).getCountry().getId();
 
-        if(productType == null) {
+        if (productType == null) {
             return ProductMapper.toListResponseDTO(this.productRepository.findByCountry(countryId));
         }
 
-        ProductType productTypeEnum = ProductType.toEnum(productType); // checks if product type is valid
-        return ProductMapper.toListResponseDTO(this.productRepository.findByCountryAndType(countryId,productType));
+        ProductType.toEnum(productType); // checks if product type is valid
+        return ProductMapper.toListResponseDTO(this.productRepository.findByCountryAndType(countryId, productType));
     }
 
     @Override
     public SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId) {
-        List<ProductRepository.ISumOfProductStockDTO> query = productRepository.getSumOfProductStockInAllWarehouses(productId);
+        List<WarehouseRepository.ISumOfProductStockDTO> query = warehouseRepository.getSumOfProductStockInAllWarehouses(productId);
 
         List<WarehouseProductSumDTO> dto = new ArrayList<>();
 
         query.forEach(c -> dto.add(new WarehouseProductSumDTO(Long.valueOf(c.getWarehouse_id()), Integer.valueOf(c.getQuantity()))));
 
-//        if (dto.isEmpty()){
-//            throw new RuntimeException("Não existe produto com o id: " + productId);
-//        }
         return new SumOfProductStockDTO(productId, dto);
+    }
+
+
+    @Override
+    public SumOfProductStockDTO getSumOfProductStockByCountry(Long productId, Long countryId) {
+        SumOfProductStockDTO dto = new SumOfProductStockDTO();
+        dto.setProductId(productId);
+        List<WarehouseProductSumDTO> warehouses = warehouseRepository.getSumOfProductsByCountry(productId, countryId).stream()
+                .map(x -> new WarehouseProductSumDTO(Long.valueOf(x.getWarehouse_id()), Integer.valueOf(x.getQuantity()))).collect(Collectors.toList());
+
+        return new SumOfProductStockDTO(productId, warehouses);
     }
 }

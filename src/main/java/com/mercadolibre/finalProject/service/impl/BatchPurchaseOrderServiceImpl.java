@@ -19,16 +19,17 @@ public class BatchPurchaseOrderServiceImpl implements IBatchPurchaseOrderService
         this.repository = repository;
     }
 
-    private BatchPurchaseOrder getModelById (Long id) {
+    private BatchPurchaseOrder getModelById(Long id) {
         Optional<BatchPurchaseOrder> batchPurchaseOpt = this.repository.findById(id);
-        if(batchPurchaseOpt.isEmpty()) { throw new NotFoundException("Purchase Order Batch ID " + id + " invalid"); } //can't find batch purchase order
+        if (batchPurchaseOpt.isEmpty()) {
+            throw new NotFoundException("Purchase Order Batch ID " + id + " invalid");
+        }
 
         return batchPurchaseOpt.get();
     }
 
     @Override
-    public BatchPurchaseOrderResponseDTO findById (Long id) {
-
+    public BatchPurchaseOrderResponseDTO findById(Long id) {
         BatchPurchaseOrder batchPurchaseOrder = this.getModelById(id);
         return BatchPurchaseOrderMapper.toResponseDTO(batchPurchaseOrder);
     }

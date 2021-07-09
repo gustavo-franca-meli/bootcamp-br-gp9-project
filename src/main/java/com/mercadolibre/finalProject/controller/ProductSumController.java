@@ -18,7 +18,11 @@ public class ProductSumController {
     }
 
     @GetMapping
-    public SumOfProductStockDTO getSumOfProductInAllWarehouses(@RequestParam Long productId){
-        return service.getSumOfProductStockInAllWarehouses(productId);
+    public SumOfProductStockDTO getSumOfProductInAllWarehouses(@RequestParam Long productId , @RequestParam(required = false) Long countryId){
+        if(countryId != null){
+            return service.getSumOfProductStockByCountry(productId, countryId);
+        }else{
+            return service.getSumOfProductStockInAllWarehouses(productId);
+        }
     }
 }
