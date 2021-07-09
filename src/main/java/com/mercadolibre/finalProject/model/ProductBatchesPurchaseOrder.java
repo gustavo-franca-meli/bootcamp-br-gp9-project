@@ -1,5 +1,6 @@
 package com.mercadolibre.finalProject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +27,7 @@ public class ProductBatchesPurchaseOrder {
     @OneToMany(mappedBy = "productBatchPurchaseOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BatchPurchaseOrder> purchaseBatches = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "purchase_order_id")
     private PurchaseOrder purchaseOrder;

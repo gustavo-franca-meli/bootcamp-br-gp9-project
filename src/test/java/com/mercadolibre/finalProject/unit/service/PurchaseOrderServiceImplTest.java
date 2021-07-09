@@ -1,13 +1,17 @@
 package com.mercadolibre.finalProject.unit.service;
 
 import com.google.common.collect.Lists;
+import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.model.Account;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
 import com.mercadolibre.finalProject.repository.*;
 import com.mercadolibre.finalProject.service.*;
 import com.mercadolibre.finalProject.service.impl.*;
 import com.mercadolibre.finalProject.util.TestUtils;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,35 +37,80 @@ public class PurchaseOrderServiceImplTest {
         this.service = new PurchaseOrderServiceImpl(purchaseOrderRepository, productRepository, batchRepository, batchService, productService, accountRepository);
     }
 
-//    @Test
-//    void shouldCreatePurchaseOrder() {
-//        PurchaseOrderRequestDTO purchaseOrderRequest = TestUtils.getPurchaseOrderRequestDTO();
-//        String username = "onias-rocha";
-//        var responseExpected = TestUtils.getPurchaseOrderResponseDTO();
-//
-//        Optional<Account> accountOpt = Optional.of(TestUtils.getAccountMocked());
-//        when(accountRepository.findByUsername(username)).thenReturn(accountOpt);
-//
-//        when(productService.findById(1L)).thenReturn(TestUtils.getProductResponseDTO());
-//
-//        Optional<PurchaseOrder> purchaseOrderOpt = Optional.of(TestUtils.getPurchaseOrder());
-//        purchaseOrderOpt.get().setProducts(Lists.newArrayList(TestUtils.getProductBatchesPurchaseOrder()));
-//        when(purchaseOrderRepository.findById(1L)).thenReturn(purchaseOrderOpt);
-//
-//        var response = service.getById(id, username);
-//
-//        verify(purchaseOrderRepository, times(1)).findById(anyLong());
-//        verify(accountRepository, times(1)).findByUsername(any());
-//
-//        assertEquals(responseExpected.getId(), response.getId());
-//        assertEquals(responseExpected.getTotalPrice(), response.getTotalPrice());
-//        assertEquals(responseExpected.getProducts().size(), response.getProducts().size());
-//        assertEquals(responseExpected.getDate(), response.getDate());
-//    }
+    @Test
+    void shouldCreatePurchaseOrder() throws Exception {
+        PurchaseOrderRequestDTO purchaseOrderRequest = TestUtils.getPurchaseOrderRequestDTO();
+        String username = "onias-rocha";
+        var responseExpected = TestUtils.getPurchaseOrderResponseDTO();
+
+        Optional<Account> accountOpt = Optional.of(TestUtils.getAccountMocked());
+        when(accountRepository.findByUsername(any())).thenReturn(accountOpt);
+
+        when(productService.findById(anyLong())).thenReturn(TestUtils.getProductResponseDTO());
+
+        var quantityExpected = 10;
+        when(productService.getQuantityOfProductByCountryAndDate(anyLong(), anyLong(), any())).thenReturn(quantityExpected);
+
+        var productValidOpt = Optional.of(TestUtils.getProductMocked());
+        when(productRepository.findById(any())).thenReturn(productValidOpt);
+
+        ProductStockDTO productStockDTO = TestUtils.getProductStockDTO();
+        when(productService.getStockForProductInCountryByDate(anyLong(), anyLong(), any())).thenReturn(productStockDTO);
+
+        when(purchaseOrderRepository.save(any())).thenReturn(TestUtils.getPurchaseOrder());
+
+        PurchaseOrderResponseDTO response = null;
+        try {
+            response = service.create(purchaseOrderRequest, username);
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+
+        verify(accountRepository, times(1)).findByUsername(any());
+        verify(productService, times(1)).findById(anyLong());
+        verify(productService, times(1)).getQuantityOfProductByCountryAndDate(anyLong(), anyLong(), any());
+        verify(purchaseOrderRepository, times(1)).save(any());
+
+        assertEquals(responseExpected.getTotalPrice(), response.getTotalPrice());
+        assertEquals(responseExpected.getProducts().size(), response.getProducts().size());
+        assertEquals(responseExpected.getDate(), response.getDate());
+    }
 
     @Test
-    void shouldUpdatePurchaseOrder() {
+    void shouldUpdatePurchaseOrder() throws Exception {
+        PurchaseOrderUpdateRequestDTO purchaseOrderRequest = TestUtils.getPurchaseOrderUpdateRequestDTO();
+        var responseExpected = TestUtils.getPurchaseOrderResponseDTO();
 
+        Optional<PurchaseOrder> purchaseOrderOpt = Optional.of(TestUtils.getPurchaseOrder());
+        purchaseOrderOpt.get().setProducts(Lists.newArrayList(TestUtils.getProductBatchesPurchaseOrder()));
+        when(purchaseOrderRepository.findById(1L)).thenReturn(purchaseOrderOpt);
+
+        when(productService.findById(anyLong())).thenReturn(TestUtils.getProductResponseDTO());
+
+        var quantityExpected = 10;
+        when(productService.getQuantityOfProductByCountryAndDate(anyLong(), anyLong(), any())).thenReturn(quantityExpected);
+
+        var productValidOpt = Optional.of(TestUtils.getProductMocked());
+        when(productRepository.findById(any())).thenReturn(productValidOpt);
+
+        ProductStockDTO productStockDTO = TestUtils.getProductStockDTO();
+        when(productService.getStockForProductInCountryByDate(anyLong(), anyLong(), any())).thenReturn(productStockDTO);
+
+        when(purchaseOrderRepository.save(any())).thenReturn(TestUtils.getPurchaseOrder());
+
+        PurchaseOrderResponseDTO response = null;
+        try {
+            response = service.update(purchaseOrderRequest);
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+
+        verify(purchaseOrderRepository, times(1)).findById(any());
+        verify(purchaseOrderRepository, times(1)).save(any());
+
+        assertEquals(responseExpected.getTotalPrice(), response.getTotalPrice());
+        assertEquals(responseExpected.getProducts().size(), response.getProducts().size());
+        assertEquals(responseExpected.getDate(), response.getDate());
     }
 
     @Test
