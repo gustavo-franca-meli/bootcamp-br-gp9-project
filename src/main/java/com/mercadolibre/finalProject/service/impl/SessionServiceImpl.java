@@ -80,27 +80,4 @@ public class SessionServiceImpl implements ISessionService {
         return "Bearer " + token;
     }
 
-    /**
-     * Decodifica un token para poder obtener los componentes que contiene el mismo
-     *
-     * @param token
-     * @return
-     */
-    private static Claims decodeJWT(String token) {
-        Claims claims = Jwts.parser().setSigningKey("mySecretKey".getBytes())
-                .parseClaimsJws(token).getBody();
-        return claims;
-    }
-
-    /**
-     * Permite obtener el username según el token indicado
-     *
-     * @param token
-     * @return
-     */
-    public static String getUsername(String token) {
-        Claims claims = decodeJWT(token);
-        return claims.get("sub", String.class);
-    }
-
 }

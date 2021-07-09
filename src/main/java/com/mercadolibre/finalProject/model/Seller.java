@@ -32,22 +32,6 @@ public class Seller {
         this.id = id;
     }
 
-    public Seller(Long id, String name) {
-        this.id = id;
-        this.name = name;
-        this.products = new ArrayList<>();
-    }
-
-    public Seller(String name, List<Product> products) {
-        this.name = name;
-        this.products = products;
-    }
-
-    public Seller(String name, Account account) {
-        this.name = name;
-        this.account = account;
-    }
-
     public Seller(Long id, String name, Account account) {
         this.id = id;
         this.name = name;
