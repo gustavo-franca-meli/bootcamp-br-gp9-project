@@ -1,27 +1,17 @@
 package com.mercadolibre.finalProject.util;
 
 import com.google.common.collect.Lists;
-import com.mercadolibre.finalProject.dtos.BatchDTO;
-import com.mercadolibre.finalProject.dtos.BatchPurchaseOrderDTO;
-import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
-import com.mercadolibre.finalProject.dtos.SectorDTO;
+import com.mercadolibre.finalProject.dtos.*;
 import com.mercadolibre.finalProject.dtos.request.*;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
 import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
-import com.mercadolibre.finalProject.model.enums.ProductType;
-import com.mercadolibre.finalProject.model.enums.RoleType;
-import com.mercadolibre.finalProject.model.mapper.ProductMapper;
-import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
-import com.mercadolibre.finalProject.model.mapper.SectorMapper;
+import com.mercadolibre.finalProject.model.enums.*;
+import com.mercadolibre.finalProject.model.mapper.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.time.*;
+import java.util.*;
+import java.util.stream.*;
 
 public interface TestUtils {
 
@@ -89,8 +79,16 @@ public interface TestUtils {
 
 
     static Product getProductValid() {
-        //return new Product("Pizza", null);
         return new Product(1L);
+    }
+
+    static Product getProductMocked() {
+        return new Product(1L,
+                "Produto1",
+                "",
+                10.0,
+                1,
+                new Seller());
     }
 
     static InboundOrder getOrderValid() {
@@ -323,6 +321,10 @@ public interface TestUtils {
 
     static WarehouseProductSumDTO getWarehouseProductSumDTO() {
         return new WarehouseProductSumDTO(1L, 1);
+    }
+
+    static ProductStockDTO getProductStockDTO() {
+        return new ProductStockDTO(1L, "Produto1", 10.0, new ArrayList<>());
     }
 
     static SumOfProductStockDTO getSumOfProductStockDTO() {
