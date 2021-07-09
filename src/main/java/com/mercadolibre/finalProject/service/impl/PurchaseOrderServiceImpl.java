@@ -97,9 +97,8 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         if(!this.isBuyerIdValid(account,purchaseOrder.getBuyer().getId())) {
             throw new BuyerIdInvalidForRequest("Buyer owner of purchase order id " + purchaseOrder.getId() + " isn't logged in.");
         }
-
-        return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
-    }
+          return PurchaseOrderMapper.toResponseDTO(purchaseOrder);
+    }  
 
     @Override
     public List<PurchaseOrderResponseDTO> getAll(String username) {
@@ -206,7 +205,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         batchPurchaseOrder.setQuantity(batchPurchaseOrder.getQuantity() + quantity);
         BatchDTO batchDTO = this.batchService.withdrawQuantity(batchPurchaseOrder.getBatch().getId(),quantity);
     }
-
+  
     public Boolean isStockEnough (List<ProductPurchaseOrderRequestDTO> productRequests, Long countryId, LocalDate date) throws ProductNotFoundException, StockInsufficientException {
         List<ProductStockInsufficientException> exceptions = new ArrayList<>();
 
