@@ -23,7 +23,7 @@ public class CountryController {
 
     @RequestMapping(method = RequestMethod.POST, consumes="application/json")
     @ResponseBody
-    public ResponseEntity<CountryResponseDTO> create(@RequestHeader(value="Authorization") String token, @Validated @RequestBody CountryRequestDTO newCountryHouse) {
+    public ResponseEntity<CountryResponseDTO> create(@Validated @RequestBody CountryRequestDTO newCountryHouse) {
         CountryResponseDTO countryResponseDTO = countryService.create(newCountryHouse);
 
         return new ResponseEntity(countryResponseDTO, HttpStatus.CREATED);

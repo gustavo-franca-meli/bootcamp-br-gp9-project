@@ -29,19 +29,4 @@ public class Country {
         this.name = name;
         this.accounts = new ArrayList<>();
     }
-
-    public Country(Long id, @Unique String name) {
-        this.id = id;
-        this.name = name;
-        this.accounts = new ArrayList<>();
-    }
-
-    public Country(@Unique String name, List<Account> accounts) {
-        this.name = name;
-        this.accounts = accounts;
-    }
-
-    public Country(Long id) {
-        this.id = id;
-    }
 }

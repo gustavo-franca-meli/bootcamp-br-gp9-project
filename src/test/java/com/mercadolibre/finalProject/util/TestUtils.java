@@ -5,20 +5,22 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.BatchPurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
 import com.mercadolibre.finalProject.dtos.SectorDTO;
-import com.mercadolibre.finalProject.dtos.request.CountryRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.ProductPurchaseOrderRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.*;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
 import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.ProductType;
+import com.mercadolibre.finalProject.model.enums.RoleType;
+import com.mercadolibre.finalProject.model.mapper.ProductMapper;
 import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
 import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface TestUtils {
@@ -30,10 +32,6 @@ public interface TestUtils {
 
     static Optional<Warehouse> getOptionalWarehouseInvalid() {
         return Optional.ofNullable(null);
-    }
-
-    static Country getCountryValid() {
-        return new Country(1L);
     }
 
     static Country getCountry() {
@@ -68,23 +66,27 @@ public interface TestUtils {
     }
 
     static Account getAccountValid() {
-        return new Account();
+        var acc = new Account();
+        acc.setId(1L);
+        acc.setUsername("A Name Interesting");
+        acc.setPassword("A Strong Password");
+        acc.setRol(RoleType.REPRESENTATIVE.getCode());
+        var country = getCountry();
+        country.setId(1L);
+        acc.setCountry(country);
+        return acc;
     }
 
     static Account getAccountMocked() {
-    return new Account(1L, "onias-rocha", "pass123", 1, new Country(1L, "Argentina"));
+        var country = new Country("Argentina");
+        country.setId(1L);
+        return new Account(1L, "onias-rocha", "pass123", 1, country);
     }
 
     static RepresentativeResponseDTO getRepresentativeResponseDTOValid() {
         return RepresentativeMapper.toResponseDTO(getRepresentativeValid());
     }
 
-    static Seller getSellerValid() {
-        var products = Arrays.asList(getProductValid());
-        var seller = new Seller("Leonardo", products);
-        seller.setId(1L);
-        return seller;
-    }
 
     static Product getProductValid() {
         //return new Product("Pizza", null);
@@ -222,6 +224,20 @@ public interface TestUtils {
         return new CountryResponseDTO(1L, "Brasil");
     }
 
+    static ProductRequestDTO createProductRequestDTO() {
+        return new ProductRequestDTO("Produto1", "", 10.0, 1);
+    }
+
+    static Product createExpectedProduct(Seller sellerExpected) {
+        return new Product(
+                1L,
+                "Produto1",
+                "",
+                10.0,
+                1,
+                sellerExpected);
+    }
+
     static BatchPurchaseOrder getBatchPurchaseOrder() {
         var batch = getBatchValid();
         return new BatchPurchaseOrder(10, batch);
@@ -275,4 +291,42 @@ public interface TestUtils {
         return new ProductBatchesPurchaseOrder(product, 10.0, purchaseOrder);
     }
 
+    static ProductResponseDTO createExpectedProductResponseDTO(Seller sellerExpected) {
+        return new ProductResponseDTO(
+                1L,
+                "Produto1",
+                "",
+                10.0,
+                1,
+                "Fresh");
+    }
+
+    static Seller createExpectedSeller() {
+        return new Seller(
+                1L,
+                "Seller1",
+                new Account(
+                        "seller1",
+                        "123",
+                        1,
+                        new Country("Brasil")));
+    }
+
+    static List<ProductResponseDTO> getListProductResponse() {
+        var listOfProduct = getListOfProducts();
+        return ProductMapper.toListResponseDTO(listOfProduct);
+    }
+
+    static List<Product> getListOfProducts() {
+        return Arrays.asList(createExpectedProduct(createExpectedSeller()), createExpectedProduct(createExpectedSeller()), createExpectedProduct(createExpectedSeller()), createExpectedProduct(createExpectedSeller()));
+    }
+
+    static WarehouseProductSumDTO getWarehouseProductSumDTO() {
+        return new WarehouseProductSumDTO(1L, 1);
+    }
+
+    static SumOfProductStockDTO getSumOfProductStockDTO() {
+        var listWareHouseProductSumDTO = Arrays.asList(getWarehouseProductSumDTO());
+        return new SumOfProductStockDTO(1L, listWareHouseProductSumDTO);
+    }
 }

@@ -1,9 +1,9 @@
 package com.mercadolibre.finalProject.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IProductService;
 import org.springframework.http.HttpStatus;
@@ -38,11 +38,20 @@ public class ProductController {
     }
 
     @GetMapping
-    ResponseEntity<List<ProductResponseDTO>> getProductsByCountry (@RequestParam(required = false) Integer productType) {
+    ResponseEntity<List<ProductResponseDTO>> getProductsByCountry(@RequestParam(required = false) Integer productType) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
         List<ProductResponseDTO> response = productService.getProductsByCountry(username, productType);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/warehouse")
+    public SumOfProductStockDTO getSumOfProductInAllWarehouses(@RequestParam Long productId, @RequestParam(required = false) Long countryId) {
+        if (countryId != null) {
+            return productService.getSumOfProductStockByCountry(productId, countryId);
+        } else {
+            return productService.getSumOfProductStockInAllWarehouses(productId);
+        }
     }
 }

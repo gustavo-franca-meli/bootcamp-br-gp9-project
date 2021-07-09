@@ -32,8 +32,8 @@ public class AccountServiceImplTest {
 
     @Test
     public void shouldReturnAccountByUsername() {
-        var country = TestUtils.getCountryValid();
-        country.setName("Brasil");
+        var country = TestUtils.getCountry();
+        country.setId(1L);
         var expected = TestUtils.getAccountValid();
         expected.setId(1L);
         expected.setUsername("user");
