@@ -1,6 +1,5 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.exceptions.SellerNotFoundException;
 import com.mercadolibre.finalProject.model.Seller;
 import com.mercadolibre.finalProject.repository.SellerRepository;
