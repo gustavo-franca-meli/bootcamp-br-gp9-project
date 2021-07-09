@@ -44,7 +44,7 @@ public class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.service = new ProductServiceImpl(productRepository,accountService ,sellerService,batchRepository, warehouseRepository);
+        this.service = new ProductServiceImpl(productRepository, accountService, sellerService, batchRepository, warehouseRepository);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ProductServiceTest {
 
         var request = TestUtils.createProductRequestDTO();
 
-        var response = service.update(productId,request);
+        var response = service.update(productId, request);
 
         verify(sellerService, times(1)).findSellerById(any());
         verify(productRepository, times(1)).save(any());
@@ -91,19 +91,19 @@ public class ProductServiceTest {
 
     @Test
     void shouldDeleteProductCorrectly() {
-        var productIdToDelete  = 10L;
-        assertDoesNotThrow(() ->service.delete(productIdToDelete));
-        verify(productRepository,times(1)).deleteById(productIdToDelete);
+        var productIdToDelete = 10L;
+        assertDoesNotThrow(() -> service.delete(productIdToDelete));
+        verify(productRepository, times(1)).deleteById(productIdToDelete);
 
     }
 
     @Test
     void shouldReturnAProductList() {
-        var responseExpected  = TestUtils.getListProductResponse();
+        var responseExpected = TestUtils.getListProductResponse();
 
         when(productRepository.findAll()).thenReturn(TestUtils.getListOfProducts());
         var response = service.findAll();
-        assertEquals(responseExpected,response);
+        assertEquals(responseExpected, response);
     }
 
     @Test
@@ -114,9 +114,9 @@ public class ProductServiceTest {
         var product = TestUtils.createExpectedProduct(TestUtils.createExpectedSeller());
         product.setId(10L);
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        var total = service.getTotalPrice(productId,quantity);
+        var total = service.getTotalPrice(productId, quantity);
 
-        assertEquals(total,product.getPrice() * quantity);
+        assertEquals(total, product.getPrice() * quantity);
 
     }
 
@@ -130,13 +130,13 @@ public class ProductServiceTest {
         product.setId(10L);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        when(batchRepository.findByProductCountryAndDate(productId,countryId,date)).thenReturn(listBatchResponse);
+        when(batchRepository.findByProductCountryAndDate(productId, countryId, date)).thenReturn(listBatchResponse);
 
         var expected = BatchMapper.toListDTO(listBatchResponse);
 
-        var response = service.getStockForProductInCountryByDate(productId,countryId, LocalDate.now());
+        var response = service.getStockForProductInCountryByDate(productId, countryId, LocalDate.now());
 
-        assertEquals(expected,response.getBatches());
+        assertEquals(expected, response.getBatches());
 
     }
 
@@ -146,19 +146,20 @@ public class ProductServiceTest {
         var countryId = 1L;
         var date = LocalDate.now();
         var expected = 10;
-        when(batchRepository.getProductQuantityByCountryAndDate(productId,countryId,date)).thenReturn(expected);
-        var response = service.getQuantityOfProductByCountryAndDate(productId,countryId,date);
-        assertEquals(expected,response);
+        when(batchRepository.getProductQuantityByCountryAndDate(productId, countryId, date)).thenReturn(expected);
+        var response = service.getQuantityOfProductByCountryAndDate(productId, countryId, date);
+        assertEquals(expected, response);
     }
+
     @Test
     void shouldReturnZeroWhenNotFoundBatches() {
         var productId = 10L;
         var countryId = 1L;
         var date = LocalDate.now();
         var expected = 0;
-        when(batchRepository.getProductQuantityByCountryAndDate(productId,countryId,date)).thenReturn(null);
-        var response = service.getQuantityOfProductByCountryAndDate(productId,countryId,date);
-        assertEquals(expected,response);
+        when(batchRepository.getProductQuantityByCountryAndDate(productId, countryId, date)).thenReturn(null);
+        var response = service.getQuantityOfProductByCountryAndDate(productId, countryId, date);
+        assertEquals(expected, response);
     }
 
     @Test
@@ -172,8 +173,8 @@ public class ProductServiceTest {
         when(accountService.getAccountByUsername(account.getUsername())).thenReturn(account);
         when(productRepository.findByCountry(account.getCountry().getId())).thenReturn(products);
 
-        var response = service.getProductsByCountry(account.getUsername(),null);
-        assertEquals(expected,response);
+        var response = service.getProductsByCountry(account.getUsername(), null);
+        assertEquals(expected, response);
     }
 
     @Test
@@ -186,21 +187,18 @@ public class ProductServiceTest {
         var products = TestUtils.getListOfProducts();
 
         when(accountService.getAccountByUsername(account.getUsername())).thenReturn(account);
-        when(productRepository.findByCountryAndType(account.getCountry().getId(),productType)).thenReturn(products);
+        when(productRepository.findByCountryAndType(account.getCountry().getId(), productType)).thenReturn(products);
 
-        var response = service.getProductsByCountry(account.getUsername(),productType);
-        assertEquals(expected,response);
+        var response = service.getProductsByCountry(account.getUsername(), productType);
+        assertEquals(expected, response);
     }
 
     @Test
     void shouldReturnSumOfProductStockInAllWarehouses() {
-
-
-
         var productId = 10L;
 
         var listWarehouseSum = new ArrayList<WarehouseProductSumDTO>();
-        var warehouseProductSumDTO = new WarehouseProductSumDTO(1l,10);
+        var warehouseProductSumDTO = new WarehouseProductSumDTO(1l, 10);
         listWarehouseSum.add(warehouseProductSumDTO);
         listWarehouseSum.add(warehouseProductSumDTO);
         listWarehouseSum.add(warehouseProductSumDTO);
@@ -224,12 +222,8 @@ public class ProductServiceTest {
 
         var response = service.getSumOfProductStockInAllWarehouses(productId);
 
-        assertEquals(expected,response);
+        assertEquals(expected.getProductId(), response.getProductId());
     }
-
-
-
-
 
 
 }

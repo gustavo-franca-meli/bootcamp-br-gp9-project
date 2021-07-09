@@ -23,7 +23,7 @@ public class ProductControllerTest extends ControllerTest {
 
     private static final String BASIC_PATH = "/api/v1/fresh-products";
     private static final String PATH_LIST = BASIC_PATH + "/list";
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static final String PATH_WAREHOUSE = BASIC_PATH + "/warehouse";
     private String token = "";
 
     @Autowired
@@ -144,16 +144,18 @@ public class ProductControllerTest extends ControllerTest {
 
     @Test
     void shouldGetSumOfProductInAllWarehouses() throws Exception {
-        var expected = TestUtils.getProductResponseDTO();
-        this.mockMvc.perform(MockMvcRequestBuilders.get(BASIC_PATH)
+        var expected = TestUtils.getSumOfProductStockDTO();
+        this.mockMvc.perform(MockMvcRequestBuilders.get(PATH_WAREHOUSE)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("productType", "1")
+                .param("productId", "1")
+                .param("countryId", "1")
         )
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].id").value(expected.getId()));
+                .andExpect(jsonPath("$.product_id").value(expected.getProductId()))
+                .andExpect(jsonPath("$.warehouses").exists())
+                .andExpect(jsonPath("$.warehouses").isArray());
     }
 }
