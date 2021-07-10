@@ -251,12 +251,12 @@ public interface TestUtils {
     }
 
     static BatchPurchaseOrderResponseDTO getBatchPurchaseOrderResponseDTO() {
-        return new BatchPurchaseOrderResponseDTO(1L, 3L, 1, LocalDate.of(2021,04,10), LocalDateTime.of(2021,04,10,0,0), LocalDate.of(2021,04,10));
+        return new BatchPurchaseOrderResponseDTO(2L, 3L, 1, LocalDate.of(2021,04,10), LocalDateTime.of(2021,04,10,0,0), LocalDate.of(2021,04,10));
     }
 
     static PurchaseOrderRequestDTO getPurchaseOrderRequestDTO() {
         return new PurchaseOrderRequestDTO(
-                LocalDate.now(),
+                LocalDate.of(2021,7,1),
                 1L,
                 1,
                 Lists.newArrayList(new ProductPurchaseOrderRequestDTO(1L, 1))
@@ -271,14 +271,52 @@ public interface TestUtils {
         var account = getAccountMocked();
         var purchaseProduct = new ProductBatchesPurchaseOrder(getProductMocked(), 13.89, null);
         purchaseProduct.setPurchaseBatches(List.of(getBatchPurchaseOrder()));
-        var purchaseOrder =  new PurchaseOrder(1L, account, LocalDate.now(), 1,List.of(purchaseProduct));
+        var purchaseOrder =  new PurchaseOrder(2L, account, LocalDate.of(2021,7,1), 1,List.of(purchaseProduct));
         return purchaseOrder;
     }
 
     static PurchaseOrderResponseDTO getPurchaseOrderResponseDTO() {
         return new PurchaseOrderResponseDTO(
+                2L,
+                LocalDate.of(2021,7,1),
+                13.89,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        2L,
+                        1L,
+                        "Bisteca Suína",
+                        1,
+                        13.89,
+                        Lists.newArrayList(getBatchPurchaseOrderResponseDTO())))
+        );
+    }
+
+
+    static PurchaseOrderResponseDTO getExistingPurchaseOrderResponseDTO() {
+        return new PurchaseOrderResponseDTO(
                 1L,
-                LocalDate.now(),
+                LocalDate.of(2021,7,9),
+                277.8,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        1L,
+                        1L,
+                        "Bisteca Suína",
+                        20,
+                        277.8,
+                        Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                1L,
+                                3L,
+                                20,
+                                LocalDate.of(2021,4,10),
+                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
+                                LocalDate.of(2021,7,30)
+                        ))))
+        );
+    }
+
+    static PurchaseOrderResponseDTO getExistingPurchaseOrderUpdatedResponseDTO() {
+        return new PurchaseOrderResponseDTO(
+                1L,
+                LocalDate.of(2021,7,9),
                 13.89,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         1L,
@@ -286,7 +324,14 @@ public interface TestUtils {
                         "Bisteca Suína",
                         1,
                         13.89,
-                        Lists.newArrayList(getBatchPurchaseOrderResponseDTO())))
+                        Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                1L,
+                                3L,
+                                1,
+                                LocalDate.of(2021,4,10),
+                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
+                                LocalDate.of(2021,7,30)
+                        ))))
         );
     }
 

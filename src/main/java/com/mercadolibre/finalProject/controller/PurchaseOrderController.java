@@ -25,7 +25,7 @@ public class PurchaseOrderController {
         this.purchaseOrderService = purchaseOrderService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<PurchaseOrderResponseDTO> create(@RequestBody PurchaseOrderRequestDTO dto) throws Exception {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -34,16 +34,16 @@ public class PurchaseOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PurchaseOrderResponseDTO> getById (@PathVariable Long id) throws Exception {
+    @GetMapping
+    public ResponseEntity<PurchaseOrderResponseDTO> getById (@RequestParam Long purchaseOrderId) throws Exception {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
-        PurchaseOrderResponseDTO response = purchaseOrderService.getById(id, username);
+        PurchaseOrderResponseDTO response = purchaseOrderService.getById(purchaseOrderId, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<PurchaseOrderResponseDTO>> getAll () throws Exception {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
