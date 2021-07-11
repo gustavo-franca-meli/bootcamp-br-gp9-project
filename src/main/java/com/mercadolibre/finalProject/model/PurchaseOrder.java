@@ -1,6 +1,5 @@
 package com.mercadolibre.finalProject.model;
 
-import com.mercadolibre.finalProject.model.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +31,16 @@ public class PurchaseOrder {
     @OneToMany(mappedBy = "purchaseOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductBatchesPurchaseOrder> products = new ArrayList<>();
 
-    public PurchaseOrder(LocalDate orderDate, Integer orderStatus, List<ProductBatchesPurchaseOrder> products) {
+    @OneToOne(mappedBy = "purchaseOrder", fetch = FetchType.LAZY)
+    private ReturnOrder returnOrder;
+
+    public PurchaseOrder(Long id) {
+        this.id = id;
+    }
+
+    public PurchaseOrder(Long id, Account buyer, LocalDate orderDate, Integer orderStatus, List<ProductBatchesPurchaseOrder> products) {
+        this.id = id;
+        this.buyer = buyer;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
         this.products = products;
@@ -44,7 +52,7 @@ public class PurchaseOrder {
         this.orderStatus = orderStatus;
     }
 
-    public Double getTotalPrice () {
+    public Double getTotalPrice() {
         return this.getProducts().stream().mapToDouble(ProductBatchesPurchaseOrder::getTotalPrice).sum();
     }
 }

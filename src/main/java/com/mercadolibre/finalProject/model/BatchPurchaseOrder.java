@@ -35,4 +35,8 @@ public class BatchPurchaseOrder {
         this.quantity = quantity;
         this.batch = batch;
     }
+
+    public Long getWarehouseId() {
+        return this.batch.getSector().getWareHouseId();
+    }
 }

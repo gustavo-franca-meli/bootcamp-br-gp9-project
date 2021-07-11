@@ -5,7 +5,9 @@ public enum OrderStatus {
     PROCESSING (1, "Processing"),
     PAYED (2, "Payment Approved"),
     IN_DELIVERY (3, "In Delivery"),
-    DELIVERED (4, "Delivered");
+    DELIVERED (4, "Delivered"),
+    RETURN_PROCESSING (5, "Return Processing"),
+    RETURNED (6, "Returned");
 
     private int cod;
     private String description;

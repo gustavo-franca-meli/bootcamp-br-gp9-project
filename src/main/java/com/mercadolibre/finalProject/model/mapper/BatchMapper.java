@@ -4,8 +4,8 @@ import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestCreateDTO;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.BatchRequestUpdateDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchIdentificationResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.BatchValidateDateResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.BatchStockResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.BatchValidateDateResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.InboundOrder;
@@ -73,6 +73,7 @@ public interface BatchMapper {
                 batchStock.getDueDate()
         );
     }
+
     static BatchDTO toDTO(BatchRequestUpdateDTO batchStock) {
         return new BatchDTO(
                 batchStock.getId(),

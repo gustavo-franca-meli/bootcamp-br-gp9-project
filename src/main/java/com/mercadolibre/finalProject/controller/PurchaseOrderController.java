@@ -1,10 +1,8 @@
 package com.mercadolibre.finalProject.controller;
 
-import com.mercadolibre.finalProject.dtos.InboundOrderDTO;
-import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.InboundOrderResponseDTO;
+import com.mercadolibre.finalProject.dtos.request.UpdatePurchaseOrderStatusRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +32,7 @@ public class PurchaseOrderController {
     }
 
     @GetMapping
-    public ResponseEntity<PurchaseOrderResponseDTO> getById (@RequestParam Long purchaseOrderId) throws Exception {
+    public ResponseEntity<PurchaseOrderResponseDTO> getById(@RequestParam Long purchaseOrderId) throws Exception {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
@@ -44,7 +41,7 @@ public class PurchaseOrderController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PurchaseOrderResponseDTO>> getAll () throws Exception {
+    public ResponseEntity<List<PurchaseOrderResponseDTO>> getAll() throws Exception {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
@@ -57,4 +54,16 @@ public class PurchaseOrderController {
         PurchaseOrderResponseDTO response = purchaseOrderService.update(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PutMapping("update-status")
+    public ResponseEntity<Void> updateStatus(@RequestBody UpdatePurchaseOrderStatusRequestDTO dto) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        dto.setRepresentativeUsername(username);
+        this.purchaseOrderService.updateStatus(dto);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

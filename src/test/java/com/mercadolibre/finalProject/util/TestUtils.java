@@ -6,12 +6,17 @@ import com.mercadolibre.finalProject.dtos.request.*;
 import com.mercadolibre.finalProject.dtos.request.inboundOrder.*;
 import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
-import com.mercadolibre.finalProject.model.enums.*;
-import com.mercadolibre.finalProject.model.mapper.*;
+import com.mercadolibre.finalProject.model.enums.ProductType;
+import com.mercadolibre.finalProject.model.enums.RoleType;
+import com.mercadolibre.finalProject.model.mapper.ProductMapper;
+import com.mercadolibre.finalProject.model.mapper.RepresentativeMapper;
+import com.mercadolibre.finalProject.model.mapper.SectorMapper;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 public interface TestUtils {
 
@@ -283,7 +288,7 @@ public interface TestUtils {
         var account = getAccountMocked();
         var purchaseProduct = new ProductBatchesPurchaseOrder(getProductMocked(), 13.89, null);
         purchaseProduct.setPurchaseBatches(List.of(getBatchPurchaseOrder()));
-        var purchaseOrder =  new PurchaseOrder(2L, account, LocalDate.of(2021,7,1), 1,List.of(purchaseProduct));
+        var purchaseOrder =  new PurchaseOrder(2L, account, LocalDate.of(2021,7,1), 1, Arrays.asList(purchaseProduct));
         return purchaseOrder;
     }
 

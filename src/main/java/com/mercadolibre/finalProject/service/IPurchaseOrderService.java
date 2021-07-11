@@ -1,8 +1,8 @@
 package com.mercadolibre.finalProject.service;
 
-import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.UpdatePurchaseOrderStatusRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.StockInsufficientException;
@@ -18,4 +18,7 @@ public interface IPurchaseOrderService {
     PurchaseOrderResponseDTO getById(Long id, String username) throws ProductNotFoundException;
 
     List<PurchaseOrderResponseDTO> getAll(String username);
+
+    void updateStatus(UpdatePurchaseOrderStatusRequestDTO dto);
+
 }

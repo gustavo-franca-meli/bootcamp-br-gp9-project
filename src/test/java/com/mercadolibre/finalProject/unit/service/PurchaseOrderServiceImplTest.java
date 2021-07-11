@@ -7,12 +7,16 @@ import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.model.Account;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
-import com.mercadolibre.finalProject.repository.*;
-import com.mercadolibre.finalProject.service.*;
-import com.mercadolibre.finalProject.service.impl.*;
+import com.mercadolibre.finalProject.repository.AccountRepository;
+import com.mercadolibre.finalProject.repository.BatchRepository;
+import com.mercadolibre.finalProject.repository.ProductRepository;
+import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
+import com.mercadolibre.finalProject.service.IBatchService;
+import com.mercadolibre.finalProject.service.IProductService;
+import com.mercadolibre.finalProject.service.IRepresentativeService;
+import com.mercadolibre.finalProject.service.impl.PurchaseOrderServiceImpl;
 import com.mercadolibre.finalProject.util.TestUtils;
 import lombok.SneakyThrows;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,16 +35,17 @@ public class PurchaseOrderServiceImplTest {
     BatchRepository batchRepository = Mockito.mock(BatchRepository.class);
     IProductService productService = Mockito.mock(IProductService.class);
     IBatchService batchService = Mockito.mock(IBatchService.class);
+    IRepresentativeService representativeService = Mockito.mock(IRepresentativeService.class);
     PurchaseOrderServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        this.service = new PurchaseOrderServiceImpl(purchaseOrderRepository, productRepository, batchRepository, batchService, productService, accountRepository);
+        this.service = new PurchaseOrderServiceImpl(purchaseOrderRepository, productRepository, batchRepository, batchService, productService, accountRepository, representativeService);
     }
 
     @SneakyThrows
     @Test
-    void shouldCreatePurchaseOrder()  {
+    void shouldCreatePurchaseOrder() {
         PurchaseOrderRequestDTO purchaseOrderRequest = TestUtils.getPurchaseOrderRequestDTO();
         String username = "onias-rocha";
         var responseExpected = TestUtils.getPurchaseOrderResponseDTO();
