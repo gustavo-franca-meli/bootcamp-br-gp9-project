@@ -54,3 +54,7 @@ INSERT INTO batch (id,current_quantity, current_temperature, due_date, inbound_o
 INSERT INTO batch (`id`, `current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_time`, `minimum_temperature`, `inbound_order_id`, `product_id`, `sector_id`) VALUES (7, 10, 20.0, '2021-12-12', 100, '2021-04-10', '2021-04-10', 10.0, 3, 2,4);
 INSERT INTO batch (`id`, `current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_time`, `minimum_temperature`, `inbound_order_id`, `product_id`, `sector_id`) VALUES (9, 40, 20.0, '2021-11-11', 100, '2021-04-10', '2021-04-10', 10.0, 3, 2,4);
 INSERT INTO batch (`current_quantity`, `current_temperature`, `due_date`, `initial_quantity`, `manufacturing_date`, `manufacturing_time`, `minimum_temperature`, `inbound_order_id`, `product_id`, `sector_id`) VALUES (10, 20.0, '2021-12-12', 100, '2021-04-10', '2021-04-10', 10.0, 3, 2,4);
+
+INSERT INTO purchase_order (order_date, order_status, buyer_id) VALUES ('2021-07-09',1,1);
+INSERT INTO product_batch_purchase_order (current_price_per_unit, product_id, purchase_order_id) VALUES (13.89,1,1);
+INSERT INTO batch_purchase_order (quantity, batch_id, purchase_batch_order_id) VALUES (2,3,1);

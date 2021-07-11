@@ -251,12 +251,12 @@ public interface TestUtils {
     }
 
     static BatchPurchaseOrderResponseDTO getBatchPurchaseOrderResponseDTO() {
-        return new BatchPurchaseOrderResponseDTO(1L, 3L, 1, LocalDate.of(2021,04,10), LocalDateTime.of(2021,04,10,0,0), LocalDate.of(2021,04,10));
+        return new BatchPurchaseOrderResponseDTO(2L, 3L, 1, LocalDate.of(2021,4,10), LocalDateTime.of(2021,04,10,0,0), LocalDate.of(2021,4,10));
     }
 
     static PurchaseOrderRequestDTO getPurchaseOrderRequestDTO() {
         return new PurchaseOrderRequestDTO(
-                LocalDate.now(),
+                LocalDate.of(2021,7,1),
                 1L,
                 1,
                 Lists.newArrayList(new ProductPurchaseOrderRequestDTO(1L, 1))
@@ -267,18 +267,68 @@ public interface TestUtils {
         return new PurchaseOrderUpdateRequestDTO(1L, 1L, 1);
     }
 
+    static PurchaseOrderUpdateRequestDTO getPurchaseOrderDownsizeRequestDTO() {
+        return new PurchaseOrderUpdateRequestDTO(1L, 1L, 1);
+    }
+
+    static PurchaseOrderUpdateRequestDTO getPurchaseOrderUpsizeRequestDTO() {
+        return new PurchaseOrderUpdateRequestDTO(1L, 1L, 3);
+    }
+
+    static PurchaseOrderUpdateRequestDTO getPurchaseOrderAddProductRequestDTO() {
+        return new PurchaseOrderUpdateRequestDTO(1L, 2L, 1);
+    }
+
     static PurchaseOrder getPurchaseOrder() {
         var account = getAccountMocked();
         var purchaseProduct = new ProductBatchesPurchaseOrder(getProductMocked(), 13.89, null);
         purchaseProduct.setPurchaseBatches(List.of(getBatchPurchaseOrder()));
-        var purchaseOrder =  new PurchaseOrder(1L, account, LocalDate.now(), 1,List.of(purchaseProduct));
+        var purchaseOrder =  new PurchaseOrder(2L, account, LocalDate.of(2021,7,1), 1,List.of(purchaseProduct));
         return purchaseOrder;
     }
 
     static PurchaseOrderResponseDTO getPurchaseOrderResponseDTO() {
         return new PurchaseOrderResponseDTO(
+                2L,
+                LocalDate.of(2021,7,1),
+                13.89,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        2L,
+                        1L,
+                        "Bisteca Suína",
+                        1,
+                        13.89,
+                        Lists.newArrayList(getBatchPurchaseOrderResponseDTO())))
+        );
+    }
+
+
+    static PurchaseOrderResponseDTO getExistingPurchaseOrderResponseDTO() {
+        return new PurchaseOrderResponseDTO(
                 1L,
-                LocalDate.now(),
+                LocalDate.of(2021,7,9),
+                27.78,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        1L,
+                        1L,
+                        "Bisteca Suína",
+                        2,
+                        27.78,
+                        Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                1L,
+                                3L,
+                                2,
+                                LocalDate.of(2021,4,10),
+                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
+                                LocalDate.of(2021,7,30)
+                        ))))
+        );
+    }
+
+    static PurchaseOrderResponseDTO getExistingPurchaseOrderUpdatedResponseDTO() {
+        return new PurchaseOrderResponseDTO(
+                1L,
+                LocalDate.of(2021,7,9),
                 13.89,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         1L,
@@ -286,7 +336,72 @@ public interface TestUtils {
                         "Bisteca Suína",
                         1,
                         13.89,
-                        Lists.newArrayList(getBatchPurchaseOrderResponseDTO())))
+                        Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                1L,
+                                3L,
+                                1,
+                                LocalDate.of(2021,4,10),
+                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
+                                LocalDate.of(2021,7,30)
+                        ))))
+        );
+    }
+
+    static PurchaseOrderResponseDTO getExistingPurchaseOrderUpsizedResponseDTO() {
+        return new PurchaseOrderResponseDTO(
+                1L,
+                LocalDate.of(2021,7,9),
+                41.67,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        1L,
+                        1L,
+                        "Bisteca Suína",
+                        3,
+                        41.67,
+                        Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                1L,
+                                3L,
+                                3,
+                                LocalDate.of(2021,4,10),
+                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
+                                LocalDate.of(2021,7,30)
+                        ))))
+        );
+    }
+
+    static PurchaseOrderResponseDTO getExistingPurchaseOrderAddProductResponseDTO() {
+        return new PurchaseOrderResponseDTO(
+                1L,
+                LocalDate.of(2021,7,9),
+                28.68,
+                Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
+                        1L,
+                        1L,
+                        "Bisteca Suína",
+                        2,
+                        27.78,
+                        Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                1L,
+                                3L,
+                                2,
+                                LocalDate.of(2021,4,10),
+                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
+                                LocalDate.of(2021,7,30)
+                        ))),
+                        new ProductBatchesPurchaseOrderResponseDTO(
+                                2L,
+                                2L,
+                                "Batata Lavada 1 Unidade 300g",
+                                1,
+                                0.9,
+                                Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                        2L,
+                                        9L,
+                                        1,
+                                        LocalDate.of(2021,4,10),
+                                        LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
+                                        LocalDate.of(2021,11,11)
+                                ))))
         );
     }
 
