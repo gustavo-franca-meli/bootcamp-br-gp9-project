@@ -458,4 +458,20 @@ public interface TestUtils {
         var account = getAccountValid();
         return new Seller(1L, "seller", account);
     }
+
+    static Vehicle getVehicle() {
+        return new Vehicle(1L, 1, 1, "ABC-1234", true, new Warehouse(1L));
+    }
+
+    static List<Vehicle> getVehiclesList() {
+        return Lists.newArrayList(getVehicle());
+    }
+
+    static VehicleResponseDTO getVehicleResponseDTO() {
+        return new VehicleResponseDTO(1L, VehicleType.toEnum(1), 1, "ABC-1234", true, 1L);
+    }
+
+    static List<VehicleResponseDTO> getVehiclesListResponseDTO() {
+        return Lists.newArrayList(getVehicleResponseDTO());
+    }
 }

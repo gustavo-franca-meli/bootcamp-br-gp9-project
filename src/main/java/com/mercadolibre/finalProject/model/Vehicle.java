@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "vehicle")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Vehicle {
 
     @Id
