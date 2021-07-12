@@ -1,0 +1,85 @@
+erDiagram
+    ACCOUNT }o--|| COUNTRY: from
+    ACCOUNT ||--o| SELLER: is
+    ACCOUNT ||--o| REPRESENTATIVE: is
+    ACCOUNT {
+        Long id
+        String username
+        String password
+        type rol
+    }
+    SELLER {
+        Long id
+        String store_name
+    }
+    REPRESENTATIVE ||--o| WAREHOUSE: command
+    REPRESENTATIVE {
+        Long id
+        String name
+    }
+    COUNTRY ||--o{ WAREHOUSE: has
+    COUNTRY {
+        Long id
+        String name
+    }
+    WAREHOUSE ||--o{ SECTOR: has
+    WAREHOUSE {
+        Long id
+        String name
+    }
+    SECTOR ||--o{ BATCH: has
+    SECTOR {
+        Long id
+        String name
+        enum types
+        Integer maxQuantityBatches
+    }
+    BATCH }o--||PRODUCT: has
+    BATCH }o--|| INBOUND_ORDER: has
+    BATCH ||--o{ BATCH_PURCHASE_ORDER: has
+    BATCH { 
+        Long id
+        Int initial_quantity
+        Int current_quantity
+        Double min_temperature
+        Double max_temperature
+        Date manufacturing_date
+        Time manufacturing_time
+        Date due_date
+    }
+    PRODUCT }o--|| SELLER: has
+    PRODUCT {
+        Long id
+        String name
+        String description
+        enum types
+        Double value
+    }
+    INBOUND_ORDER |o--|| REPRESENTATIVE: negociate
+    INBOUND_ORDER {
+        Long id
+        Int quantity
+        date date
+    }
+    BATCH_PURCHASE_ORDER }o--|| PRODUCT_BATCH_PURCHASE_ORDER: has
+    BATCH_PURCHASE_ORDER {
+        Long id
+        Int quantity
+    }
+    PRODUCT }o--|| PRODUCT_BATCH_PURCHASE_ORDER: "created by"
+    PRODUCT_BATCH_PURCHASE_ORDER }o--|| PURCHASE_ORDER: has
+    PRODUCT_BATCH_PURCHASE_ORDER {
+        Long id
+        Int quantity
+        Double pricePerUnit
+    }
+    ACCOUNT ||--o{ PURCHASE_ORDER: buy
+    PURCHASE_ORDER {
+        Long id
+        enum status
+    }
+    PURCHASE_ORDER ||--o{ RETURN_ORDER: has
+    RETURN_ORDER {
+        Long id
+        String reason
+    }
