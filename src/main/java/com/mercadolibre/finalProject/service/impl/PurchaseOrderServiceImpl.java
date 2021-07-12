@@ -276,7 +276,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
         var order = this.findById(dto.getPurchaseOrderId());
         var warehouseId = this.getWarehouseIdFromPurchaseOrder(order);
         this.validateIfRepresentativeBelongsWarehouse(warehouseId, dto.getRepresentativeUsername());
-
+        this.verifyIfNewStatusOrderExist(dto.getStatusOrderCode());
         order.setOrderStatus(dto.getStatusOrderCode());
         this.repository.save(order);
 
@@ -317,6 +317,10 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService {
             batches.add(model);
         }
         return batches;
+    }
+
+    private void verifyIfNewStatusOrderExist(Integer orderStatus) {
+        OrderStatus.toEnum(orderStatus);
     }
 
 }

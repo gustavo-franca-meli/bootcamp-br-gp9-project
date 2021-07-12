@@ -473,6 +473,11 @@ public interface TestUtils {
     }
 
     static ReturnOrder getReturnOrder() {
-        return new ReturnOrder(1L, "", 1, null);
+        var purchaseOrder = getPurchaseOrder();
+        return new ReturnOrder(1L, "", 1, purchaseOrder);
+    }
+
+    static UpdatePurchaseOrderStatusRequestDTO getUpdatePurchaseOrderStatusRequestDTO() {
+        return new UpdatePurchaseOrderStatusRequestDTO(1L, 1);
     }
 }

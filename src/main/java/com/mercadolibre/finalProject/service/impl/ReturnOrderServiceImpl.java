@@ -1,9 +1,11 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.request.ReturnOrderRequestDTO;
+import com.mercadolibre.finalProject.dtos.request.UpdatePurchaseOrderStatusRequestDTO;
 import com.mercadolibre.finalProject.dtos.request.UpdateReturnOrderRequestDTO;
 import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.model.ReturnOrder;
+import com.mercadolibre.finalProject.model.enums.OrderStatus;
 import com.mercadolibre.finalProject.model.enums.ReturnOrderStatusType;
 import com.mercadolibre.finalProject.model.mapper.ReturnOrderMapper;
 import com.mercadolibre.finalProject.repository.ReturnOrderRepository;
@@ -41,6 +43,11 @@ public class ReturnOrderServiceImpl implements IReturnOrderService {
         this.validateIfStatusTypeExist(dto.getStatusCode());
         returnOrder.setStatus(dto.getStatusCode());
         this.returnOrderRepository.save(returnOrder);
+
+        if (ReturnOrderStatusType.ACCEPTED.getCod() == dto.getStatusCode()) {
+            var updatePurchaseRequest = this.assembleUpdatePurchaseOrderStatusRequestDTOOf(dto, returnOrder.getPurchaseOrder().getId());
+            this.purchaseOrderService.updateStatus(updatePurchaseRequest);
+        }
     }
 
     private ReturnOrder findBy(Long id) {
@@ -54,6 +61,10 @@ public class ReturnOrderServiceImpl implements IReturnOrderService {
 
     private void validateIfStatusTypeExist(Integer code) {
         ReturnOrderStatusType.toEnum(code);
+    }
+
+    private UpdatePurchaseOrderStatusRequestDTO assembleUpdatePurchaseOrderStatusRequestDTOOf(UpdateReturnOrderRequestDTO dto, Long purchaseId) {
+        return new UpdatePurchaseOrderStatusRequestDTO(purchaseId, OrderStatus.RETURN_PROCESSING.getCod(), dto.getUsername());
     }
 
 }

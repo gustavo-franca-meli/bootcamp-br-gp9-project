@@ -22,12 +22,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-public class PurchaseOrderControllerTest  extends ControllerTest{
+public class PurchaseOrderControllerTest extends ControllerTest {
     private static final String BASIC_PATH = "/api/v1";
     private static final String PATH = BASIC_PATH + "/fresh-products/purchase-order";
     private static final String PATH_CREATE = PATH + "/create";
     private static final String PATH_GET_ALL = PATH + "/all";
     private static final String PATH_UPDATE = PATH + "/update";
+    private static final String PATH_UPDATE_STATUS = PATH + "/update-status";
 
     private String token;
     private String tokenInvalid;
@@ -43,10 +44,11 @@ public class PurchaseOrderControllerTest  extends ControllerTest{
         token = CreateFakeLogin.loginValid("onias-rocha", RoleType.REPRESENTATIVE);
         tokenInvalid = CreateFakeLogin.loginInvalid("user", RoleType.REPRESENTATIVE);
     }
+
     @SneakyThrows
     @Test
     @DirtiesContext
-    public void shouldCreateAPurchaseOrderCorrectly(){
+    public void shouldCreateAPurchaseOrderCorrectly() {
         var request = TestUtils.getPurchaseOrderRequestDTO();
 
         var json = mapper.writeValueAsString(request);
@@ -82,7 +84,7 @@ public class PurchaseOrderControllerTest  extends ControllerTest{
 
     @SneakyThrows
     @Test
-    public void shouldGetAPurchaseOrderByIdCorrectly(){
+    public void shouldGetAPurchaseOrderByIdCorrectly() {
 
         var expectedObject = TestUtils.getExistingPurchaseOrderResponseDTO();
 
@@ -113,7 +115,7 @@ public class PurchaseOrderControllerTest  extends ControllerTest{
 
     @SneakyThrows
     @Test
-    public void shouldGetAllPurchaseOrdersByBuyerLoginCorrectly(){
+    public void shouldGetAllPurchaseOrdersByBuyerLoginCorrectly() {
 
         var expectedObject = Lists.newArrayList(TestUtils.getExistingPurchaseOrderResponseDTO());
 
@@ -144,7 +146,7 @@ public class PurchaseOrderControllerTest  extends ControllerTest{
     @SneakyThrows
     @Test
     @DirtiesContext
-    public void shouldUpdateAPurchaseOrderByDownsizingCorrectly(){
+    public void shouldUpdateAPurchaseOrderByDownsizingCorrectly() {
         var request = TestUtils.getPurchaseOrderDownsizeRequestDTO();
 
         var json = mapper.writeValueAsString(request);
@@ -180,7 +182,7 @@ public class PurchaseOrderControllerTest  extends ControllerTest{
     @SneakyThrows
     @Test
     @DirtiesContext
-    public void shouldUpdateAPurchaseOrderByUpsizingCorrectly(){
+    public void shouldUpdateAPurchaseOrderByUpsizingCorrectly() {
         var request = TestUtils.getPurchaseOrderUpsizeRequestDTO();
 
         var json = mapper.writeValueAsString(request);
@@ -216,7 +218,7 @@ public class PurchaseOrderControllerTest  extends ControllerTest{
     @SneakyThrows
     @Test
     @DirtiesContext
-    public void shouldUpdateAPurchaseOrderByAddingProductCorrectly(){
+    public void shouldUpdateAPurchaseOrderByAddingProductCorrectly() {
         var request = TestUtils.getPurchaseOrderAddProductRequestDTO();
 
         var json = mapper.writeValueAsString(request);
@@ -258,5 +260,69 @@ public class PurchaseOrderControllerTest  extends ControllerTest{
                 .andExpect(jsonPath("$.products[1].batches[0].manufacturing_date").exists())
                 .andExpect(jsonPath("$.products[1].batches[0].manufacturing_time").exists())
                 .andExpect(jsonPath("$.products[1].batches[0].due_date").exists());
+    }
+
+    @SneakyThrows
+    @Test
+    public void shouldUpdateStatusCorrectly() {
+        var request = TestUtils.getUpdatePurchaseOrderStatusRequestDTO();
+        request.setStatusOrderCode(5);
+        var json = mapper.writeValueAsString(request);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH_UPDATE_STATUS)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+        )
+                .andExpect(status().isNoContent())
+                .andDo(print());
+    }
+
+    @SneakyThrows
+    @Test
+    public void shouldUpdateStatusAndUpdateBatchesCorrectly() {
+        var request = TestUtils.getUpdatePurchaseOrderStatusRequestDTO();
+        request.setStatusOrderCode(6);
+        var json = mapper.writeValueAsString(request);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH_UPDATE_STATUS)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+        )
+                .andExpect(status().isNoContent())
+                .andDo(print());
+    }
+
+    @SneakyThrows
+    @Test
+    public void shouldFailUpdateStatusWithInvalidStatusCode() {
+        var request = TestUtils.getUpdatePurchaseOrderStatusRequestDTO();
+        request.setStatusOrderCode(999999);
+        var json = mapper.writeValueAsString(request);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH_UPDATE_STATUS)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+        )
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @SneakyThrows
+    @Test
+    public void shouldFailUpdateStatusWithInvalidPurchaseOrderId() {
+        var request = TestUtils.getUpdatePurchaseOrderStatusRequestDTO();
+        request.setPurchaseOrderId(99999L);
+        var json = mapper.writeValueAsString(request);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put(PATH_UPDATE_STATUS)
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+        )
+                .andExpect(status().isNotFound())
+                .andDo(print());
     }
 }

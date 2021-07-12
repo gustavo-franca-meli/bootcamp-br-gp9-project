@@ -7,12 +7,14 @@ import com.mercadolibre.finalProject.dtos.request.PurchaseOrderUpdateRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.model.Account;
 import com.mercadolibre.finalProject.model.PurchaseOrder;
+import com.mercadolibre.finalProject.model.enums.OrderStatus;
 import com.mercadolibre.finalProject.repository.AccountRepository;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
 import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
 import com.mercadolibre.finalProject.service.IBatchService;
 import com.mercadolibre.finalProject.service.IProductService;
+import com.mercadolibre.finalProject.service.IPurchaseOrderService;
 import com.mercadolibre.finalProject.service.IRepresentativeService;
 import com.mercadolibre.finalProject.service.impl.PurchaseOrderServiceImpl;
 import com.mercadolibre.finalProject.util.TestUtils;
@@ -161,5 +163,47 @@ public class PurchaseOrderServiceImplTest {
         assertEquals(responseExpected.get(0).getTotalPrice(), response.get(0).getTotalPrice());
         assertEquals(responseExpected.get(0).getProducts().size(), response.get(0).getProducts().size());
         assertEquals(responseExpected.get(0).getDate(), response.get(0).getDate());
+    }
+
+    @Test
+    void shouldUpdateStatus() {
+        var username = "onias-rocha";
+
+        var purchaseOrder = TestUtils.getPurchaseOrder();
+        when(purchaseOrderRepository.findById(anyLong())).thenReturn(Optional.of(purchaseOrder));
+
+        var representative = TestUtils.getRepresentativeResponseDTOValid();
+        when(representativeService.findByAccountUsernameAndWarehouseId(anyString(), anyLong())).thenReturn(representative);
+
+        when(purchaseOrderRepository.save(any())).thenReturn(purchaseOrder);
+
+        var updateStatusRequest = TestUtils.getUpdatePurchaseOrderStatusRequestDTO();
+        updateStatusRequest.setRepresentativeUsername(username);
+        service.updateStatus(updateStatusRequest);
+
+        verify(batchRepository, times(0)).saveAll(anyList());
+    }
+
+    @Test
+    void shouldUpdateStatusAndUpdateBatches() {
+        String username = "onias-rocha";
+
+        var purchaseOrder = TestUtils.getPurchaseOrder();
+        when(purchaseOrderRepository.findById(anyLong())).thenReturn(Optional.of(purchaseOrder));
+
+        var representative = TestUtils.getRepresentativeResponseDTOValid();
+        when(representativeService.findByAccountUsernameAndWarehouseId(anyString(), anyLong())).thenReturn(representative);
+        when(purchaseOrderRepository.save(any())).thenReturn(purchaseOrder);
+
+        var batch = TestUtils.getBatchValid();
+        when(batchRepository.findById(anyLong())).thenReturn(Optional.of(batch));
+
+        var updateStatusRequest = TestUtils.getUpdatePurchaseOrderStatusRequestDTO();
+        updateStatusRequest.setRepresentativeUsername(username);
+        updateStatusRequest.setStatusOrderCode(6);
+
+        service.updateStatus(updateStatusRequest);
+
+        verify(batchRepository, times(1)).saveAll(anyList());
     }
 }

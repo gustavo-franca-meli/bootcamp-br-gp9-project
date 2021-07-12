@@ -1,9 +1,9 @@
 package com.mercadolibre.finalProject.dtos.request;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class UpdateReturnOrderRequestDTO {
 

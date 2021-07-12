@@ -1,5 +1,6 @@
 package com.mercadolibre.finalProject.unit.service;
 
+import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.model.ReturnOrder;
 import com.mercadolibre.finalProject.repository.ReturnOrderRepository;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class ReturnOrderServiceImplTest {
@@ -63,6 +65,42 @@ public class ReturnOrderServiceImplTest {
         verify(representativeService, times(1)).findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong());
         verify(returnOrderRepository, times(1)).findById(Mockito.anyLong());
         verify(returnOrderRepository, times(1)).save(Mockito.any());
+    }
+
+    @Test
+    void shouldUpdateStatusAndUpdateStatusOfPurchaseOrder() {
+        var request = TestUtils.getUpdateReturnOrderDTO();
+        String username = "onias-rocha";
+        request.setUsername(username);
+        request.setStatusCode(2);
+        var returnOrder = TestUtils.getReturnOrder();
+        when(returnOrderRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(returnOrder));
+
+        var representative = TestUtils.getRepresentativeResponseDTOValid();
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representative);
+
+        when(returnOrderRepository.save(Mockito.any())).thenReturn(returnOrder);
+
+        returnOrderService.updateStatus(request);
+
+        verify(representativeService, times(1)).findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong());
+        verify(returnOrderRepository, times(1)).findById(Mockito.anyLong());
+        verify(returnOrderRepository, times(1)).save(Mockito.any());
+        verify(purchaseOrderService, times(1)).updateStatus(Mockito.any());
+    }
+
+    @Test
+    void shouldFailUpdateStatus() {
+        var request = TestUtils.getUpdateReturnOrderDTO();
+        String username = "onias-rocha";
+        request.setUsername(username);
+
+        var representative = TestUtils.getRepresentativeResponseDTOValid();
+        when(representativeService.findByAccountUsernameAndWarehouseId(Mockito.anyString(), Mockito.anyLong())).thenReturn(representative);
+
+        when(returnOrderRepository.findById(Mockito.anyLong())).thenThrow(NotFoundException.class);
+
+        assertThrows(NotFoundException.class, () -> returnOrderService.updateStatus(request));
     }
 
 }

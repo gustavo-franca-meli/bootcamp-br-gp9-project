@@ -28,7 +28,7 @@ public class ReturnOrderController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> returnOrderRequest(@RequestBody UpdateReturnOrderRequestDTO dto) {
+    public ResponseEntity<Void> updateStatus(@RequestBody UpdateReturnOrderRequestDTO dto) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         dto.setUsername(username);

@@ -14,4 +14,10 @@ public class UpdatePurchaseOrderStatusRequestDTO {
         this.purchaseOrderId = purchaseOrderId;
         this.statusOrderCode = statusOrderCode;
     }
+
+    public UpdatePurchaseOrderStatusRequestDTO(Long purchaseOrderId, Integer statusOrderCode, String representativeUsername) {
+        this.purchaseOrderId = purchaseOrderId;
+        this.statusOrderCode = statusOrderCode;
+        this.representativeUsername = representativeUsername;
+    }
 }
