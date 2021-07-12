@@ -55,14 +55,14 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class, InboundOrderNotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class, PurchaseOrderNotFoundException.class})
+    @ExceptionHandler(value = {WarehouseNotFoundException.class, RepresentativeNotFound.class, SectorNotFoundException.class, NotFoundException.class, InboundOrderNotFoundException.class, ProductNotFoundException.class, BatchNotFoundException.class, PurchaseOrderNotFoundException.class, VehicleNotFoundException.class})
     protected ResponseEntity<ApiError> handleNotFoundException(Exception e) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.toString(), e.getMessage(), HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(apiError.getStatus())
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {NoSpaceInSectorException.class, BuyerIdInvalidForRequest.class, InvalidProductTypeCodeException.class})
+    @ExceptionHandler(value = {NoSpaceInSectorException.class, BuyerIdInvalidForRequest.class, InvalidProductTypeCodeException.class, InvalidVehicleTypeCodeException.class, VehicleAlreadyExistsException.class})
     protected ResponseEntity<ApiError> handleBadRequestException(Exception e) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(apiError.getStatus())

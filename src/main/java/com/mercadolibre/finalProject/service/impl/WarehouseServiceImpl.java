@@ -1,24 +1,12 @@
 package com.mercadolibre.finalProject.service.impl;
 
-import com.mercadolibre.finalProject.dtos.ProductDTO;
-import com.mercadolibre.finalProject.dtos.ProductBatchesPurchaseOrderDTO;
-import com.mercadolibre.finalProject.dtos.PurchaseOrderDTO;
-import com.mercadolibre.finalProject.dtos.response.ProductBatchesPurchaseOrderResponseDTO;
-import com.mercadolibre.finalProject.dtos.response.PurchaseOrderResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseResponseDTO;
-import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.exceptions.WarehouseNotFoundException;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.model.mapper.WarehouseMapper;
 import com.mercadolibre.finalProject.repository.WarehouseRepository;
-import com.mercadolibre.finalProject.service.IBatchService;
-import com.mercadolibre.finalProject.service.IProductService;
-import com.mercadolibre.finalProject.service.ISectorService;
 import com.mercadolibre.finalProject.service.IWarehouseService;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class WarehouseServiceImpl implements IWarehouseService {
@@ -30,12 +18,13 @@ public class WarehouseServiceImpl implements IWarehouseService {
     }
 
     @Override
-    public WarehouseResponseDTO findById(Long warehouseId) throws WarehouseNotFoundException {
-        var warehouse = this.findWarehouseBy(warehouseId);
+    public WarehouseResponseDTO findById(Long warehouseId) {
+        var warehouse = this.findWarehouseById(warehouseId);
         return WarehouseMapper.toResponseDTO(warehouse);
     }
 
-    private Warehouse findWarehouseBy(Long warehouseId) {
+    @Override
+    public Warehouse findWarehouseById(Long warehouseId) {
         var data = warehouseRepository.findById(warehouseId);
         return data.orElseThrow(() -> new WarehouseNotFoundException("Warehouse Not Found. Id:" + warehouseId));
     }

@@ -26,6 +26,9 @@ public class Warehouse {
     @OneToMany(mappedBy = "warehouse")
     private List<Sector> sectors = new ArrayList<>();
 
+    @OneToMany(mappedBy = "warehouse")
+    private List<Vehicle> vehicles = new ArrayList<>();
+
     @OneToOne
     private Representative representative;
 
