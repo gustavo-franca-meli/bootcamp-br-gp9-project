@@ -12,6 +12,6 @@ import lombok.Setter;
 public class ProductStatusWarehouseResponseDTO {
     private Long productId;
     private ProductStatusIntervalDueDateResponseDTO statusDueDateLessThan3Weeks;
-    private ProductStatusIntervalDueDateResponseDTO statusDueDateBetweenThan3WeeksAnd2Months;
+    private ProductStatusIntervalDueDateResponseDTO statusDueDateBetween3WeeksAnd2Months;
     private ProductStatusIntervalDueDateResponseDTO statusDueDateMoreThan2Months;
 }

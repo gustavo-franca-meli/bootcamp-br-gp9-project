@@ -5,6 +5,7 @@ import com.mercadolibre.finalProject.dtos.response.AccountResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductStatusIntervalDueDateResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductStatusWarehouseResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductWarningStatusWarehouseResponseDTO;
+import com.mercadolibre.finalProject.exceptions.NoProductsFoundException;
 import com.mercadolibre.finalProject.exceptions.NotARepresentativeException;
 import com.mercadolibre.finalProject.model.Warehouse;
 import com.mercadolibre.finalProject.repository.WarehouseRepository;
@@ -55,7 +56,7 @@ public class WarehouseStatusServiceImpl implements IWarehouseStatusService {
 
         List<WarehouseRepository.IProductStatusWarehouseDTO> productStatuses = this.repository.getWarehouseStatus(representativeId,date1,date2);
 
-        if(productStatuses.isEmpty()) { return new ArrayList<>(); }
+        if(productStatuses.isEmpty()) { throw new NoProductsFoundException("No products found in the warehouse."); }
 
         List<ProductStatusWarehouseResponseDTO> productStatusesResponse = new ArrayList<>();
 
@@ -74,7 +75,7 @@ public class WarehouseStatusServiceImpl implements IWarehouseStatusService {
 
         List<WarehouseRepository.IProductWarningStatusWarehouseDTO> productStatuses = this.repository.getWarehouseWarningStatus(representativeId,date1);
 
-        if(productStatuses.isEmpty()) { return new ArrayList<>(); }
+        if(productStatuses.isEmpty()) { throw new NoProductsFoundException("No products to expire in less than 3 weeks found in the warehouse."); }
 
         List<ProductWarningStatusWarehouseResponseDTO> productStatusesResponse = new ArrayList<>();
 

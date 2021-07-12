@@ -6,6 +6,7 @@ import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseProductSumDTO;
+import com.mercadolibre.finalProject.exceptions.NoProductsFoundException;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
 import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
@@ -123,12 +124,17 @@ public class ProductServiceImpl implements IProductService {
     public List<ProductResponseDTO> getProductsByCountry(String username, Integer productType) {
         Long countryId = this.accountService.getAccountByUsername(username).getCountry().getId();
 
+        List<Product> products = new ArrayList<>();
         if (productType == null) {
-            return ProductMapper.toListResponseDTO(this.productRepository.findByCountry(countryId));
+            products = this.productRepository.findByCountry(countryId);
+        }
+        else {
+            ProductType.toEnum(productType); // checks if product type is valid
+            products = this.productRepository.findByCountryAndType(countryId, productType);
         }
 
-        ProductType.toEnum(productType); // checks if product type is valid
-        return ProductMapper.toListResponseDTO(this.productRepository.findByCountryAndType(countryId, productType));
+        if(products.isEmpty()) { throw new NoProductsFoundException("No products found in country."); }
+        return ProductMapper.toListResponseDTO(products);
     }
 
     @Override
