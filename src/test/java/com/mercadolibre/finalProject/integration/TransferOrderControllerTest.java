@@ -45,10 +45,12 @@ public class TransferOrderControllerTest extends ControllerTest {
     @Test
     void shouldCreateTransferOrderCorrectly() throws Exception {
         var request = TestUtils.getTransferOrderRequestValid();
+        request.getBatchStock().get(2).setId(4L);
 
         var json = mapper.writeValueAsString(request);
 
         var expectedBatch = TestUtils.getTransferOrderResponseValid();
+        expectedBatch.getBatchStock().get(2).setId(4L);
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("Authorization", token)
@@ -57,36 +59,14 @@ public class TransferOrderControllerTest extends ControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andDo(print())
-                .andExpect(jsonPath("$.transfer_order_id").value(expectedBatch.getTransferOrderId()))
+                .andExpect(jsonPath("$.transfer_order_id").isNumber())
                 .andExpect(jsonPath("$.batch_stock").exists())
                 .andExpect(jsonPath("$.batch_stock").isArray())
-                .andExpect(jsonPath("$.batch_stock[0].id").value(expectedBatch.getBatchStock().get(1).getId()))
-                .andExpect(jsonPath("$.batch_stock[1].id").value(expectedBatch.getBatchStock().get(2).getId()))
-                .andExpect(jsonPath("$.batch_stock[2].id").value(expectedBatch.getBatchStock().get(3).getId()));
+                .andExpect(jsonPath("$.batch_stock[0].batchNumber").value(expectedBatch.getBatchStock().get(0).getId()))
+                .andExpect(jsonPath("$.batch_stock[1].batchNumber").value(expectedBatch.getBatchStock().get(1).getId()))
+                .andExpect(jsonPath("$.batch_stock[2].batchNumber").value(expectedBatch.getBatchStock().get(2).getId()));
     }
 
-    @Test
-    void shouldReturnErrorWhenBatchNotFound() throws Exception {
-        var request = TestUtils.getTransferOrderRequestValid();
-
-        var json = mapper.writeValueAsString(request);
-
-        var expectedBatch = TestUtils.getTransferOrderResponseValid();
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-                .header("Authorization", token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        )
-                .andExpect(status().isCreated())
-                .andDo(print())
-                .andExpect(jsonPath("$.transfer_order_id").value(expectedBatch.getTransferOrderId()))
-                .andExpect(jsonPath("$.batch_stock").exists())
-                .andExpect(jsonPath("$.batch_stock").isArray())
-                .andExpect(jsonPath("$.batch_stock[0].id").value(expectedBatch.getBatchStock().get(1).getId()))
-                .andExpect(jsonPath("$.batch_stock[1].id").value(expectedBatch.getBatchStock().get(2).getId()))
-                .andExpect(jsonPath("$.batch_stock[2].id").value(expectedBatch.getBatchStock().get(3).getId()));
-    }
     @Test
     void shouldReturnNotFoundWhenRepresentativeNotWorkInWarehouse() throws Exception {
         var request = TestUtils.getInboundOrderDTOValidForCreate();
@@ -138,12 +118,11 @@ public class TransferOrderControllerTest extends ControllerTest {
 
         var representativeId = 1L;
 
-        var expectedMessage = "Not found 2 batch";
+        var expectedMessage = "Error in transfer 2 batches";
 
         this.mockMvc.perform(MockMvcRequestBuilders.post(PATH)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", token)
                 .content(json)
         )
                 .andExpect(status().isBadRequest())
@@ -151,7 +130,7 @@ public class TransferOrderControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].message").exists())
                 .andExpect(jsonPath("$.errors[1].message").exists())
-                .andExpect(jsonPath("$.errors[0].message").value("[ERROR] transfer batch position 0 error: The batch doesn't exist in warehouse. Id: 100"));
+                .andExpect(jsonPath("$.errors[0].message").value("Transfer Batch 100 error: Batch Not Found in Warehouse"));
     }
 
     //não pode retornar o batch quando requisitar a rota de listar batches

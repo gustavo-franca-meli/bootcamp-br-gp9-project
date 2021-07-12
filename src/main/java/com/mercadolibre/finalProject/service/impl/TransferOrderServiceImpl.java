@@ -56,6 +56,7 @@ public class TransferOrderServiceImpl  implements TransferOrderService {
             try{
                 var batch = batchRepository.findByIdAndWarehouseId(batchId.getId(), dto.getWarehouseId());
                 if (batch == null) throw new BatchNotFoundException("Batch Not Found in Warehouse");
+                if(batch.getStatus() == BatchStatus.IN_TRANSFER)throw new Exception("batch "+ batch.getId() + " already is in transfer");
                 batch.setStatus(BatchStatus.IN_TRANSFER);
                 transferBatches.add(new TransferBatch(batch, transferOrder));
             }catch (Exception e){
