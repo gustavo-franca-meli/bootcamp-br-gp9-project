@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.service.impl;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductInventoryResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseProductSumDTO;
@@ -151,5 +152,24 @@ public class ProductServiceImpl implements IProductService {
                 .map(x -> new WarehouseProductSumDTO(Long.valueOf(x.getWarehouse_id()), Integer.valueOf(x.getQuantity()))).collect(Collectors.toList());
 
         return new SumOfProductStockDTO(productId, warehouses);
+    }
+
+    @Override
+    public List<ProductInventoryResponseDTO> getProductInventory(){
+        List<ProductRepository.IProductInventory> rawInventory = productRepository.getProductInventory();
+
+        List<ProductInventoryResponseDTO> response = new ArrayList<>();
+
+        for(ProductRepository.IProductInventory i : rawInventory){
+            ProductInventoryResponseDTO dto = new ProductInventoryResponseDTO();
+            dto.setProductName(i.getProduct_name());
+            dto.setWarehouseName(i.getWarehouse_name());
+            dto.setQuantityInStock(i.getQuantity_in_stock());
+            dto.setUnitaryPrice(i.getUnitary_price());
+            dto.setTotalAssetsValue(i.getTotal_assets_value());
+
+            response.add(dto);
+        }
+        return response;
     }
 }

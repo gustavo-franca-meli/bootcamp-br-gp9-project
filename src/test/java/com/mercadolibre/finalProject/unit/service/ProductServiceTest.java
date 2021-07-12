@@ -1,34 +1,28 @@
 package com.mercadolibre.finalProject.unit.service;
 
-import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
-import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductInventoryResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 import com.mercadolibre.finalProject.dtos.response.WarehouseProductSumDTO;
-import com.mercadolibre.finalProject.model.Account;
-import com.mercadolibre.finalProject.model.Country;
-import com.mercadolibre.finalProject.model.Product;
-import com.mercadolibre.finalProject.model.Seller;
 import com.mercadolibre.finalProject.model.enums.ProductType;
 import com.mercadolibre.finalProject.model.mapper.AccountMapper;
 import com.mercadolibre.finalProject.model.mapper.BatchMapper;
 import com.mercadolibre.finalProject.repository.BatchRepository;
 import com.mercadolibre.finalProject.repository.ProductRepository;
-import com.mercadolibre.finalProject.repository.SellerRepository;
 import com.mercadolibre.finalProject.repository.WarehouseRepository;
 import com.mercadolibre.finalProject.service.IAccountService;
 import com.mercadolibre.finalProject.service.ISellerService;
 import com.mercadolibre.finalProject.service.impl.ProductServiceImpl;
-import com.mercadolibre.finalProject.util.TestUtils;
-import org.assertj.core.util.Lists;
-import org.assertj.core.util.Sets;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import static com.mercadolibre.finalProject.util.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -49,14 +43,14 @@ public class ProductServiceTest {
 
     @Test
     void shouldCreateFullProductCorrectly() {
-        var sellerExpected = TestUtils.createExpectedSeller();
-        var responseExpected = TestUtils.createExpectedProductResponseDTO(sellerExpected);
+        var sellerExpected = createExpectedSeller();
+        var responseExpected = createExpectedProductResponseDTO(sellerExpected);
         when(sellerService.findSellerById(1L)).thenReturn(sellerExpected);
 
-        var product1 = TestUtils.createExpectedProduct(sellerExpected);
+        var product1 = createExpectedProduct(sellerExpected);
         when(productRepository.save(Mockito.any())).thenReturn(product1);
 
-        var request = TestUtils.createProductRequestDTO();
+        var request = createProductRequestDTO();
         var response = service.create(request);
 
         verify(sellerService, times(1)).findSellerById(any());
@@ -66,8 +60,8 @@ public class ProductServiceTest {
 
     @Test
     void shouldUpdateFullProductCorrectly() {
-        var sellerExpected = TestUtils.createExpectedSeller();
-        var responseExpected = TestUtils.createExpectedProductResponseDTO(sellerExpected);
+        var sellerExpected = createExpectedSeller();
+        var responseExpected = createExpectedProductResponseDTO(sellerExpected);
 
         var productId = 10L;
 
@@ -75,12 +69,12 @@ public class ProductServiceTest {
 
         when(sellerService.findSellerById(1L)).thenReturn(sellerExpected);
 
-        var product1 = TestUtils.createExpectedProduct(sellerExpected);
+        var product1 = createExpectedProduct(sellerExpected);
         product1.setId(productId);
         when(productRepository.save(Mockito.any())).thenReturn(product1);
         when(productRepository.findById(productId)).thenReturn(Optional.of(product1));
 
-        var request = TestUtils.createProductRequestDTO();
+        var request = createProductRequestDTO();
 
         var response = service.update(productId, request);
 
@@ -99,9 +93,9 @@ public class ProductServiceTest {
 
     @Test
     void shouldReturnAProductList() {
-        var responseExpected = TestUtils.getListProductResponse();
+        var responseExpected = getListProductResponse();
 
-        when(productRepository.findAll()).thenReturn(TestUtils.getListOfProducts());
+        when(productRepository.findAll()).thenReturn(getListOfProducts());
         var response = service.findAll();
         assertEquals(responseExpected, response);
     }
@@ -111,7 +105,7 @@ public class ProductServiceTest {
         Double expected = 100.50;
         var productId = 10L;
         var quantity = 5;
-        var product = TestUtils.createExpectedProduct(TestUtils.createExpectedSeller());
+        var product = createExpectedProduct(createExpectedSeller());
         product.setId(10L);
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         var total = service.getTotalPrice(productId, quantity);
@@ -124,9 +118,9 @@ public class ProductServiceTest {
     void shouldReturnStockForProductInCountryByDate() {
         var productId = 10L;
         var countryId = 1L;
-        var product = TestUtils.createExpectedProduct(TestUtils.createExpectedSeller());
+        var product = createExpectedProduct(createExpectedSeller());
         var date = LocalDate.now();
-        var listBatchResponse = TestUtils.getBatchListValid();
+        var listBatchResponse = getBatchListValid();
         product.setId(10L);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -164,11 +158,11 @@ public class ProductServiceTest {
 
     @Test
     void shouldReturnProductByCountry() {
-        var account = AccountMapper.toResponseDTO(TestUtils.getAccountValid());
+        var account = AccountMapper.toResponseDTO(getAccountValid());
 
-        var expected = TestUtils.getListProductResponse();
+        var expected = getListProductResponse();
 
-        var products = TestUtils.getListOfProducts();
+        var products = getListOfProducts();
 
         when(accountService.getAccountByUsername(account.getUsername())).thenReturn(account);
         when(productRepository.findByCountry(account.getCountry().getId())).thenReturn(products);
@@ -179,12 +173,12 @@ public class ProductServiceTest {
 
     @Test
     void shouldReturnProductByCountryAndProductType() {
-        var account = AccountMapper.toResponseDTO(TestUtils.getAccountValid());
+        var account = AccountMapper.toResponseDTO(getAccountValid());
         var productType = ProductType.FROZEN.getCod();
 
-        var expected = TestUtils.getListProductResponse();
+        var expected = getListProductResponse();
 
-        var products = TestUtils.getListOfProducts();
+        var products = getListOfProducts();
 
         when(accountService.getAccountByUsername(account.getUsername())).thenReturn(account);
         when(productRepository.findByCountryAndType(account.getCountry().getId(), productType)).thenReturn(products);
@@ -224,6 +218,25 @@ public class ProductServiceTest {
 
         assertEquals(expected.getProductId(), response.getProductId());
     }
+
+    @Test
+    void shouldReturnProductsInventory(){
+
+        var inventoryItem = Mockito.mock(ProductRepository.IProductInventory.class);
+
+        List<ProductRepository.IProductInventory> inventory = new ArrayList<>();
+
+        inventory.add(inventoryItem);
+
+        when(productRepository.getProductInventory()).thenReturn(inventory);
+
+        service.getProductInventory();
+
+        verify(productRepository, times(1)).getProductInventory();
+
+    }
+
+
 
 
 }

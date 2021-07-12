@@ -1,6 +1,7 @@
 package com.mercadolibre.finalProject.controller;
 
 import com.mercadolibre.finalProject.dtos.request.SectorBatchRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductInventoryResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SectorBatchResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
@@ -53,5 +54,10 @@ public class ProductController {
         } else {
             return productService.getSumOfProductStockInAllWarehouses(productId);
         }
+    }
+
+    @GetMapping("/inventory")
+    public List<ProductInventoryResponseDTO> getProductInventory(){
+        return productService.getProductInventory();
     }
 }

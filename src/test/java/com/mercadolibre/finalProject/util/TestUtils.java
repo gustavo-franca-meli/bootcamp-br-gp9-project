@@ -8,6 +8,7 @@ import com.mercadolibre.finalProject.dtos.response.*;
 import com.mercadolibre.finalProject.model.*;
 import com.mercadolibre.finalProject.model.enums.*;
 import com.mercadolibre.finalProject.model.mapper.*;
+import com.mercadolibre.finalProject.repository.ProductRepository;
 
 import java.time.*;
 import java.util.*;
@@ -458,4 +459,36 @@ public interface TestUtils {
         var account = getAccountValid();
         return new Seller(1L, "seller", account);
     }
+
+    static ProductInventoryResponseDTO getPopulatedInventoryDTO(){
+        return new ProductInventoryResponseDTO(
+                "Maçã",
+                "Warehouse de Medelin",
+                "150",
+                "5",
+                "10");
+    }
+
+    static List<ProductInventoryResponseDTO> getPopulatedInventoryDTOList(){
+        ProductInventoryResponseDTO dto1 = getPopulatedInventoryDTO();
+        ProductInventoryResponseDTO dto2 = getPopulatedInventoryDTO();
+
+        List<ProductInventoryResponseDTO> response = new ArrayList<>();
+        response.add(dto1);
+        response.add(dto2);
+
+        return response;
+    }
+
+    static List<ProductInventoryResponseDTO> convertInventoryInterfaceIntoInventoryDTO(List<ProductRepository.IProductInventory> inventoryInterface){
+        List<ProductInventoryResponseDTO> dto = new ArrayList<>();
+
+        for(ProductRepository.IProductInventory i : inventoryInterface){
+            ProductInventoryResponseDTO item = new ProductInventoryResponseDTO(i.getProduct_name(), i.getWarehouse_name(), i.getQuantity_in_stock(), i.getUnitary_price(), i.getTotal_assets_value());
+            dto.add(item);
+        }
+        return dto;
+    }
+
+
 }

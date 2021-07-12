@@ -3,6 +3,7 @@ package com.mercadolibre.finalProject.service;
 import com.mercadolibre.finalProject.dtos.BatchDTO;
 import com.mercadolibre.finalProject.dtos.ProductStockDTO;
 import com.mercadolibre.finalProject.dtos.request.ProductRequestDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductInventoryResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductResponseDTO;
 import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
 import com.mercadolibre.finalProject.exceptions.ProductNotFoundException;
@@ -35,6 +36,8 @@ public interface IProductService {
     SumOfProductStockDTO getSumOfProductStockInAllWarehouses(Long productId);
 
     SumOfProductStockDTO getSumOfProductStockByCountry(Long productId, Long countryId);
+
+    public List<ProductInventoryResponseDTO> getProductInventory();
 
 
 

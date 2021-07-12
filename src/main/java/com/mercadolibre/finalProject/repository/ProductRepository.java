@@ -1,15 +1,11 @@
 package com.mercadolibre.finalProject.repository;
 
-import com.mercadolibre.finalProject.dtos.response.SumOfProductStockDTO;
-import com.mercadolibre.finalProject.model.Account;
-import com.mercadolibre.finalProject.model.Batch;
 import com.mercadolibre.finalProject.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -37,8 +33,26 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             " GROUP BY warehouse_id ", nativeQuery = true)
     public List<ISumOfProductStockDTO> getSumOfProductStockInAllWarehouses (@Param("productId") Long productId);
 
+    @Query( value = " SELECT product.name AS product_name, warehouse.name AS warehouse_name, SUM(batch.current_quantity) AS quantity_in_stock, product.price AS unitary_price, ROUND(product.price * SUM(batch.current_quantity),2) AS total_assets_value " +
+            " FROM product " +
+            " INNER JOIN batch  ON product.id = batch.product_id " +
+            " INNER JOIN sector on batch.sector_id = sector.id " +
+            " INNER JOIN warehouse on warehouse.id = sector.warehouse_id " +
+            " GROUP BY product.name, warehouse.name, product.price ", nativeQuery = true)
+    public List<IProductInventory> getProductInventory();
+
     public static interface ISumOfProductStockDTO {
         String getWarehouse_id();
         String getQuantity();
     }
+
+    public static interface IProductInventory {
+        String getProduct_name();
+        String getWarehouse_name();
+        String getQuantity_in_stock();
+        String getUnitary_price();
+        String getTotal_assets_value();
+    }
+
+//    # nome do produto, nome do warehouse, quantidade em estoque, valor unitário, valor total
 }
