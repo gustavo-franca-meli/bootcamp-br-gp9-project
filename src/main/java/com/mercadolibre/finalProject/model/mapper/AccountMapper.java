@@ -10,6 +10,7 @@ public interface AccountMapper {
                 account.getId(),
                 account.getUsername(),
                 account.getPassword(),
+                account.getRol(),
                 CountryMapper.toResponseDTO(account.getCountry()));
     }
 }

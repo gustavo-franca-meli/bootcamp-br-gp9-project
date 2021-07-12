@@ -76,7 +76,7 @@ public class ControllerExceptionHandler {
                 .body(apiError);
     }
 
-    @ExceptionHandler(value = {CreateBatchStockException.class, StockInsufficientException.class})
+    @ExceptionHandler(value = {CreateBatchStockException.class, StockInsufficientException.class, NotARepresentativeException.class})
     protected ResponseEntity<ApiError> handleListBadRequestException(ListException e) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), HttpStatus.BAD_REQUEST.value(), e.getSubErros());
         return ResponseEntity.status(apiError.getStatus())
