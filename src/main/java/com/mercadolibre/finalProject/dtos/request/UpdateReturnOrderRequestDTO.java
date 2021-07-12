@@ -1,16 +1,18 @@
 package com.mercadolibre.finalProject.dtos.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class UpdateReturnOrderDTO {
+@NoArgsConstructor
+public class UpdateReturnOrderRequestDTO {
 
-    private final Long returnOrderId;
-    private final Long warehouseId;
-    private final Integer statusCode;
+    private Long returnOrderId;
+    private Long warehouseId;
+    private Integer statusCode;
     private String username;
 
-    public UpdateReturnOrderDTO(Long returnOrderId, Long warehouseId, Integer statusCode) {
+    public UpdateReturnOrderRequestDTO(Long returnOrderId, Long warehouseId, Integer statusCode) {
         this.returnOrderId = returnOrderId;
         this.warehouseId = warehouseId;
         this.statusCode = statusCode;

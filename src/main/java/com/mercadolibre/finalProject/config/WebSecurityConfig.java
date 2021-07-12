@@ -16,6 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static String[] REPRESENTATIVE = {FRESH_PRODUCTS_ROUTE + "/inboundorder", FRESH_PRODUCTS_ROUTE + "/list", FRESH_PRODUCTS_ROUTE + "/warehouse", "/seller/**"};
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -25,6 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/ping").permitAll()
                 .antMatchers(HttpMethod.GET, "/v3/api-docs").permitAll()
                 .antMatchers(HttpMethod.GET, "/fake").permitAll()
+                .antMatchers(HttpMethod.POST, FRESH_PRODUCTS_ROUTE + "/return-order").hasRole("BUYER")
+                .antMatchers(HttpMethod.PUT, FRESH_PRODUCTS_ROUTE + "/return-order").hasRole("REPRESENTATIVE")
                 .antMatchers(REPRESENTATIVE).hasRole("REPRESENTATIVE")
 
                 .anyRequest().authenticated();

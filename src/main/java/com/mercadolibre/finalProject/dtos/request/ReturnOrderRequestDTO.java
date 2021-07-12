@@ -1,12 +1,14 @@
 package com.mercadolibre.finalProject.dtos.request;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ReturnOrderRequestDTO {
 
-    private final Long purchaseOrderId;
-    private final String reason;
+    private Long purchaseOrderId;
+    private String reason;
     private String buyerUsername;
 
     public ReturnOrderRequestDTO(Long purchaseOrderId, String reason) {

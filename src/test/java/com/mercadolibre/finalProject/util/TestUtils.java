@@ -256,12 +256,12 @@ public interface TestUtils {
     }
 
     static BatchPurchaseOrderResponseDTO getBatchPurchaseOrderResponseDTO() {
-        return new BatchPurchaseOrderResponseDTO(2L, 3L, 1, LocalDate.of(2021,4,10), LocalDateTime.of(2021,04,10,0,0), LocalDate.of(2021,4,10));
+        return new BatchPurchaseOrderResponseDTO(2L, 3L, 1, LocalDate.of(2021, 4, 10), LocalDateTime.of(2021, 04, 10, 0, 0), LocalDate.of(2021, 4, 10));
     }
 
     static PurchaseOrderRequestDTO getPurchaseOrderRequestDTO() {
         return new PurchaseOrderRequestDTO(
-                LocalDate.of(2021,7,1),
+                LocalDate.of(2021, 7, 1),
                 1L,
                 1,
                 Lists.newArrayList(new ProductPurchaseOrderRequestDTO(1L, 1))
@@ -288,14 +288,14 @@ public interface TestUtils {
         var account = getAccountMocked();
         var purchaseProduct = new ProductBatchesPurchaseOrder(getProductMocked(), 13.89, null);
         purchaseProduct.setPurchaseBatches(List.of(getBatchPurchaseOrder()));
-        var purchaseOrder =  new PurchaseOrder(2L, account, LocalDate.of(2021,7,1), 1, Arrays.asList(purchaseProduct));
+        var purchaseOrder = new PurchaseOrder(2L, account, LocalDate.of(2021, 7, 1), 1, Arrays.asList(purchaseProduct));
         return purchaseOrder;
     }
 
     static PurchaseOrderResponseDTO getPurchaseOrderResponseDTO() {
         return new PurchaseOrderResponseDTO(
                 2L,
-                LocalDate.of(2021,7,1),
+                LocalDate.of(2021, 7, 1),
                 13.89,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         2L,
@@ -311,7 +311,7 @@ public interface TestUtils {
     static PurchaseOrderResponseDTO getExistingPurchaseOrderResponseDTO() {
         return new PurchaseOrderResponseDTO(
                 1L,
-                LocalDate.of(2021,7,9),
+                LocalDate.of(2021, 7, 9),
                 27.78,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         1L,
@@ -323,9 +323,9 @@ public interface TestUtils {
                                 1L,
                                 3L,
                                 2,
-                                LocalDate.of(2021,4,10),
-                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
-                                LocalDate.of(2021,7,30)
+                                LocalDate.of(2021, 4, 10),
+                                LocalDateTime.of(LocalDate.of(2021, 4, 10), LocalTime.of(21, 0)),
+                                LocalDate.of(2021, 7, 30)
                         ))))
         );
     }
@@ -333,7 +333,7 @@ public interface TestUtils {
     static PurchaseOrderResponseDTO getExistingPurchaseOrderUpdatedResponseDTO() {
         return new PurchaseOrderResponseDTO(
                 1L,
-                LocalDate.of(2021,7,9),
+                LocalDate.of(2021, 7, 9),
                 13.89,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         1L,
@@ -345,9 +345,9 @@ public interface TestUtils {
                                 1L,
                                 3L,
                                 1,
-                                LocalDate.of(2021,4,10),
-                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
-                                LocalDate.of(2021,7,30)
+                                LocalDate.of(2021, 4, 10),
+                                LocalDateTime.of(LocalDate.of(2021, 4, 10), LocalTime.of(21, 0)),
+                                LocalDate.of(2021, 7, 30)
                         ))))
         );
     }
@@ -355,7 +355,7 @@ public interface TestUtils {
     static PurchaseOrderResponseDTO getExistingPurchaseOrderUpsizedResponseDTO() {
         return new PurchaseOrderResponseDTO(
                 1L,
-                LocalDate.of(2021,7,9),
+                LocalDate.of(2021, 7, 9),
                 41.67,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
                         1L,
@@ -367,9 +367,9 @@ public interface TestUtils {
                                 1L,
                                 3L,
                                 3,
-                                LocalDate.of(2021,4,10),
-                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
-                                LocalDate.of(2021,7,30)
+                                LocalDate.of(2021, 4, 10),
+                                LocalDateTime.of(LocalDate.of(2021, 4, 10), LocalTime.of(21, 0)),
+                                LocalDate.of(2021, 7, 30)
                         ))))
         );
     }
@@ -377,22 +377,22 @@ public interface TestUtils {
     static PurchaseOrderResponseDTO getExistingPurchaseOrderAddProductResponseDTO() {
         return new PurchaseOrderResponseDTO(
                 1L,
-                LocalDate.of(2021,7,9),
+                LocalDate.of(2021, 7, 9),
                 28.68,
                 Lists.newArrayList(new ProductBatchesPurchaseOrderResponseDTO(
-                        1L,
-                        1L,
-                        "Bisteca Suína",
-                        2,
-                        27.78,
-                        Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
                                 1L,
-                                3L,
+                                1L,
+                                "Bisteca Suína",
                                 2,
-                                LocalDate.of(2021,4,10),
-                                LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
-                                LocalDate.of(2021,7,30)
-                        ))),
+                                27.78,
+                                Lists.newArrayList(new BatchPurchaseOrderResponseDTO(
+                                        1L,
+                                        3L,
+                                        2,
+                                        LocalDate.of(2021, 4, 10),
+                                        LocalDateTime.of(LocalDate.of(2021, 4, 10), LocalTime.of(21, 0)),
+                                        LocalDate.of(2021, 7, 30)
+                                ))),
                         new ProductBatchesPurchaseOrderResponseDTO(
                                 2L,
                                 2L,
@@ -403,9 +403,9 @@ public interface TestUtils {
                                         2L,
                                         9L,
                                         1,
-                                        LocalDate.of(2021,4,10),
-                                        LocalDateTime.of(LocalDate.of(2021,4,10),LocalTime.of(21,0)),
-                                        LocalDate.of(2021,11,11)
+                                        LocalDate.of(2021, 4, 10),
+                                        LocalDateTime.of(LocalDate.of(2021, 4, 10), LocalTime.of(21, 0)),
+                                        LocalDate.of(2021, 11, 11)
                                 ))))
         );
     }
@@ -462,5 +462,17 @@ public interface TestUtils {
     static Seller getSeller() {
         var account = getAccountValid();
         return new Seller(1L, "seller", account);
+    }
+
+    static ReturnOrderRequestDTO getReturnOrderRequestDTO() {
+        return new ReturnOrderRequestDTO(1L, "Reason");
+    }
+
+    static UpdateReturnOrderRequestDTO getUpdateReturnOrderDTO() {
+        return new UpdateReturnOrderRequestDTO(1L, 1L, 1);
+    }
+
+    static ReturnOrder getReturnOrder() {
+        return new ReturnOrder(1L, "", 1, null);
     }
 }

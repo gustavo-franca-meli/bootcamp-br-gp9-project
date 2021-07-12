@@ -58,3 +58,5 @@ INSERT INTO batch (`current_quantity`, `current_temperature`, `due_date`, `initi
 INSERT INTO purchase_order (order_date, order_status, buyer_id) VALUES ('2021-07-09',1,1);
 INSERT INTO product_batch_purchase_order (current_price_per_unit, product_id, purchase_order_id) VALUES (13.89,1,1);
 INSERT INTO batch_purchase_order (quantity, batch_id, purchase_batch_order_id) VALUES (2,3,1);
+
+INSERT INTO return_order(`id`, `reason`, `status`, `purchase_order_id`) VALUES (1, 'reason', 1, 1);

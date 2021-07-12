@@ -1,12 +1,11 @@
 package com.mercadolibre.finalProject.service.impl;
 
 import com.mercadolibre.finalProject.dtos.request.ReturnOrderRequestDTO;
-import com.mercadolibre.finalProject.dtos.request.UpdateReturnOrderDTO;
+import com.mercadolibre.finalProject.dtos.request.UpdateReturnOrderRequestDTO;
 import com.mercadolibre.finalProject.exceptions.NotFoundException;
 import com.mercadolibre.finalProject.model.ReturnOrder;
 import com.mercadolibre.finalProject.model.enums.ReturnOrderStatusType;
 import com.mercadolibre.finalProject.model.mapper.ReturnOrderMapper;
-import com.mercadolibre.finalProject.repository.PurchaseOrderRepository;
 import com.mercadolibre.finalProject.repository.ReturnOrderRepository;
 import com.mercadolibre.finalProject.service.IPurchaseOrderService;
 import com.mercadolibre.finalProject.service.IRepresentativeService;
@@ -18,13 +17,11 @@ public class ReturnOrderServiceImpl implements IReturnOrderService {
 
     private final ReturnOrderRepository returnOrderRepository;
     private final IPurchaseOrderService purchaseOrderService;
-    private final PurchaseOrderRepository purchaseOrderRepository;
     private final IRepresentativeService representativeService;
 
-    public ReturnOrderServiceImpl(ReturnOrderRepository returnOrderRepository, IPurchaseOrderService purchaseOrderService, PurchaseOrderRepository purchaseOrderRepository, IRepresentativeService representativeService) {
+    public ReturnOrderServiceImpl(ReturnOrderRepository returnOrderRepository, IPurchaseOrderService purchaseOrderService, IRepresentativeService representativeService) {
         this.returnOrderRepository = returnOrderRepository;
         this.purchaseOrderService = purchaseOrderService;
-        this.purchaseOrderRepository = purchaseOrderRepository;
         this.representativeService = representativeService;
     }
 
@@ -37,7 +34,7 @@ public class ReturnOrderServiceImpl implements IReturnOrderService {
     }
 
     @Override
-    public void updateStatus(UpdateReturnOrderDTO dto) {
+    public void updateStatus(UpdateReturnOrderRequestDTO dto) {
         this.validateIfRepresentativeBelongsWarehouse(dto.getWarehouseId(), dto.getUsername());
         var returnOrder = findBy(dto.getReturnOrderId());
 
