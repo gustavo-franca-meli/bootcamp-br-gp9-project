@@ -1,6 +1,8 @@
 package com.mercadolibre.finalProject.controller;
 
+import com.mercadolibre.finalProject.dtos.ProductStatusWarehouseDTO;
 import com.mercadolibre.finalProject.dtos.response.ProductStatusWarehouseResponseDTO;
+import com.mercadolibre.finalProject.dtos.response.ProductWarningStatusWarehouseResponseDTO;
 import com.mercadolibre.finalProject.service.IWarehouseStatusService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,20 @@ public class WarehouseStatusController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductStatusWarehouseResponseDTO>> getWarehouseStatus () {
+    public ResponseEntity<List<ProductStatusWarehouseResponseDTO>> getWarehouseProductsStatuses () {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 
         List<ProductStatusWarehouseResponseDTO> response = this.service.getWarehouseStatus(username);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/warning")
+    public ResponseEntity<List<ProductWarningStatusWarehouseResponseDTO>> getWarehouseWarningProductsStatuses () {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        List<ProductWarningStatusWarehouseResponseDTO> response = this.service.getWarehouseWarningProducts(username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
