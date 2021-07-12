@@ -28,7 +28,7 @@ public class VehicleServiceImpl implements IVehicleService {
 
         if (vehicleOpt.isPresent()) throw new VehicleAlreadyExistsException(vehicleRequestDTO.getPlate());
 
-        var warehouse = warehouseService.findWarehouseById(vehicleRequestDTO.getWarehouse_id());
+        var warehouse = warehouseService.findWarehouseById(vehicleRequestDTO.getWarehouseId());
 
         var vehicle = new Vehicle(
                 vehicleRequestDTO.getVehicleType(),
@@ -49,8 +49,8 @@ public class VehicleServiceImpl implements IVehicleService {
         vehicle.setCapacity(vehicleRequestDTO.getCapacity() != null ? vehicleRequestDTO.getCapacity() : vehicle.getCapacity());
         vehicle.setPlate(vehicleRequestDTO.getPlate() != null ? vehicleRequestDTO.getPlate() : vehicle.getPlate());
 
-        if (vehicleRequestDTO.getWarehouse_id() != null) {
-            var warehouse = warehouseService.findWarehouseById(vehicleRequestDTO.getWarehouse_id());
+        if (vehicleRequestDTO.getWarehouseId() != null) {
+            var warehouse = warehouseService.findWarehouseById(vehicleRequestDTO.getWarehouseId());
             vehicle.setWarehouse(warehouse);
         }
 
@@ -84,7 +84,7 @@ public class VehicleServiceImpl implements IVehicleService {
 
     @Override
     public VehicleResponseDTO findVehicleByPlate(String plate) {
-        var vehicle = vehicleRepository.getVehicleByPlate(plate);
+        var vehicle = vehicleRepository.getVehicleByPlate(plate.toUpperCase());
 
         if (vehicle.isEmpty()) throw new VehicleNotFoundException(plate);
 

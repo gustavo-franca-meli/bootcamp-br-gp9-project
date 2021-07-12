@@ -35,6 +35,15 @@ INSERT INTO warehouse (name, country_id, representative_id) VALUES ('Centro de T
 UPDATE representative SET warehouse_id = 1 WHERE (`id` = 1);
 UPDATE representative SET warehouse_id = 2 WHERE (`id` = 2);
 
+INSERT INTO vehicle
+	(id, vehicle_type, capacity, plate, is_available, warehouse_id)
+VALUES
+	(1, 1, 5, 'GCV-4526', true, 1),
+    (2, 1, 3, 'EXC-6608', true, 1),
+    (3, 2, 30, 'HMX-5420', true, 1),
+    (4, 3, 500, 'HXW-7653', true, 1),
+    (5, 2, 60, 'HZF-2512', true, 2);
+
 INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (50, 1, 1);
 INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (50, 2, 2);
 INSERT INTO sector (`max_quantity_batches`, `warehouse_id`, `sector_type`) VALUES (1, 1, 1);

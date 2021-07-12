@@ -16,7 +16,6 @@ public class VehicleRequestDTO {
     @NotNull
     private String plate;
 
-    @NotNull
-    private Long warehouse_id;
+    private Long warehouseId;
 
 }
