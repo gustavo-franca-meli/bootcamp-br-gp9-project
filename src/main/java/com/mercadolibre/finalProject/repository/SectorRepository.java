@@ -12,7 +12,7 @@ public interface SectorRepository extends JpaRepository<Sector, Long> {
 
     @Query(value = "SELECT count(b.id) FROM Batch b " +
             "INNER JOIN Sector s ON b.sector_id = s.id " +
-            "WHERE b.sector_id = :sectorId AND b.current_quantity > 0", nativeQuery = true)
+            "WHERE b.sector_id = :sectorId AND b.current_quantity > 0 AND b.status='IN_STOCK'", nativeQuery = true)
     Integer countBatchesIn(@Param("sectorId") Long sectorId);
 
 }

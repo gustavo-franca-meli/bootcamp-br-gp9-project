@@ -83,7 +83,6 @@ public class BatchServiceImpl implements IBatchService {
         } else {
             throw new CreateBatchStockException("Error in save " + errorList.size() + " batch in sector", errorList);
         }
-        //register all batch in sector if dont works repeat 3 times of fails all throws Internal Server Error.
     }
 
     @Override
@@ -97,6 +96,11 @@ public class BatchServiceImpl implements IBatchService {
     @Override
     public void deleteAll(List<Batch> batches) {
         batchRepository.deleteAll(batches);
+    }
+
+    @Override
+    public Batch findByIdAndWarehouse(Long id, Long warehouseId) {
+        return this.batchRepository.findByIdAndWarehouseId(id,warehouseId);
     }
 
     private Batch findBatchBy(Long batchId) {

@@ -15,18 +15,18 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
     @Query(value = "SELECT b.* FROM Batch b " +
             "INNER JOIN Sector s ON b.sector_id = s.id " +
             "INNER JOIN Warehouse w ON s.warehouse_id = w.id " +
-            "WHERE s.warehouse_id = :warehouseId AND b.product_id = :productId AND b.due_date >= :minimumDueDate", nativeQuery = true)
+            "WHERE s.warehouse_id = :warehouseId AND b.product_id = :productId AND b.due_date >= :minimumDueDate AND b.status='IN_STOCK'", nativeQuery = true)
     List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDate(Long warehouseId, Long productId, LocalDate minimumDueDate);
 
     @Query("SELECT b FROM Batch b " +
             "INNER JOIN Sector s ON b.sector.id = s.id " +
             "INNER JOIN Warehouse w ON s.warehouse.id = w.id " +
-            "WHERE s.warehouse.id = :warehouseId AND b.product.id = :productId AND b.dueDate >= :minimumDueDate")
+            "WHERE s.warehouse.id = :warehouseId AND b.product.id = :productId AND b.dueDate >= :minimumDueDate AND b.status='IN_STOCK'")
     public List<Batch> findBatchByWarehouseIdAndProductIdAndMinimumDueDateOrderBySortField(Long warehouseId, Long productId, LocalDate minimumDueDate, Sort sort);
 
     @Query(value = "SELECT b.* FROM Batch b"
             + " INNER JOIN Sector s ON b.sector_id = :sectorId"
-            + " WHERE b.due_date <= :maximumDueDate"
+            + " WHERE b.due_date <= :maximumDueDate AND b.status='IN_STOCK'"
             + " GROUP BY b.id"
             + " ORDER BY b.due_date ASC", nativeQuery = true)
     List<Batch> findBatchesBySectorId(Long sectorId, LocalDate maximumDueDate);
@@ -38,7 +38,7 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
 
     @Query(value = "SELECT A.* FROM Batch A INNER JOIN Sector B ON (A.sector_id=B.id) " +
             "INNER JOIN Warehouse C ON (B.warehouse_id=C.id) " +
-            "WHERE C.country_id=:countryId AND A.product_id=:productId AND A.due_date >=:date " +
+            "WHERE C.country_id=:countryId AND A.product_id=:productId AND A.due_date >=:date AND A.status='IN_STOCK' " +
             "ORDER BY A.due_date ASC", nativeQuery = true)
     List<Batch> findByProductCountryAndDate (Long productId, Long countryId, LocalDate date);
 
@@ -46,7 +46,13 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
             "FROM Batch A " +
             "INNER JOIN Sector B ON (A.sector_id=B.id) " +
             "INNER JOIN Warehouse C ON (B.warehouse_id=C.id) " +
-            "WHERE C.country_id=:countryId AND A.due_date >=:date AND A.product_id=:productId " +
+            "WHERE C.country_id=:countryId AND A.due_date >=:date AND A.product_id=:productId AND A.status='IN_STOCK'" +
             "GROUP BY A.product_id", nativeQuery = true)
     Integer getProductQuantityByCountryAndDate (Long productId, Long countryId, LocalDate date);
+
+    @Query("SELECT b FROM Batch b " +
+            "INNER JOIN Sector s ON b.sector.id = s.id " +
+            "INNER JOIN Warehouse w ON s.warehouse.id = w.id " +
+            "WHERE s.warehouse.id = :warehouseId AND b.id = :id AND b.status='IN_STOCK'")
+    Batch findByIdAndWarehouseId(Long id, Long warehouseId);
 }

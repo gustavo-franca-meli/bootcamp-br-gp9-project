@@ -2,10 +2,10 @@ package com.mercadolibre.finalProject.model.enums;
 
 public enum OrderStatus {
 
-    PROCESSING (1, "Processing"),
-    PAYED (2, "Payment Approved"),
-    IN_DELIVERY (3, "In Delivery"),
-    DELIVERED (4, "Delivered");
+    PROCESSING(1, "Processing"),
+    PAYED(2, "Payment Approved"),
+    IN_DELIVERY(3, "In Delivery"),
+    DELIVERED(4, "Delivered");
 
     private int cod;
     private String description;
@@ -24,14 +24,15 @@ public enum OrderStatus {
     }
 
     public static OrderStatus toEnum(Integer cod) {
-        if(cod == null)
+        if (cod == null)
             return null;
 
-        for(OrderStatus x : OrderStatus.values()) {
-            if(cod.equals(x.getCod()))
+        for (OrderStatus x : OrderStatus.values()) {
+            if (cod.equals(x.getCod()))
                 return x;
         }
 
         throw new RuntimeException("Invalid order status code: " + cod);
     }
 }
+

@@ -1,5 +1,7 @@
 package com.mercadolibre.finalProject.model;
 
+import com.mercadolibre.finalProject.model.enums.BatchStatus;
+import com.mercadolibre.finalProject.model.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +32,9 @@ public class Batch {
     @ManyToOne
     @JoinColumn(name = "inbound_order_id",nullable = false)
     private InboundOrder inboundOrder;
+
+    @Column(columnDefinition = "varchar(45) default '" + BatchStatus.IN_STOCK + "'")
+    private String status;
 
     private Float currentTemperature;
     private Float minimumTemperature;
@@ -85,6 +90,20 @@ public class Batch {
 
     public Batch (Long id) {
         this.id = id;
+    }
+
+    public Batch(Long id, Product product, Sector sector, InboundOrder inboundOrder, Float currentTemperature, Float minimumTemperature, Integer initialQuantity, Integer currentQuantity, LocalDate manufacturingDate, LocalDateTime manufacturingTime, LocalDate dueDate) {
+        this.id = id;
+        this.product = product;
+        this.sector = sector;
+        this.inboundOrder = inboundOrder;
+        this.currentTemperature = currentTemperature;
+        this.minimumTemperature = minimumTemperature;
+        this.initialQuantity = initialQuantity;
+        this.currentQuantity = currentQuantity;
+        this.manufacturingDate = manufacturingDate;
+        this.manufacturingTime = manufacturingTime;
+        this.dueDate = dueDate;
     }
 
     public void withdrawQuantity(Integer quantityTakenFromBatch) {

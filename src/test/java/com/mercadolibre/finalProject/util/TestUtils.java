@@ -458,4 +458,25 @@ public interface TestUtils {
         var account = getAccountValid();
         return new Seller(1L, "seller", account);
     }
+
+    static TransferOrderRequestDTO getTransferOrderRequestValid() {
+        return new TransferOrderRequestDTO(1L,2L,getBatchStockIdList());
+    }
+
+    static List<BatchId> getBatchStockIdList() {
+
+
+        return Arrays.asList(new BatchId(1L),new BatchId(2L),new BatchId(3L));
+    }
+
+    static TransferOrderResponseDTO getTransferOrderResponseValid() {
+        var batchResponseList = new ArrayList<BatchDTO>();
+        BatchDTO batch = null;
+        for(int i = 1; i < 4; i++){
+            batch = getBatchDTO();
+            batch.setId((long) i);
+            batchResponseList.add(batch);
+        }
+        return new TransferOrderResponseDTO(1L,batchResponseList);
+    }
 }

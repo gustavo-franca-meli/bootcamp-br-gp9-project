@@ -26,4 +26,6 @@ public interface IBatchService {
     List<Batch> save(@NotNull List<BatchDTO> batchStock, Long sectorId, Long OrderId) throws CreateBatchStockException;
 
     void deleteAll(List<Batch> batches);
+
+    Batch findByIdAndWarehouse(Long id, Long warehouseId);
 }
