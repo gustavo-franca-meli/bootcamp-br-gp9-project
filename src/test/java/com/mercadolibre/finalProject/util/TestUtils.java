@@ -458,4 +458,34 @@ public interface TestUtils {
         var account = getAccountValid();
         return new Seller(1L, "seller", account);
     }
+
+    static ProductStatusIntervalDueDateResponseDTO getProductStatusIntervalDueDateDTO (Integer batches, Integer items) {
+        return new ProductStatusIntervalDueDateResponseDTO(
+                batches,
+                items);
+    }
+
+    static List<ProductStatusWarehouseResponseDTO> getProductStatusesResponseDTO () {
+        return Lists.newArrayList(
+                new ProductStatusWarehouseResponseDTO(
+                        1L,
+                        getProductStatusIntervalDueDateDTO(1,40),
+                        getProductStatusIntervalDueDateDTO(4,100),
+                        getProductStatusIntervalDueDateDTO(1,150)
+                ),
+                new ProductStatusWarehouseResponseDTO(
+                        2L,
+                        getProductStatusIntervalDueDateDTO(0,0),
+                        getProductStatusIntervalDueDateDTO(0,0),
+                        getProductStatusIntervalDueDateDTO(3,60)
+                )
+        );
+    }
+
+    static List<ProductWarningStatusWarehouseResponseDTO> getProductWarningStatusesResponseDTO () {
+        return Lists.newArrayList(
+                new ProductWarningStatusWarehouseResponseDTO(
+                        1L,
+                        getProductStatusIntervalDueDateDTO(1,40)));
+    }
 }
