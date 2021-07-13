@@ -10,7 +10,7 @@
 # How i use It ?
 
 
-#US006 - [link dos requisitos](/us006.pdf)
+#US006 - [link dos requisitos](/docs/guide/us006.pdf)
 
 
 # database Model
