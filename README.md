@@ -1,6 +1,21 @@
-# dambetan01
+# Desafio final bootcamp
 
-# Spring Boot App model for Java 11
+## Modelagem
+A modelagem pode ser encontrada acessando o link: https://tinyurl.com/2hpmja9x
+
+## Collection de exemplo
+Devido a complexidade das chamadas e modelagens, o uso de nossa Collection criada pelo Postman com chamadas exemplo e variáveis já atribuídas ao fazer a requisição, possa facilitar o entendimento do projeto.
+Para cloná-la, vá ao site https://www.postman.com/ ou abra seu aplicativo e importe o seguinte link:
+```
+https://www.getpostman.com/collections/b1e8b6486809482c5d79
+```
+
+## Requisito 6
+O requisito 6 se encontra na pasta docs > Nycolas Vieira - Requisito_Dia_6_PT-BR
+
+# Readme - Fury
+
+## Spring Boot App model for Java 11
 
 We provide a basic model for JDK 11 / Spring based web applications.
 
@@ -21,9 +36,9 @@ For example, for the **SCOPE** 'items-loader-test' the **SCOPE_SUFFIX** would be
 ### Web Server
 
 Each Spring Boot web application includes an embedded web server. For servlet stack applications, Its supports three web Servers:
-  * Tomcat (maven dependency: `spring-boot-starter-tomcat`)
-  * Jetty (maven dependency: `spring-boot-starter-jetty`)
-  * Undertow (maven dependency: `spring-boot-starter-undertow`)
+* Tomcat (maven dependency: `spring-boot-starter-tomcat`)
+* Jetty (maven dependency: `spring-boot-starter-jetty`)
+* Undertow (maven dependency: `spring-boot-starter-undertow`)
 
 This project is configured with Jetty, but to exchange WebServer, it is enough to configure the dependencies mentioned above in the pom.xml file.
 
