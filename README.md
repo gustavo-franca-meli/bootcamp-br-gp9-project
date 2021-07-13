@@ -8,6 +8,9 @@ Please address any questions and comments to [Fury Issue Tracker](https://github
 
 ## Usage
 
+
+## requisitos 
+US006 - [link dos requisitos](/us006.pdf)
 ### SCOPE
 
 The suffix of each Fury **SCOPE** is used to know which properties file to use, it is identified from the last '-' of the name of the scope.
